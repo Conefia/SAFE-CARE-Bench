@@ -1,63 +1,99 @@
-# SAFE-CARE Bench — ablation tier A0
-# Capability declaration only. Implementation-neutral by design: this file states
-# WHICH capabilities are active at this tier, not how any particular system
-# implements them. Substitute your own runtime when reproducing.
+# =============================================================================
+# SAFE-CARE Bench - ablation tier A0
+#
+# Capability declaration only. Implementation-neutral by design: this file
+# states WHICH capabilities are active at this tier, not how any particular
+# system implements them. Substitute your own runtime when reproducing.
+#
+# NOTE ON THE LADDER. Adjacent tiers differ by a *capability bundle*, not
+# always by a single flag. Bundles are grouped so that the members of a bundle
+# are not independently interpretable - see `delta_from_previous` below and the
+# "Capability bundles, not one-variable ablation" section of the README. Report
+# adjacent-tier deltas as the effect of the named bundle.
+# =============================================================================
 
 agent_id: "A0"
 tier: "A0"
 name: "Ungoverned Baseline"
+bundle_added: "none (reference floor)"
 
 description: >
-  Direct model call with a static system prompt
-  No retrieval, no tools, no guardrails, no memory, no profiling
-  Lower-bound reference against which all capability gains are measured.
+  Direct model call with a static system prompt. No retrieval, no guardrails, no memory, no profiling, no tools. Establishes the lower-bound reference against which every capability bundle is measured.
 
-# ---------------------------------------------------------------------------
-# Model — held constant across all tiers so that differences are attributable
-# to the capability layer alone, not to model choice or sampling variance.
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Model - held constant across all tiers so that differences are attributable
+# to the capability bundle alone, not to model choice or sampling variance.
+# -----------------------------------------------------------------------------
 model:
-  provider: "<your-llm-provider>"       # any chat-completion endpoint
+  provider: "<your-llm-provider>"        # any chat-completion endpoint
   deployment: "<your-model-deployment>"
   temperature: 0.0                       # deterministic for reproducibility
   max_tokens: 800
   seed: 42
 
-# ---------------------------------------------------------------------------
-# Capability flags — the independent variable of the ablation
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Capability vector - the independent variable of the ablation.
+# Every tier declares all 10 flags explicitly. A capability that is absent is
+# declared false rather than omitted, so that any two tiers can be diffed
+# mechanically and the delta is unambiguous.
+# -----------------------------------------------------------------------------
 features:
-  rag: false
-  guardrails: false
-  memory: false
-  profiling: false
-  tool_use: false
+  retrieval:               false  # Vector search over an approved clinical knowledge base.
+  citation_enforcement:    false  # Every clinical claim must carry an inline citation to a retrieved source.
+  safety_guardrails:       false  # Layered input and output screening against a configurable rule set.
+  session_context:         false  # Carries context within a single conversation.
+  cross_session_memory:    false  # Reads timestamped, user-correctable context from prior sessions.
+  progressive_profiling:   false  # Collects structured profile fields one question per turn.
+  profile_write_back:      false  # Writes user-confirmed profile fields back to durable state.
+  life_stage_inference:    false  # Derives a life-stage label with a confidence value from profile signals.
+  application_tools:       false  # Permissioned non-retrieval tools that act on user state.
+  closed_loop_actions:     false  # Initiates follow-up actions across turns without a fresh user request.
 
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Delta from the previous tier
+# -----------------------------------------------------------------------------
+delta_from_previous:
+  baseline: true
+  note: >
+    Reference floor. No capabilities active.
+
+
+# -----------------------------------------------------------------------------
 # Retrieval
-# ---------------------------------------------------------------------------
-rag:
+# -----------------------------------------------------------------------------
+retrieval:
   enabled: false
   # No retrieval. Responses draw on parametric model knowledge only.
   # Citations are not possible at this tier.
 
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Guardrails
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 guardrails:
   enabled: false
   # No input or output screening. Unsafe or off-topic content is not intercepted.
 
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Memory
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 memory:
-  enabled: false
+  session_context: false
+  cross_session: false
   # No context beyond the current turn. Each exchange is answered from scratch.
 
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Profiling
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 profiling:
   enabled: false
   # No structured profile collection at this tier.
+
+# -----------------------------------------------------------------------------
+# Agency
+# -----------------------------------------------------------------------------
+agency:
+  profile_write_back: false
+  life_stage_inference: false
+  application_tools: false
+  closed_loop_actions: false
+  # No write-back, inference, application tools, or closed-loop behaviour at this tier.

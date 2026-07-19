@@ -1,53 +1,86 @@
-# SAFE-CARE Bench — ablation tier A4
-# Capability declaration only. Implementation-neutral by design: this file states
-# WHICH capabilities are active at this tier, not how any particular system
-# implements them. Substitute your own runtime when reproducing.
+# =============================================================================
+# SAFE-CARE Bench - ablation tier A4
+#
+# Capability declaration only. Implementation-neutral by design: this file
+# states WHICH capabilities are active at this tier, not how any particular
+# system implements them. Substitute your own runtime when reproducing.
+#
+# NOTE ON THE LADDER. Adjacent tiers differ by a *capability bundle*, not
+# always by a single flag. Bundles are grouped so that the members of a bundle
+# are not independently interpretable - see `delta_from_previous` below and the
+# "Capability bundles, not one-variable ablation" section of the README. Report
+# adjacent-tier deltas as the effect of the named bundle.
+# =============================================================================
 
 agent_id: "A4"
 tier: "A4"
 name: "Full Agentic Companion"
+bundle_added: "Agency (write-side)"
 
 description: >
-  All capabilities combined, including write-back of confirmed profile fields and inferred life-stage
-  Represents the complete governed agent architecture.
+  Adds the write-side agency bundle: confirmed profile write-back, life-stage inference, permissioned application tools, and closed-loop actions. This is the complete governed agent architecture and the upper rung of the ladder.
 
-# ---------------------------------------------------------------------------
-# Model — held constant across all tiers so that differences are attributable
-# to the capability layer alone, not to model choice or sampling variance.
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Model - held constant across all tiers so that differences are attributable
+# to the capability bundle alone, not to model choice or sampling variance.
+# -----------------------------------------------------------------------------
 model:
-  provider: "<your-llm-provider>"       # any chat-completion endpoint
+  provider: "<your-llm-provider>"        # any chat-completion endpoint
   deployment: "<your-model-deployment>"
   temperature: 0.0                       # deterministic for reproducibility
   max_tokens: 800
   seed: 42
 
-# ---------------------------------------------------------------------------
-# Capability flags — the independent variable of the ablation
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Capability vector - the independent variable of the ablation.
+# Every tier declares all 10 flags explicitly. A capability that is absent is
+# declared false rather than omitted, so that any two tiers can be diffed
+# mechanically and the delta is unambiguous.
+# -----------------------------------------------------------------------------
 features:
-  rag: true
-  guardrails: true
-  memory: true
-  profiling: true
-  tool_use: true
+  retrieval:               true   # Vector search over an approved clinical knowledge base.
+  citation_enforcement:    true   # Every clinical claim must carry an inline citation to a retrieved source.
+  safety_guardrails:       true   # Layered input and output screening against a configurable rule set.
+  session_context:         true   # Carries context within a single conversation.
+  cross_session_memory:    true   # Reads timestamped, user-correctable context from prior sessions.
+  progressive_profiling:   true   # Collects structured profile fields one question per turn.
+  profile_write_back:      true   # Writes user-confirmed profile fields back to durable state.
+  life_stage_inference:    true   # Derives a life-stage label with a confidence value from profile signals.
+  application_tools:       true   # Permissioned non-retrieval tools that act on user state.
+  closed_loop_actions:     true   # Initiates follow-up actions across turns without a fresh user request.
 
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Delta from the previous tier
+# -----------------------------------------------------------------------------
+delta_from_previous:
+  bundle: "Agency (write-side)"
+  flags_enabled:
+    - profile_write_back
+    - life_stage_inference
+    - application_tools
+    - closed_loop_actions
+  interpretation: >
+    The A3-to-A4 delta measures the joint effect of the flags listed
+    above. It is a multi-flag bundle and may NOT be attributed to any one member.
+
+
+# -----------------------------------------------------------------------------
 # Retrieval
-# ---------------------------------------------------------------------------
-rag:
+# -----------------------------------------------------------------------------
+retrieval:
   enabled: true
-  retrieval: "vector search over an approved clinical knowledge base"
+  method: "vector search over an approved clinical knowledge base"
   k: 2
   score_threshold: 0.7
   deduplication: "chunk-level within a session"
   citation_requirement: >
-    Every factual or clinical claim carries an inline citation immediately after
-    the statement. End-of-response citation lists do not satisfy this requirement.
+    Every factual or clinical claim carries an inline citation immediately
+    after the statement. End-of-response citation lists do not satisfy this
+    requirement.
 
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Guardrails
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 guardrails:
   enabled: true
   scope: ["input", "output"]
@@ -55,35 +88,54 @@ guardrails:
     Screened before the model is invoked. A flagged input returns a
     pre-configured refusal or escalation message; the model is not called.
   output_behavior: >
-    Screened after generation, including link validation. A flagged response is
-    suppressed or replaced.
+    Screened after generation, including link validation. A flagged response
+    is suppressed or replaced.
   configuration: "externally configurable rule set, hot-reloadable"
 
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Memory
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 memory:
-  enabled: true
-  scope: "cross-session"
+  session_context: true
+  cross_session: true
   operations: ["retrieve_prior_context", "save_detail"]
   requirement: >
-    Stored items are timestamped and user-correctable. Stale entries must not be
-    presented as current state.
+    Stored items are timestamped and user-correctable. Stale entries must not
+    be presented as current state.
 
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Profiling
-# ---------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 profiling:
   enabled: true
-  method: "progressive — one targeted question per turn, never a bulk intake form"
+  method: "progressive - one targeted question per turn, never a bulk intake form"
   fields_collected:
     - cycle_status
     - cycle_pattern
     - active_symptoms
     - hormone_therapy_status
     - surgical_history
-    - age
-    - disambiguation
+    - age_band
   confirmation_rule: >
     Sensitive fields require explicit user confirmation before storage.
     Uncertain values are not written.
+
+# -----------------------------------------------------------------------------
+# Agency
+# -----------------------------------------------------------------------------
+agency:
+  profile_write_back: true
+  life_stage_inference: true
+  application_tools: true
+  closed_loop_actions: true
+  write_back_rule: >
+    Only user-confirmed values are persisted. Inferred values are held as
+    session-scoped hypotheses until confirmed.
+  life_stage_inference_contract: >
+    The agent derives a life-stage label together with a confidence value from
+    declared profile signals, and must surface both the label and its
+    provisional status to the user. The specific decision rule is an
+    implementation choice and is deliberately not specified here; any rule
+    satisfying this contract is conformant.
+  escalation_precedence: >
+    No agentic action may override a guardrail refusal or a pending escalation.

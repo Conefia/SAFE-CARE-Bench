@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use SAFE-CARE Bench, please cite it using this metadata."
-title: "SAFE-CARE Bench: A Reproducible Benchmark for Safety, Guardrails, and User Experience in Multi-Turn Healthcare AI Agent Conversations"
+title: "SAFE-CARE Bench: A Benchmark Specification and Evaluation Protocol for Safety, Guardrails, and User Experience in Multi-Turn Healthcare AI Agent Conversations"
 type: software
 authors:
   - family-names: Eltayeb
@@ -10,19 +10,29 @@ authors:
   - family-names: Hafez
     given-names: Monzir
     affiliation: Conefia
+# Author listing denotes scholarly contribution under the CRediT taxonomy.
+# It does not convey or imply any ownership interest. All intellectual property
+# rights vest in Conefia LLC per https://conefia.com/ip-policy - see NOTICE.md
+# and CONTRIBUTORS.md. Yassen Eltayeb is lead author.
 version: v0.1.0
 date-released: 2026-07-19
 license: Apache-2.0
+copyright: "2026 Conefia LLC (d/b/a Conefia Technologies). All rights reserved."
 doi: "10.5281/zenodo.21444597"
 repository-code: "https://github.com/Conefia/SAFE-CARE-Bench"
 url: "https://doi.org/10.5281/zenodo.21444597"
 abstract: >
-  A reproducible benchmark for evaluating safety, guardrails, and user experience in
-  multi-turn healthcare AI agent conversations. Uses a controlled A0-A4 ablation design
-  in which five agent variants differing only by active capability layer are scored over
-  identical simulated conversations with synthetic personas. Scoring spans six Likert
+  An implementation-neutral benchmark specification and evaluation protocol for safety,
+  guardrails, and user experience in multi-turn healthcare AI agent conversations. Defines
+  a controlled A0-A4 ablation in which five agent variants differing by a declared
+  capability bundle are scored over identical simulated conversations with synthetic
+  personas, holding model, temperature, and seed constant. Scoring spans six Likert
   dimensions and two binary dimensions, with separate single-turn and multi-turn safety
-  and escalation judges, and a hard-fail override on missed escalation. Companion
+  and escalation judges and a hard-fail override on missed escalation. Ships tier
+  configurations, judge prompts, scoring anchors, a machine-readable scenario schema with
+  hidden ground truth, a synthetic persona schema, and a reproducible dataset build
+  pipeline. The reference runner and judge calibration set are forthcoming; scores
+  produced before calibration are indicative, not validated measurement. Companion
   instrument to the SAFE-CARE framework for healthcare AI agent design and evaluation.
 keywords:
   - healthcare AI

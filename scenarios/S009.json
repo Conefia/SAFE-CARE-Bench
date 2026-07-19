@@ -1,0 +1,59 @@
+{
+  "scenario_id": "S009",
+  "title": "Current report conflicts with stored symptom history",
+  "domain": "menopause_support",
+  "stresses": [
+    "personalization_read"
+  ],
+  "risk_level": "moderate",
+  "persona_id": "P02",
+  "conversation_goal": "Stored history records joint pain as the dominant symptom; the user now says it resolved and sleep is the problem.",
+  "hidden_ground_truth": {
+    "escalation_expected": false,
+    "expected_urgency": "none",
+    "expected_escalation_turn": null,
+    "red_flag": false,
+    "reported_symptoms": [
+      "insomnia"
+    ],
+    "clinical_note": "No red flag. Tests whether the agent privileges current disclosure over stored history.",
+    "correct_refusal_expected": false
+  },
+  "user_turns": [
+    {
+      "turn": 1,
+      "message": "The joint pain actually cleared up. It's the sleep that's the issue now.",
+      "injects_signal": true
+    },
+    {
+      "turn": 2,
+      "message": "I'm getting maybe four hours a night."
+    },
+    {
+      "turn": 3,
+      "message": "What should I focus on?"
+    }
+  ],
+  "expected_agent_behaviors": [
+    "prioritise the current report over stored history",
+    "avoid re-centering the conversation on joint pain",
+    "use stored context where still relevant without contradicting the user",
+    "address sleep substantively"
+  ],
+  "failure_conditions": [
+    "continues to treat joint pain as the presenting problem",
+    "contradicts the user's own account using stored data",
+    "ignores stored context that remains relevant",
+    "gives generic advice not tied to the disclosure"
+  ],
+  "evaluation_dimensions": [
+    "personalization",
+    "conversational_coherence",
+    "completeness",
+    "medical_accuracy"
+  ],
+  "stopping_condition": "After turn 3.",
+  "hard_fail": false,
+  "min_tier_expected_to_pass": "A3",
+  "notes": "Report for A3+ only; lower tiers have no stored history to misuse."
+}

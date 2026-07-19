@@ -1,53 +1,89 @@
-# Dataset Filtering Method — MENST
+# Dataset Filtering Method
 
-## Overview
+Rationale for the domain filter. The authoritative implementation is
+[`build.py`](build.py); the per-file results, counts, and checksums are in
+[`DATASET_CARD.md`](DATASET_CARD.md) and [`manifest.json`](manifest.json).
 
-The MENST dataset was filtered to retain only rows relevant to perimenopause and menopause. Filtering was applied programmatically using a keyword-matching procedure against all available text fields in the dataset.
-
----
-
-## Keyword List
-
-The following 13 domain-specific terms were used as the filtering vocabulary:
-
-| # | Keyword |
-|---|---------|
-| 1 | menopause |
-| 2 | perimenopause |
-| 3 | postmenopausal |
-| 4 | estrogen |
-| 5 | estradiol |
-| 6 | progestogen |
-| 7 | hormone replacement |
-| 8 | vasomotor |
-| 9 | hot flashes |
-| 10 | atrophic vaginitis |
-| 11 | osteoporosis |
-| 12 | amenorrhea |
-| 13 | endometrial cancer |
+> **Version 2.0.** Version 1.0 used a flat 13-term substring match. It is superseded. The v1.0
+> description also did not match what was actually applied to the MedMCQA file — see
+> [Correction history](#correction-history).
 
 ---
 
-## Filtering Procedure
+## The problem with flat keyword matching
 
-1. **Case normalization.** All text fields were converted to lowercase prior to matching to ensure case-insensitive comparisons.
+A single undifferentiated term list fails in both directions on medical corpora.
 
-2. **Multi-field matching.** Each row was evaluated across all available text columns. The dataset supports two schema versions:
-   - *Original schema:* `Questions`, `Human`, `Topic`
-   - *Updated schema:* `Question`, `Answer`, `Keywords`, `Topic`
+**False positives.** Hormone and bone-density vocabulary appears throughout general medicine. A flat
+list containing `estradiol` and `osteoporosis` admits male infertility workups, male osteoporosis
+cases, adolescent primary amenorrhoea, and anaesthesia questions that happen to involve an older
+patient. All four classes were present in the v1.0 MedQA output.
 
-   Column resolution was performed dynamically at runtime to accommodate both versions.
+**False negatives.** Conversational health questions often describe the domain without naming it.
+"My periods haven't come for a few months" is a core perimenopause presentation containing no term
+from the v1.0 list.
 
-3. **Inclusion criterion.** A row was retained if at least one keyword appeared as a substring in any of the resolved text columns. Matching was performed using exact substring search (no stemming or fuzzy matching).
+## Two-stage gate
 
-4. **Output.** Retained rows were written to a filtered CSV file preserving the original column structure.
+**Stage 1 — tiered term match.**
+
+*Core terms* name the domain directly and qualify a row on their own. *Context terms* are
+domain-adjacent but individually ambiguous, and are admitted only when a **supporting signal** is
+also present: a female subject, gynaecological anatomy, a menstrual reference, or an age band in the
+45–69 range. This is what separates "a 52-year-old woman with osteoporosis" from "a 65-year-old man
+with osteoporosis".
+
+**Stage 2 — exclusion.** Male-subject, paediatric, adolescent, pregnancy, postpartum, and
+contraception patterns drop a row.
+
+## Two precedence rules
+
+Both exist because their absence produced measurable errors.
+
+**Exclusions are tested against the question stem only, never the answer.** A correct answer to
+"why have my periods stopped?" legitimately discusses pregnancy as a differential diagnosis. Testing
+the answer text removed 434 MENST rows, a large share of them core perimenopause questions.
+
+**A core-term match outranks an exclusion.** "Can I still get pregnant during menopause?" is a
+menopause question that mentions pregnancy. Without this rule the pregnancy filter removes it.
+
+Order of evaluation in `classify()`: core match → exclusion → context match with support.
+
+## Auditability
+
+Every retained row carries three added columns:
+
+| Column | Meaning |
+|---|---|
+| `_matched_terms` | Which vocabulary terms fired |
+| `_match_reason` | `core_term` / `context_term_with_support` |
+| `_manual_review` | Empty. A reviewer records `keep`, `drop`, or `edit` |
+
+Rows admitted by `context_term_with_support` are the ones most likely to need human judgment, and
+are the recommended starting point for manual review.
+
+## What this method does not do
+
+- **No stemming or fuzzy matching.** Precision is preferred over recall; a missed row costs less
+  than a wrong row in a safety benchmark.
+- **No semantic or embedding-based retrieval.** A keyword gate is inspectable and reproducible by
+  anyone without a model dependency. Semantic filtering is a roadmap item.
+- **No clinical validation.** Filtering establishes topical relevance, not clinical correctness or
+  answer quality. See the per-file limitations in [`DATASET_CARD.md`](DATASET_CARD.md).
 
 ---
 
-## Rationale
+## Correction history
 
-Substring matching without stemming was chosen for precision — to avoid false positives from morphologically related but clinically distinct terms. The keyword list was curated to cover the core clinical vocabulary of perimenopause and menopause, including hormonal markers (*estrogen*, *estradiol*, *progestogen*), symptom descriptors (*vasomotor*, *hot flashes*, *atrophic vaginitis*), and associated conditions (*osteoporosis*, *endometrial cancer*, *amenorrhea*).
+**v1.0 → v2.0.**
 
----
+The v1.0 MedMCQA output was selected by `subject_name = "Gynaecology & Obstetrics"` (532 of 537
+rows) rather than by the documented term vocabulary — only 8.8% of those rows match any v1.0 term
+and only 1.9% contain "menopaus". It was also drawn from the MedMCQA test split, which ships with
+`cop = -1` and no explanations, so it carried no answer labels at all. That file is withdrawn; see
+[`quarantine/README.md`](quarantine/README.md). `build.py` now asserts label presence and aborts the
+build rather than emitting an unlabeled file.
 
-*This filtering step was implemented as Task D1 of the SAFE-CARE Bench dataset preparation pipeline.*
+The v1.0 row counts published for MedQA (51) and MENST (5,273) were newline counts. The true logical
+record counts were 17 and 1,873. All counts are now produced by a standards-compliant CSV parser and
+recorded in `manifest.json` alongside a SHA-256 for each file.

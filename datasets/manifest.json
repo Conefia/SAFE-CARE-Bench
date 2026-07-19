@@ -1,0 +1,108 @@
+{
+  "generated_utc": "2026-07-19T22:09:18+00:00",
+  "vocabulary_version": "2.0",
+  "core_terms": [
+    "menopaus",
+    "perimenopaus",
+    "postmenopaus",
+    "climacteric",
+    "hot flash",
+    "hot flush",
+    "vasomotor",
+    "atrophic vaginitis",
+    "vaginal atrophy",
+    "hormone replacement",
+    "hormone therapy"
+  ],
+  "context_terms": [
+    "estrogen",
+    "oestrogen",
+    "estradiol",
+    "progestogen",
+    "osteoporosis",
+    "amenorrhea",
+    "amenorrhoea",
+    "endometrial cancer",
+    "night sweat",
+    "fsh",
+    "follicle stimulating hormone"
+  ],
+  "support_patterns": [
+    "\\bwoman\\b",
+    "\\bwomen\\b",
+    "\\bfemale\\b",
+    "\\bshe\\b",
+    "\\bher\\b",
+    "\\bmenstrua",
+    "\\bperiod\\b",
+    "\\bperiods\\b",
+    "\\bovar",
+    "\\buter",
+    "\\bendometri",
+    "\\bhysterectom",
+    "\\bgynaec",
+    "\\bgynec",
+    "\\b4[5-9][- ]year",
+    "\\b5[0-9][- ]year",
+    "\\b6[0-9][- ]year"
+  ],
+  "exclude_patterns": [
+    "\\bmale\\b(?!\\s*(and|or)\\s*female)",
+    "\\bman\\b",
+    "\\bhis\\b",
+    "\\bprostat",
+    "\\btesticul",
+    "\\bpuberty\\b",
+    "\\badolescen",
+    "\\bpregnan",
+    "\\bpostpartum\\b",
+    "\\bneonat",
+    "\\bcontracept"
+  ],
+  "note": "Logical record counts come from a standards-compliant CSV parser and will differ from newline counts wherever a field contains embedded newlines. Regenerate with `python datasets/build.py`; verify with `python datasets/build.py --verify`.",
+  "datasets": [
+    {
+      "source": "medqa",
+      "hf_id": "bigbio/med_qa",
+      "split": "train",
+      "file": "menopause_medqa.csv",
+      "logical_records": 13,
+      "sha256": "a43278c4627c83fe6ee91f8bd7a6013abe1da694146d9d3c4b020dd8b1e70cd1",
+      "filter_outcomes": {
+        "core_term": 9,
+        "context_term_with_support": 4
+      },
+      "manual_review_completed": 0,
+      "license": "Upstream MedQA terms. Verify before redistribution.",
+      "status": "active"
+    },
+    {
+      "source": "menst",
+      "hf_id": null,
+      "split": null,
+      "file": "menopause_menst.csv",
+      "logical_records": 1816,
+      "sha256": "4c29e73bb64761e529286d7f18911635971c2a19ab9d2e702f1e0f9a20d01e7c",
+      "filter_outcomes": {
+        "context_term_with_support": 450,
+        "core_term": 1366
+      },
+      "manual_review_completed": 0,
+      "license": "Upstream MENST publisher terms. Raw dump not redistributed.",
+      "status": "active"
+    },
+    {
+      "source": "medmcqa",
+      "hf_id": "openlifescienceai/medmcqa",
+      "split": "test (INCORRECT)",
+      "file": "menopause_medmcqa.csv",
+      "logical_records": 0,
+      "sha256": null,
+      "filter_outcomes": {},
+      "manual_review_completed": 0,
+      "license": "Upstream MedMCQA terms.",
+      "status": "WITHDRAWN",
+      "withdrawal_reason": "Built from the MedMCQA test split, which ships with cop=-1 and empty exp - it carries no answer labels. The domain filter also fell back to subject metadata rather than the stated term vocabulary. Withdrawn pending rebuild from the train split via datasets/build.py. Retained under datasets/quarantine/ for provenance only; not for use."
+    }
+  ]
+}

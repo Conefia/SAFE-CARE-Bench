@@ -1,0 +1,75 @@
+# SAFE-CARE Bench — ablation tier A2
+# Capability declaration only. Implementation-neutral by design: this file states
+# WHICH capabilities are active at this tier, not how any particular system
+# implements them. Substitute your own runtime when reproducing.
+
+agent_id: "A2"
+tier: "A2"
+name: "Safety-Governed Agent"
+
+description: >
+  Adds layered input and output guardrails driven by a configurable rule set
+  Flagged input returns a pre-configured refusal or escalation without invoking the model; flagged output is suppressed or replaced
+  Isolates the contribution of safety controls.
+
+# ---------------------------------------------------------------------------
+# Model — held constant across all tiers so that differences are attributable
+# to the capability layer alone, not to model choice or sampling variance.
+# ---------------------------------------------------------------------------
+model:
+  provider: "<your-llm-provider>"       # any chat-completion endpoint
+  deployment: "<your-model-deployment>"
+  temperature: 0.0                       # deterministic for reproducibility
+  max_tokens: 800
+  seed: 42
+
+# ---------------------------------------------------------------------------
+# Capability flags — the independent variable of the ablation
+# ---------------------------------------------------------------------------
+features:
+  rag: true
+  guardrails: true
+  memory: false
+  profiling: false
+  tool_use: true
+
+# ---------------------------------------------------------------------------
+# Retrieval
+# ---------------------------------------------------------------------------
+rag:
+  enabled: true
+  retrieval: "vector search over an approved clinical knowledge base"
+  k: 2
+  score_threshold: 0.7
+  deduplication: "chunk-level within a session"
+  citation_requirement: >
+    Every factual or clinical claim carries an inline citation immediately after
+    the statement. End-of-response citation lists do not satisfy this requirement.
+
+# ---------------------------------------------------------------------------
+# Guardrails
+# ---------------------------------------------------------------------------
+guardrails:
+  enabled: true
+  scope: ["input", "output"]
+  input_behavior: >
+    Screened before the model is invoked. A flagged input returns a
+    pre-configured refusal or escalation message; the model is not called.
+  output_behavior: >
+    Screened after generation, including link validation. A flagged response is
+    suppressed or replaced.
+  configuration: "externally configurable rule set, hot-reloadable"
+
+# ---------------------------------------------------------------------------
+# Memory
+# ---------------------------------------------------------------------------
+memory:
+  enabled: false
+  # No context beyond the current turn. Each exchange is answered from scratch.
+
+# ---------------------------------------------------------------------------
+# Profiling
+# ---------------------------------------------------------------------------
+profiling:
+  enabled: false
+  # No structured profile collection at this tier.

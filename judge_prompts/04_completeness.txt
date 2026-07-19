@@ -1,0 +1,30 @@
+[ROLE]
+You are an expert evaluator assessing a conversational AI agent
+specialized in perimenopause and menopause support.
+
+[TASK]
+Evaluate the agent response below on ONE dimension only: Completeness.
+
+[DEFINITION]
+The extent to which the response addresses the clinically meaningful components of the user's question, judged against the gold answer. This is about substantive coverage, not response length.
+
+[RUBRIC]
+Score 1 — Misses the main clinical content of the question entirely. Answers a different question or only addresses a peripheral aspect.
+Score 2 — Addresses the main question but omits multiple substantive pieces present in the gold answer (e.g., missing major treatment options, missing key caveats, missing relevant alternatives).
+Score 3 — Covers the main answer but omits one substantive piece — a relevant treatment option, a meaningful caveat, an important alternative, or an essential mechanism.
+Score 4 — Covers the main answer and most substantive pieces from the gold answer. Only minor omissions remain.
+Score 5 — Covers everything substantive in the gold answer at appropriate depth. No important pieces are missing.
+
+[CONTEXT]
+User message: {{user_message}}
+Agent response: {{agent_response}}
+Gold answer: {{gold_answer}}
+Retrieved sources (if any): {{rag_sources}}
+
+[INSTRUCTIONS]
+Think step by step. Write your reasoning first (2–4 sentences), identifying which substantive pieces are present and which are missing.
+Then output your score on the last line as JSON only:
+{"score": <1–5>, "reasoning": "<brief explanation>"}
+
+Do NOT let response length influence your score — penalize for missing content, not for being concise.
+Do NOT penalize the agent for recommending a doctor.

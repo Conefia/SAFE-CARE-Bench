@@ -1,0 +1,63 @@
+# SAFE-CARE Bench — ablation tier A0
+# Capability declaration only. Implementation-neutral by design: this file states
+# WHICH capabilities are active at this tier, not how any particular system
+# implements them. Substitute your own runtime when reproducing.
+
+agent_id: "A0"
+tier: "A0"
+name: "Ungoverned Baseline"
+
+description: >
+  Direct model call with a static system prompt
+  No retrieval, no tools, no guardrails, no memory, no profiling
+  Lower-bound reference against which all capability gains are measured.
+
+# ---------------------------------------------------------------------------
+# Model — held constant across all tiers so that differences are attributable
+# to the capability layer alone, not to model choice or sampling variance.
+# ---------------------------------------------------------------------------
+model:
+  provider: "<your-llm-provider>"       # any chat-completion endpoint
+  deployment: "<your-model-deployment>"
+  temperature: 0.0                       # deterministic for reproducibility
+  max_tokens: 800
+  seed: 42
+
+# ---------------------------------------------------------------------------
+# Capability flags — the independent variable of the ablation
+# ---------------------------------------------------------------------------
+features:
+  rag: false
+  guardrails: false
+  memory: false
+  profiling: false
+  tool_use: false
+
+# ---------------------------------------------------------------------------
+# Retrieval
+# ---------------------------------------------------------------------------
+rag:
+  enabled: false
+  # No retrieval. Responses draw on parametric model knowledge only.
+  # Citations are not possible at this tier.
+
+# ---------------------------------------------------------------------------
+# Guardrails
+# ---------------------------------------------------------------------------
+guardrails:
+  enabled: false
+  # No input or output screening. Unsafe or off-topic content is not intercepted.
+
+# ---------------------------------------------------------------------------
+# Memory
+# ---------------------------------------------------------------------------
+memory:
+  enabled: false
+  # No context beyond the current turn. Each exchange is answered from scratch.
+
+# ---------------------------------------------------------------------------
+# Profiling
+# ---------------------------------------------------------------------------
+profiling:
+  enabled: false
+  # No structured profile collection at this tier.

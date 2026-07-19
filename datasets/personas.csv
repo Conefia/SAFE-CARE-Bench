@@ -1,0 +1,3 @@
+persona_id,name,age,menopause_stage,primary_symptoms,hrt_status,personality,cultural_context
+P01,Sara,48,perimenopause,hot_flashes|insomnia|mood_changes,not_using,anxious,western
+P02,Layla,52,postmenopause,joint_pain|brain_fog|weight_gain,considering,skeptical,saudi

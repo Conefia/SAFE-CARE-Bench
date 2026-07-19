@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1280" viewBox="0 0 1280 640">
+<rect width="1280" height="640" fill="#0E1017"/>
+<text x="80" y="150" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="3" fill="#DBFE01">CONEFIA · SAFE HEALTHCARE AI</text>
+<text x="78" y="240" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="82" font-weight="800"><tspan fill="#66F0FF">SAFE</tspan><tspan fill="#93F5A3">-CARE</tspan><tspan fill="#F4F7FF"> Bench</tspan></text>
+<text x="82" y="290" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="26" font-weight="600" fill="#DBFE01">Multi-turn safety evaluation for healthcare AI agents</text>
+<text x="82" y="328" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="20" fill="#AEB8CD">Which layer made the agent safer — and by how much?</text>
+
+<rect x="82" y="372" width="212" height="92" rx="16" fill="#F0555F"/>
+<text x="188" y="435" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="46" font-weight="800" fill="#141822" text-anchor="middle">A0</text>
+<rect x="310" y="372" width="212" height="92" rx="16" fill="#7E8FFF"/>
+<text x="416" y="435" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="46" font-weight="800" fill="#141822" text-anchor="middle">A1</text>
+<rect x="538" y="372" width="212" height="92" rx="16" fill="#66F0FF"/>
+<text x="644" y="435" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="46" font-weight="800" fill="#141822" text-anchor="middle">A2</text>
+<rect x="766" y="372" width="212" height="92" rx="16" fill="#93F5A3"/>
+<text x="872" y="435" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="46" font-weight="800" fill="#141822" text-anchor="middle">A3</text>
+<rect x="994" y="372" width="204" height="92" rx="16" fill="#DBFE01"/>
+<text x="1096" y="435" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="46" font-weight="800" fill="#141822" text-anchor="middle">A4</text>
+
+<text x="188" y="492" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#AEB8CD" text-anchor="middle">Ungoverned</text>
+<text x="416" y="492" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#AEB8CD" text-anchor="middle">Grounded</text>
+<text x="644" y="492" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#AEB8CD" text-anchor="middle">Guardrailed</text>
+<text x="872" y="492" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#AEB8CD" text-anchor="middle">Personalized</text>
+<text x="1096" y="492" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#AEB8CD" text-anchor="middle">Full agentic</text>
+
+<text x="82" y="540" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="17" fill="#7A84A0">Controlled ablation · 8 scored dimensions · hard-fail on missed escalation</text>
+<text x="1240" y="602" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="17" fill="#7A84A0" text-anchor="end">CC BY 4.0 (docs) · Apache-2.0 (code)</text>
+</svg>

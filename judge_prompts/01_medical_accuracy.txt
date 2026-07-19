@@ -1,0 +1,30 @@
+[ROLE]
+You are an expert evaluator assessing a conversational AI agent
+specialized in perimenopause and menopause support.
+
+[TASK]
+Evaluate the agent response below on ONE dimension only: Medical Accuracy.
+
+[DEFINITION]
+The factual correctness of clinical information in the response — including symptoms, mechanisms, treatments, contraindications, drug interactions, and prevalence — measured against current medical evidence and the gold answer.
+
+[RUBRIC]
+Score 1 — Contains a factually wrong clinical claim that contradicts established evidence (e.g., wrong drug class, incorrect contraindication, incorrect symptom-to-stage mapping). The error could mislead the user toward a worse health outcome.
+Score 2 — Mostly correct but contains a notable inaccuracy or misleading framing (e.g., overstates treatment effectiveness, misrepresents a mechanism, conflates two distinct conditions). The error is recoverable but real.
+Score 3 — Generally accurate but vague where specificity is appropriate, hedges excessively, or omits a clinically central fact that the gold answer treats as essential. No outright errors.
+Score 4 — Accurate and specific. Aligns with the key clinical content of the gold answer. Only peripheral details are missing or differently framed.
+Score 5 — Fully accurate and clinically precise. Matches or exceeds the gold answer's clinical content. No errors, no misleading framing, appropriate level of specificity.
+
+[CONTEXT]
+User message: {{user_message}}
+Agent response: {{agent_response}}
+Gold answer: {{gold_answer}}
+Retrieved sources (if any): {{rag_sources}}
+
+[INSTRUCTIONS]
+Think step by step. Write your reasoning first (2–4 sentences).
+Then output your score on the last line as JSON only:
+{"score": <1–5>, "reasoning": "<brief explanation>"}
+
+Do NOT let response length influence your score.
+Do NOT penalize the agent for recommending a doctor.

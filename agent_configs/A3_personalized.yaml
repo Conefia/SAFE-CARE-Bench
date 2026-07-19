@@ -1,0 +1,90 @@
+# SAFE-CARE Bench — ablation tier A3
+# Capability declaration only. Implementation-neutral by design: this file states
+# WHICH capabilities are active at this tier, not how any particular system
+# implements them. Substitute your own runtime when reproducing.
+
+agent_id: "A3"
+tier: "A3"
+name: "Context-Aware Personalized Agent"
+
+description: >
+  Adds cross-session memory retrieval and progressive health profiling
+  The agent may read prior context and collect structured profile fields one question at a time
+  Isolates the contribution of safe personalization.
+
+# ---------------------------------------------------------------------------
+# Model — held constant across all tiers so that differences are attributable
+# to the capability layer alone, not to model choice or sampling variance.
+# ---------------------------------------------------------------------------
+model:
+  provider: "<your-llm-provider>"       # any chat-completion endpoint
+  deployment: "<your-model-deployment>"
+  temperature: 0.0                       # deterministic for reproducibility
+  max_tokens: 800
+  seed: 42
+
+# ---------------------------------------------------------------------------
+# Capability flags — the independent variable of the ablation
+# ---------------------------------------------------------------------------
+features:
+  rag: true
+  guardrails: true
+  memory: true
+  profiling: true
+  tool_use: true
+
+# ---------------------------------------------------------------------------
+# Retrieval
+# ---------------------------------------------------------------------------
+rag:
+  enabled: true
+  retrieval: "vector search over an approved clinical knowledge base"
+  k: 2
+  score_threshold: 0.7
+  deduplication: "chunk-level within a session"
+  citation_requirement: >
+    Every factual or clinical claim carries an inline citation immediately after
+    the statement. End-of-response citation lists do not satisfy this requirement.
+
+# ---------------------------------------------------------------------------
+# Guardrails
+# ---------------------------------------------------------------------------
+guardrails:
+  enabled: true
+  scope: ["input", "output"]
+  input_behavior: >
+    Screened before the model is invoked. A flagged input returns a
+    pre-configured refusal or escalation message; the model is not called.
+  output_behavior: >
+    Screened after generation, including link validation. A flagged response is
+    suppressed or replaced.
+  configuration: "externally configurable rule set, hot-reloadable"
+
+# ---------------------------------------------------------------------------
+# Memory
+# ---------------------------------------------------------------------------
+memory:
+  enabled: true
+  scope: "cross-session"
+  operations: ["retrieve_prior_context", "save_detail"]
+  requirement: >
+    Stored items are timestamped and user-correctable. Stale entries must not be
+    presented as current state.
+
+# ---------------------------------------------------------------------------
+# Profiling
+# ---------------------------------------------------------------------------
+profiling:
+  enabled: true
+  method: "progressive — one targeted question per turn, never a bulk intake form"
+  fields_collected:
+    - cycle_status
+    - cycle_pattern
+    - active_symptoms
+    - hormone_therapy_status
+    - surgical_history
+    - age
+    - disambiguation
+  confirmation_rule: >
+    Sensitive fields require explicit user confirmation before storage.
+    Uncertain values are not written.

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1620" viewBox="0 0 1280 810">
+<rect width="1280" height="810" fill="#0E1017"/>
+<text x="80" y="72" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="3" fill="#DBFE01">THE METHOD</text>
+<text x="78" y="122" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="42" font-weight="800" fill="#F4F7FF">The ablation <tspan fill="#DBFE01">ladder</tspan></text>
+<text x="82" y="158" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" fill="#AEB8CD">Five agents. Same conversations. Same model, temperature and seed. One variable.</text>
+
+<rect x="80" y="196" width="1120" height="88" rx="14" fill="#161C2D" stroke="#2A324A"/>
+<rect x="104" y="218" width="66" height="44" rx="12" fill="#F0555F"/>
+<text x="137" y="249" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="24" font-weight="800" fill="#141822" text-anchor="middle">A0</text>
+<text x="192" y="234" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#F4F7FF">Ungoverned baseline</text>
+<text x="192" y="262" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" fill="#AEB8CD">Raw model. No retrieval, tools, memory or guardrails.</text>
+<text x="1176" y="248" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#7A84A0" text-anchor="end">lower bound</text>
+
+<rect x="80" y="300" width="1120" height="88" rx="14" fill="#161C2D" stroke="#2A324A"/>
+<rect x="104" y="322" width="66" height="44" rx="12" fill="#7E8FFF"/>
+<text x="137" y="353" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="24" font-weight="800" fill="#141822" text-anchor="middle">A1</text>
+<text x="192" y="338" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#F4F7FF">+ Evidence grounding</text>
+<text x="192" y="366" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" fill="#AEB8CD">Retrieval over approved sources. Inline claim-level citations.</text>
+<text x="1176" y="352" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#7A84A0" text-anchor="end">isolates grounding</text>
+
+<rect x="80" y="404" width="1120" height="88" rx="14" fill="#161C2D" stroke="#2A324A"/>
+<rect x="104" y="426" width="66" height="44" rx="12" fill="#66F0FF"/>
+<text x="137" y="457" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="24" font-weight="800" fill="#141822" text-anchor="middle">A2</text>
+<text x="192" y="442" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#F4F7FF">+ Safety guardrails</text>
+<text x="192" y="470" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" fill="#AEB8CD">Input and output screening. Deterministic red-flag escalation.</text>
+<text x="1176" y="456" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#7A84A0" text-anchor="end">isolates safety controls</text>
+
+<rect x="80" y="508" width="1120" height="88" rx="14" fill="#161C2D" stroke="#2A324A"/>
+<rect x="104" y="530" width="66" height="44" rx="12" fill="#93F5A3"/>
+<text x="137" y="561" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="24" font-weight="800" fill="#141822" text-anchor="middle">A3</text>
+<text x="192" y="546" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#F4F7FF">+ Context and memory</text>
+<text x="192" y="574" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" fill="#AEB8CD">Cross-session recall. Progressive profiling, one field at a time.</text>
+<text x="1176" y="560" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#7A84A0" text-anchor="end">isolates personalization</text>
+
+<rect x="80" y="612" width="1120" height="88" rx="14" fill="#1A2030" stroke="#DBFE01"/>
+<rect x="104" y="634" width="66" height="44" rx="12" fill="#DBFE01"/>
+<text x="137" y="665" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="24" font-weight="800" fill="#141822" text-anchor="middle">A4</text>
+<text x="192" y="650" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#F4F7FF">Full agentic companion</text>
+<text x="192" y="678" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" fill="#AEB8CD">Confirmed write-back and life-stage inference. Complete architecture.</text>
+<text x="1176" y="664" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#DBFE01" text-anchor="end">upper bound</text>
+
+<text x="1200" y="742" text-anchor="end" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="17" fill="#F4F7FF">The finding is never the score. <tspan fill="#DBFE01">The finding is the delta between adjacent tiers.</tspan></text>
+</svg>

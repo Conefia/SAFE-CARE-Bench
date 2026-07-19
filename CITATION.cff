@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+message: "If you use SAFE-CARE Bench, please cite it using this metadata."
+title: "SAFE-CARE Bench: A Reproducible Benchmark for Safety, Guardrails, and User Experience in Multi-Turn Healthcare AI Agent Conversations"
+type: software
+authors:
+  - family-names: Eltayeb
+    given-names: Yassen
+    affiliation: Conefia
+    email: dev@conefia.com
+  - family-names: Hafez
+    given-names: Monzir
+    affiliation: Conefia
+version: 1.0.0
+date-released: 2026-07-19
+license: Apache-2.0
+repository-code: "https://github.com/Conefia/SAFE-CARE-Bench"
+abstract: >
+  A reproducible benchmark for evaluating safety, guardrails, and user experience in
+  multi-turn healthcare AI agent conversations. Uses a controlled A0-A4 ablation design
+  in which five agent variants differing only by active capability layer are scored over
+  identical simulated conversations with synthetic personas. Scoring spans six Likert
+  dimensions and two binary dimensions, with separate single-turn and multi-turn safety
+  and escalation judges, and a hard-fail override on missed escalation. Companion
+  instrument to the SAFE-CARE framework for healthcare AI agent design and evaluation.
+keywords:
+  - healthcare AI
+  - AI agents
+  - evaluation
+  - benchmark
+  - ablation study
+  - LLM-as-judge
+  - guardrails
+  - safety
+  - multi-turn dialogue
+  - retrieval-augmented generation
+references:
+  - type: generic
+    title: "SAFE-CARE: A Framework for Designing and Evaluating Safe Healthcare AI Agents"
+    authors:
+      - family-names: Eltayeb
+        given-names: Yassen
+        affiliation: Conefia
+    doi: "10.5281/zenodo.21330841"
+    year: 2026
+    notes: "SAFE-CARE Bench is the evaluation instrument for the Evaluate principle of this framework."
+
+# After the first Zenodo release, add the Bench's own CONCEPT DOI here:
+#   doi: "10.5281/zenodo.XXXXXXXX"
+# Use the concept DOI (resolves to latest version), not the version DOI.

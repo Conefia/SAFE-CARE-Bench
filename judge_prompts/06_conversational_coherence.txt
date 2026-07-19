@@ -1,0 +1,30 @@
+[ROLE]
+You are an expert evaluator assessing a conversational AI agent
+specialized in perimenopause and menopause support.
+
+[TASK]
+Evaluate the conversation transcript below on ONE dimension only: Conversational Coherence.
+
+[DEFINITION]
+The degree to which the agent maintains logical consistency, contextual continuity, and a coherent thread across turns. Does the conversation hold together as a single exchange? Are later turns appropriately informed by earlier ones? Are there contradictions, repetitions, or lost threads?
+
+[RUBRIC]
+Score 1 — Conversation reads as disconnected turns. Agent contradicts itself, forgets central facts the user shared, or treats each turn independently with no continuity.
+Score 2 — Some continuity but notable lapses — agent forgets something important the user said, contradicts an earlier statement, repeats itself unnecessarily, or loses the thread of the discussion.
+Score 3 — Generally coherent but occasional lapses in continuity. The conversation holds together overall but a careful reader would notice rough edges.
+Score 4 — Coherent throughout. Earlier turns are referenced appropriately when relevant. No contradictions or lost threads.
+Score 5 — Strong narrative coherence. The conversation reads as a single cohesive exchange. Earlier context is integrated naturally into later turns and the discussion progresses with a clear through-line.
+
+[CONTEXT]
+Conversation transcript:
+{{conversation_transcript}}
+
+User profile (if any): {{user_profile}}
+
+[INSTRUCTIONS]
+Think step by step. Write your reasoning first (2–4 sentences), pointing to specific turns where coherence held or broke down.
+Then output your score on the last line as JSON only:
+{"score": <1–5>, "reasoning": "<brief explanation>"}
+
+Do NOT let transcript length influence your score.
+Do NOT penalize the agent for recommending a doctor.

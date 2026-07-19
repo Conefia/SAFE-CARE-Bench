@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1520" viewBox="0 0 1280 760">
+<rect width="1280" height="760" fill="#0E1017"/>
+<text x="80" y="72" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="3" fill="#DBFE01">HOW IT WORKS</text>
+<text x="78" y="122" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="42" font-weight="800" fill="#F4F7FF">From scenario to <tspan fill="#DBFE01">release decision</tspan></text>
+
+<rect x="80" y="176" width="230" height="150" rx="14" fill="#161C2D" stroke="#2A324A"/>
+<rect x="102" y="198" width="44" height="44" rx="12" fill="#7E8FFF"/>
+<text x="124" y="228" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#141822" text-anchor="middle">1</text>
+<text x="102" y="272" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F4F7FF">Scenarios</text>
+<text x="102" y="296" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">Synthetic personas +</text>
+<text x="102" y="314" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">filtered clinical sets</text>
+
+<path d="M322 251 L358 251" stroke="#7A84A0" stroke-width="2"/>
+<path d="M352 245 L360 251 L352 257 Z" fill="#7A84A0"/>
+
+<rect x="370" y="176" width="230" height="150" rx="14" fill="#161C2D" stroke="#2A324A"/>
+<rect x="392" y="198" width="44" height="44" rx="12" fill="#66F0FF"/>
+<text x="414" y="228" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#141822" text-anchor="middle">2</text>
+<text x="392" y="272" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F4F7FF">Five agents</text>
+<text x="392" y="296" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">A0 to A4, identical</text>
+<text x="392" y="314" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">model and seed</text>
+
+<path d="M612 251 L648 251" stroke="#7A84A0" stroke-width="2"/>
+<path d="M642 245 L650 251 L642 257 Z" fill="#7A84A0"/>
+
+<rect x="660" y="176" width="230" height="150" rx="14" fill="#161C2D" stroke="#2A324A"/>
+<rect x="682" y="198" width="44" height="44" rx="12" fill="#93F5A3"/>
+<text x="704" y="228" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#141822" text-anchor="middle">3</text>
+<text x="682" y="272" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F4F7FF">Transcripts</text>
+<text x="682" y="296" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">Full multi-turn</text>
+<text x="682" y="314" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">conversations captured</text>
+
+<path d="M902 251 L938 251" stroke="#7A84A0" stroke-width="2"/>
+<path d="M932 245 L940 251 L932 257 Z" fill="#7A84A0"/>
+
+<rect x="950" y="176" width="250" height="150" rx="14" fill="#161C2D" stroke="#2A324A"/>
+<rect x="972" y="198" width="44" height="44" rx="12" fill="#FFD36B"/>
+<text x="994" y="228" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#141822" text-anchor="middle">4</text>
+<text x="972" y="272" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F4F7FF">Calibrated judge</text>
+<text x="972" y="296" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">8 dimensions, scored</text>
+<text x="972" y="314" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">against human subset</text>
+
+<path d="M1075 338 L1075 380" stroke="#7A84A0" stroke-width="2"/>
+<path d="M1069 374 L1075 382 L1081 374 Z" fill="#7A84A0"/>
+
+<rect x="80" y="392" width="1120" height="120" rx="14" fill="#161C2D" stroke="#2A324A"/>
+<text x="104" y="428" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F4F7FF">5 · Per-tier scores and adjacent deltas</text>
+<text x="104" y="456" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" fill="#AEB8CD">Each capability layer is attributed a measured contribution — evidence, not intuition.</text>
+<text x="104" y="486" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" fill="#AEB8CD">Report means by tier, the delta between tiers, and judge&#8211;human agreement.</text>
+
+<path d="M640 524 L640 566" stroke="#7A84A0" stroke-width="2"/>
+<path d="M634 560 L640 568 L646 560 Z" fill="#7A84A0"/>
+
+<rect x="80" y="578" width="550" height="94" rx="14" fill="#1A1418" stroke="#F0555F"/>
+<text x="104" y="612" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F0555F">Hard-fail override</text>
+<text x="104" y="642" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" fill="#AEB8CD">A missed escalation blocks release. No average overrides it.</text>
+
+<rect x="650" y="578" width="550" height="94" rx="14" fill="#141A16" stroke="#93F5A3"/>
+<text x="674" y="612" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#93F5A3">Release gate</text>
+<text x="674" y="642" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" fill="#AEB8CD">All gates passed and owned. Incidents become regression tests.</text>
+</svg>

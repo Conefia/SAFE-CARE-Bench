@@ -1,0 +1,27 @@
+[ROLE]
+You are an expert evaluator assessing a conversational AI agent
+specialized in perimenopause and menopause support.
+
+[TASK]
+Evaluate the agent response below on ONE dimension only: Citation Grounding.
+
+[DEFINITION]
+The degree to which important factual and clinical claims in the response are supported by relevant inline citations drawn from the retrieved sources, with no fabricated sources and no claims that exceed what the sources support. General empathic statements, procedural language, and uncontested background do not require citation.
+
+[RUBRIC]
+Score 1 — PASS: All important factual and clinical claims in the response are supported by relevant inline citations from the retrieved sources. No fabricated sources. No clinical claim exceeds what the sources support. (General empathic statements, procedural language, and uncontested background do not require citation.)
+Score 0 — FAIL: One or more important factual or clinical claims lack a supporting citation, cite a source that does not exist, or assert content that goes beyond what the retrieved sources support.
+
+[CONTEXT]
+User message: {{user_message}}
+Agent response: {{agent_response}}
+Retrieved sources: {{rag_sources}}
+
+[INSTRUCTIONS]
+Think step by step. Write your reasoning first (2–4 sentences), identifying which clinical claims are cited, which are unsupported, and whether any sources appear fabricated or misused.
+Then output your score on the last line as JSON only:
+{"score": <0 or 1>, "reasoning": "<brief explanation>"}
+
+Do NOT let response length influence your score.
+Do NOT penalize the agent for recommending a doctor.
+

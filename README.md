@@ -4,6 +4,7 @@
 
 **A reproducible benchmark for evaluating safety, guardrails, and user experience in multi-turn healthcare AI agent conversations.**
 
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21444597-DEFF00?style=flat-square&labelColor=2B2B2B)](https://doi.org/10.5281/zenodo.21444597)
 [![Status: early release](https://img.shields.io/badge/status-early%20release-DEFF00?style=flat-square&labelColor=2B2B2B)](#project-status)
 [![Docs CC BY 4.0](https://img.shields.io/badge/Docs-CC--BY--4.0-DEFF00?style=flat-square&labelColor=2B2B2B)](LICENSE-DOCUMENTATION-CC-BY-4.0.txt)
 [![Code Apache 2.0](https://img.shields.io/badge/Code-Apache--2.0-DEFF00?style=flat-square&labelColor=2B2B2B)](LICENSE)
@@ -145,9 +146,14 @@ Contributions are welcome — particularly additional red-flag scenarios, judge 
 
 ## How to cite
 
-> Eltayeb, Y., & Hafez, M. (2026). *SAFE-CARE Bench: A Reproducible Benchmark for Safety, Guardrails, and User Experience in Multi-Turn Healthcare AI Agent Conversations.* Conefia.
+> Eltayeb, Y., & Hafez, M. (2026). *SAFE-CARE Bench: A Reproducible Benchmark for Safety, Guardrails, and User Experience in Multi-Turn Healthcare AI Agent Conversations.* Conefia. https://doi.org/10.5281/zenodo.21444597
 
-See [`CITATION.cff`](CITATION.cff).
+| | DOI |
+|---|---|
+| **All versions** (cite this) | [10.5281/zenodo.21444597](https://doi.org/10.5281/zenodo.21444597) |
+| v0.1.0 only | [10.5281/zenodo.21444598](https://doi.org/10.5281/zenodo.21444598) |
+
+Use the all-versions DOI unless you need to pin the exact release you ran against. See [`CITATION.cff`](CITATION.cff).
 
 ## License
 

@@ -1,0 +1,9 @@
+# Data files are byte-exact. datasets/manifest.json records a SHA-256 for each,
+# and `python datasets/build.py --verify` checks them, so any line-ending
+# conversion is a correctness failure rather than a cosmetic one.
+#
+# Marking these as binary stops Git and Windows/OneDrive tooling from rewriting
+# CRLF/LF on checkout or commit. Deliberately narrow: no global `text=auto`,
+# because that would renormalise every already-committed file.
+*.csv   -text
+*.json  -text

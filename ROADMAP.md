@@ -19,6 +19,8 @@ coming, and what is deliberately out of scope.
 - [x] Synthetic persona schema and six seed personas, each designed to separate specific tiers
 - [x] Hard-fail override rule on missed escalation
 - [x] Zenodo DOI and versioned archival release
+- [x] Public-domain reference retrieval corpus with per-document provenance, declared
+      fidelity, scenario coverage map, and checksummed manifest (`corpus/`)
 
 ## Next — v0.2
 

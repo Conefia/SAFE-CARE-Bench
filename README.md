@@ -170,11 +170,47 @@ false`, so the set measures over-escalation as well as under-escalation.
 
 ---
 
+## Retrieval corpus
+
+Tiers A1 and above declare `retrieval: true`, which requires a document set to retrieve over.
+This release ships one: a small, fully public-domain reference corpus in
+[`corpus/`](corpus/), with provenance and scenario coverage documented in
+[`corpus/CORPUS_CARD.md`](corpus/CORPUS_CARD.md).
+
+Six documents covering menopause basics, vasomotor symptoms, hormone therapy risks and
+contraindications, dosing, and the red flags that should trigger escalation. Five are works of
+the US Government in the public domain (NIA, MedlinePlus, the Office on Women's Health). The
+sixth is FDA-approved product labeling authored by a manufacturer and distributed by NLM through
+DailyMed, reproduced unmodified with its setid recorded. The card states which basis applies to
+which document.
+
+Three properties matter for the ablation:
+
+- **It is a controlled constant.** The same corpus, ingested identically, is used at every tier.
+  Adjacent-tier deltas are attributable to the capability change, not to a difference in what the
+  agent could find.
+- **`doc_id` is the citation key.** A grounded response cites `C01` through `C06`, so the citation
+  grounding judge checks against a closed set rather than free text.
+- **Fidelity is declared per document.** Passages that could not be reproduced word for word from
+  the publisher were omitted rather than paraphrased, and every omission is marked in place. A
+  paraphrased source would make grounding scores meaningless. One document (`C05`) is a partial
+  extract for this reason, and one source anomaly is recorded rather than silently corrected.
+
+The corpus deliberately contains **no clinic-specific operational content**: no titration
+schedule, no missed-dose policy, no call-versus-wait thresholds. Those vary by practice, only a
+clinic can author them, and none are needed to measure tier deltas. Substitute your own corpus
+freely; the requirement is that it be identical across tiers and documented.
+
+`corpus/manifest.json` records a SHA-256 for each document so a run is pinned to the exact text
+used.
+
+---
+
 ## Reproducing an evaluation
 
 1. Choose a model endpoint and hold it fixed. Set temperature to 0.0 and the seed to 42.
 2. Instantiate five agent variants per the capability vectors in [`agent_configs/`](agent_configs/). The configs are deliberately implementation-neutral — they declare *which* capabilities are active, not how any particular system implements them. Substitute your own runtime.
-3. Load the personas, the scenarios, and the filtered question sets.
+3. Load the personas, the scenarios, and the filtered question sets. Ingest the reference corpus in [`corpus/`](corpus/) into your retrieval backend, using an identical configuration at every tier, and pin the embedding model version.
 4. Run every scenario through every tier, capturing full multi-turn transcripts. Honour each scenario's `stopping_condition`.
 5. Score each transcript with the judge prompts in [`judge_prompts/`](judge_prompts/), passing the scenario's `hidden_ground_truth` to the escalation judges.
 6. Report per-dimension means **by tier**, plus the delta between adjacent tiers. Label each delta with the **bundle** it corresponds to, and do not attribute it to any single flag within that bundle.

@@ -20,12 +20,12 @@ SAFE-CARE Bench is the empirical instrument for the **Evaluate** principle of th
 
 **Early release — methodology first, runner to follow.**
 
-What is published here is the **evaluation method**: the ablation design and capability declarations, the judge prompts, the scoring anchors, the scenario schema and scenario set, the persona schema, and a reproducible dataset build pipeline.
+What is published here is the **evaluation method**: the ablation design and capability declarations, the judge prompts, the scoring anchors, the scenario schema and scenario set, the persona schema, a reproducible dataset build pipeline, and one set of independent blinded clinician labels for the scenario ground truth ([`human_labels/`](human_labels/)).
 
 What is **not** published yet:
 
 - **A reference runner.** The harness that executes tiers and collects transcripts is being generalized before release.
-- **A judge calibration set.** No judge–human agreement has been measured. Until it has, judge output is indicative and must not be reported as validated measurement.
+- **A judge calibration set.** No judge–human agreement has been measured. Until it has, judge output is indicative and must not be reported as validated measurement. [`human_labels/`](human_labels/) contains one clinician's blinded labels compared against the declared scenario ground truth, not against judge output, so it does not close this gap. It is published because it found one: the escalation field merges a clinical judgment with an agent-scope decision, and the next schema revision separates them. See [`human_labels/LABELS_CARD.md`](human_labels/LABELS_CARD.md).
 - **Any results.** No benchmark run, per-tier score, or delta has been published. Nothing here demonstrates that any architectural layer improves safety — it defines how that question would be tested.
 
 Describe this release accurately: it is an **implementation-neutral benchmark specification and evaluation protocol**, not a completed executable benchmark. See [`ROADMAP.md`](ROADMAP.md).
@@ -204,12 +204,47 @@ freely; the requirement is that it be identical across tiers and documented.
 `corpus/manifest.json` records a SHA-256 for each document so a run is pinned to the exact text
 used.
 
+`corpus/manifest_4doc.json` selects four of the six. It exists for the knowledge-base change arm
+described below, and every hash in it is byte-identical to `manifest.json`. **No document is deleted
+from `corpus/docs/`: the manifest selects, the repository retains.**
+
+---
+
+## Change-type variants
+
+The capability ladder measures what happens when a system gains a capability. It does not measure
+what happens when a deployed system is *changed* — and that is the question a release gate has to
+answer. Four things get changed in practice: a prompt is edited, a model version is updated, a safety
+filter is added, and the knowledge base is refreshed. Only the third is a rung on the ladder.
+
+This release adds the artifacts needed to express the other three as controlled comparisons. **They
+are changes, not tiers.** Each declares the same ten capability flags as its parent and differs in
+exactly one named field.
+
+| Artifact | Change type | Differs from parent by |
+|---|---|---|
+| [`agent_configs/A2_P1_reworded.yaml`](agent_configs/A2_P1_reworded.yaml) | Prompt edit, meaning preserved | `retrieval.citation_requirement`, reworded to a semantically equivalent instruction |
+| [`agent_configs/A2_P2_weakened.yaml`](agent_configs/A2_P2_weakened.yaml) | Prompt edit, meaning weakened | the same field, weakened from a requirement to a preference |
+| [`corpus/manifest_4doc.json`](corpus/manifest_4doc.json) | Knowledge base refresh | four of six documents selected, hashes unchanged |
+
+A model-version change needs no new artifact: run the same configuration against a floating model
+alias and against a dated snapshot of the same family.
+
+**Each variant carries a `provenance` block** naming its parent, the fields that differ, and the
+change type. **Diff a variant against its parent before every run** and confirm the difference is the
+named field, the identity fields and the provenance block, and nothing else. A variant that has
+drifted measures something other than the change it is named for.
+
+**Why the pairs matter.** `A2_P1` and `A2_P2` are a null and a directional control on the same field.
+A gate that reports no difference on `P1` has told you nothing until `P2` shows it can report a
+difference at all.
+
 ---
 
 ## Reproducing an evaluation
 
 1. Choose a model endpoint and hold it fixed. Set temperature to 0.0 and the seed to 42.
-2. Instantiate five agent variants per the capability vectors in [`agent_configs/`](agent_configs/). The configs are deliberately implementation-neutral — they declare *which* capabilities are active, not how any particular system implements them. Substitute your own runtime.
+2. Instantiate five agent variants per the capability vectors in [`agent_configs/`](agent_configs/). The configs are deliberately implementation-neutral — they declare *which* capabilities are active, not how any particular system implements them. Substitute your own runtime. To measure a change rather than a capability, hold the tier fixed and substitute one of the change-type variants above.
 3. Load the personas, the scenarios, and the filtered question sets. Ingest the reference corpus in [`corpus/`](corpus/) into your retrieval backend, using an identical configuration at every tier, and pin the embedding model version.
 4. Run every scenario through every tier, capturing full multi-turn transcripts. Honour each scenario's `stopping_condition`.
 5. Score each transcript with the judge prompts in [`judge_prompts/`](judge_prompts/), passing the scenario's `hidden_ground_truth` to the escalation judges.
@@ -218,6 +253,11 @@ used.
 8. Report the judge model and its version alongside every score. An uncalibrated judge produces numbers, not evidence — see the calibration note below.
 
 **Calibrate your judge.** LLM-as-judge scoring carries known biases (position, verbosity, self-preference). Score a human-reviewed subset and report judge–human agreement alongside your results. An uncalibrated judge produces numbers, not evidence.
+
+**Report your own floor.** Re-score an identical transcript twice and report how much the score moves
+on its own; re-generate an identical configuration and report how much *that* moves. A delta between
+two configurations is uninterpretable without the floor it is read against, and at temperature zero
+that floor is not zero.
 
 ---
 

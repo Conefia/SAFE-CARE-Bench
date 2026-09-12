@@ -32,6 +32,16 @@ Implemented the dataset filtering pipeline and produced the domain-filtered ques
 from MedQA, MedMCQA, and MENST. Contributing the reference runner and execution harness for the
 v0.2 release.
 
+## Muaaz Abdelkarim — co-author
+
+Conefia LLC
+
+**Software** · **Data curation**
+
+Repository and dataset hygiene, including line-ending integrity and checksum verification across
+the dataset build, and inbound-data handling for the public-release boundary. Contributing to the
+reference runner and execution harness for the v0.2 release.
+
 ---
 
 ## Relationship to the SAFE-CARE framework

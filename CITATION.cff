@@ -17,8 +17,8 @@ authors:
 # It does not convey or imply any ownership interest. All intellectual property
 # rights vest in Conefia LLC per https://conefia.com/ip-policy - see NOTICE.md
 # and CONTRIBUTORS.md. Yassen Eltayeb is lead author.
-version: v0.1.0
-date-released: 2026-07-19
+version: v0.1.2
+date-released: 2026-09-14
 license: Apache-2.0
 copyright: "2026 Conefia LLC (d/b/a Conefia Technologies). All rights reserved."
 doi: "10.5281/zenodo.21444597"
@@ -29,13 +29,15 @@ abstract: >
   guardrails, and user experience in multi-turn healthcare AI agent conversations. Defines
   a controlled A0-A4 ablation in which five agent variants differing by a declared
   capability bundle are scored over identical simulated conversations with synthetic
-  personas, holding model, temperature, and seed constant. Scoring spans six Likert
-  dimensions and two binary dimensions, with separate single-turn and multi-turn safety
+  personas, holding model, temperature, and seed constant. Scoring spans seven Likert
+  dimensions and three binary dimensions, with separate single-turn and multi-turn safety
   and escalation judges and a hard-fail override on missed escalation. Ships tier
   configurations, judge prompts, scoring anchors, a machine-readable scenario schema with
   hidden ground truth, a synthetic persona schema, and a reproducible dataset build
-  pipeline. The reference runner and judge calibration set are forthcoming; scores
-  produced before calibration are indicative, not validated measurement. Companion
+  pipeline. Ships a provenance-documented public reference retrieval corpus, pinned by
+  per-document SHA-256, that tiers declaring retrieval draw on and against which citation
+  grounding is scored. The reference runner and judge calibration set are forthcoming;
+  scores produced before calibration are indicative, not validated measurement. Companion
   instrument to the SAFE-CARE framework for healthcare AI agent design and evaluation.
 keywords:
   - healthcare AI
@@ -60,5 +62,24 @@ references:
     notes: "SAFE-CARE Bench is the evaluation instrument for the Evaluate principle of this framework."
 
 # DOIs
-#   Concept DOI (above, cite this):  10.5281/zenodo.21444597  - resolves to latest version
-#   v0.1.0 version DOI:              10.5281/zenodo.21444598  - pins this release only
+#   Concept DOI (above, cite this):  10.5281/zenodo.21444597  - always resolves to the latest version
+#
+#   Version DOIs, each pinning one release only:
+#     v0.1.0   10.5281/zenodo.21444598   2026-07-19
+#     v0.1.1   10.5281/zenodo.21446163   2026-07-20
+#     v0.1.2   10.5281/zenodo.22739092   2026-09-14
+#
+# The `version` field above names the latest ARCHIVED release, which is what the concept
+# DOI resolves to. The `main` branch is ahead of it and carries tags (v0.2.0, v0.3.0) that
+# are working states rather than releases and have no DOI.
+#
+# v0.1.2 exists because the reference retrieval corpus was committed after v0.1.1 was
+# archived. Anyone resolving the DOI before 2026-09-14 reached a state of the benchmark
+# that predates the corpus and could not reproduce the citation-grounding results.
+#
+# The abstract said "six Likert dimensions and two binary dimensions" from v0.1.0 through
+# v0.1.2. The benchmark has ten: seven five-level (medical accuracy, safety single-turn,
+# safety multi-turn, completeness, empathy and tone, conversational coherence,
+# personalization) and three binary (citation grounding, escalation single-turn,
+# escalation multi-turn). Corrected here on 2026-09-14; the published v0.1.0 to v0.1.2
+# Zenodo records carry the old count unless edited in place.

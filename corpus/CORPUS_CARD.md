@@ -1,6 +1,6 @@
 # Reference retrieval corpus, menopause domain
 
-**Version 0.2** · retrieved 2026-08-28 · 6 documents · ~7,400 words
+**Version 0.3** · base retrieved 2026-08-28, additions 2026-09-13 · 9 documents in 3 sets
 
 Tiers that declare `retrieval: true` need a document set to retrieve over, and
 `citation_enforcement` needs something checkable to cite. This is that set.
@@ -54,8 +54,11 @@ The point of a declared corpus is provenance, not volume.
 | C04 | Menopause symptoms and relief | Office on Women's Health, HHS | updated 2025-05-30 | verbatim |
 | C05 | Hormone Replacement Therapy | MedlinePlus, NLM, NIH | updated 2026-01-09 | **partial extract** |
 | C06 | Estradiol Transdermal System, US prescribing information | Sandoz Inc, via DailyMed, NLM | setid `c714974b-766f-42f2-a846-b0c1f5a60560` | verbatim, selected sections |
+| C07 | VEOZAH (fezolinetant) tablets, US prescribing information | Astellas Pharma US, Inc., via DailyMed, NLM | setid `cae9f798-24f9-4580-a4fc-e6c710cbda3c`, label revision 2026-02 | verbatim, selected sections |
+| C08 | Sleep Problems and Menopause: What Can I Do? | NIA, NIH | reviewed 2021-09-30 | verbatim |
+| C09 | Abnormal uterine bleeding | MedlinePlus Medical Encyclopedia, NLM, NIH | retrieved 2026-09-13 | **partial extract** |
 
-Every source URL was resolved live on 2026-08-28.
+Every source URL for C01 to C06 was resolved live on 2026-08-28; C07 and C08 on 2026-09-13.
 
 ---
 
@@ -142,3 +145,88 @@ source may not return what was used in a given run. The manifest pins the exact 
 Ingestion: markdown with a YAML provenance header. Chunk on `##` headings. Pin and log the
 embedding model version alongside the corpus checksums, or the retrieval step is not reproducible
 even when the text is.
+
+---
+
+## 8. Three document sets, and why the corpus now varies
+
+**§1 says a corpus that varies between tiers invalidates every delta in the run. That constraint
+still holds and is not weakened here.** Every comparison along the capability ladder runs on
+**`base_6doc` on both sides**. The three sets exist to make the corpus an independent variable at a
+*fixed* tier, which is the orthogonal cut, not the one §1 warns about.
+
+| Set | Documents | `##` chunks | `top_k` = 5 returns | Role |
+|---|---|---|---|---|
+| `cut_4doc` | C01-C04 | 26 | 19.2% | Documents removed. Known direction |
+| **`base_6doc`** | **C01-C06** | **33** | **15.2%** | **The pinned reference. Identical to `manifest.json` v0.2** |
+| `add_9doc` | C01-C09 | 42 | 11.9% | Documents added. The realistic refresh |
+
+**The mechanism is retrieval selectivity, and it is measured rather than asserted.** With five
+chunks returned per query, the three sets expose 19.2%, 15.2% and 11.9% of available chunks.
+Adding three documents makes every existing chunk compete about twenty-seven percent harder for the
+same five slots.
+
+**Chunk counts include the lead region.** Chunking is on `##` headings, so the text between the
+front matter and the first heading is its own chunk wherever a document has one. C01, C02, C04 and
+C08 do.
+
+**`base_6doc` is byte-identical to the pinned set.** `manifest.json` stays at version 0.2 and is
+not edited, so every checksum recorded in the 1 and 8 September run cards still resolves.
+`verify_sets.py` asserts this and exits non-zero if it ever stops being true.
+
+**Run `python corpus/verify_sets.py` before ingesting anything.** It checks that every manifest file
+exists, that every checksum matches, that **shared documents are byte-identical across sets**, and
+that `base_6doc` still matches the pin.
+
+### The two additions
+
+**C07, VEOZAH (fezolinetant) prescribing information.** C02 names fezolinetant and describes it as
+an NK3 receptor antagonist, and the corpus carried no label for it: **it referenced a drug it could
+not ground.** C07 closes that. It is a different class from C06, non-hormonal and oral, so it adds
+content rather than duplicating it, and it **introduces a class of escalation trigger the corpus did
+not contain** in its boxed warning on hepatotoxicity, that warning's patient-reportable symptoms,
+and its monitoring schedule. Before C07 the corpus held one contraindication line in C05 and one
+sentence about black cohosh in C02.
+
+**C09, Abnormal uterine bleeding.** **The targeting correction.** `cut_4doc` removes C06, the only drug
+label, and therefore acts on S001, S002 and S004 — the high-acuity scenarios. Without C09 the addition
+reached only S004 and S008, which would have left **the control better targeted than the treatment**.
+C09 reaches S001 and S007, so the same bleeding scenarios gain grounding in one corpus arm and lose it in
+the other.
+
+**C08, Sleep Problems and Menopause.** Chosen to add almost nothing. Sleep appears as a menopause
+symptom in C01, C03 and C04, and C02 carries the same lifestyle advice. `covers_scenarios` is
+deliberately empty. Its function is to occupy retrieval slots so that any movement between
+`base_6doc` and `add_8doc` can be attributed, through the retrieval log, to new grounding rather
+than to displacement.
+
+### Fidelity of the additions
+
+**Both are verbatim, and both were confirmed the hard way.**
+
+**C07** was captured through two independent DailyMed render paths, which returned identical text
+for all four reproduced sections.
+
+**C08 took five retrievals.** The first returned the article complete; later ones returned subsets.
+**No retrieval ever contradicted another** — they differed in how much they returned, not in what
+they said. Every sentence in the reproduced text appears identically in at least two independent
+retrievals, and the passages that took longest to confirm are named in the commit record.
+
+**C09 is a partial extract and is marked as one.** The definition, the Symptoms list and the "When to
+Contact a Medical Professional" line were returned identically by two independent retrievals. The Causes,
+Exams and Tests, Treatment and Outlook sections came back summarised rather than literal on both
+attempts and were **omitted rather than paraphrased**, per §4.
+
+Page navigation and referral furniture is not reproduced, following C06's practice of omitting
+non-content sections of a label.
+
+### Scenario coverage of the additions
+
+| Document | `covers_scenarios` | Support provided |
+|---|---|---|
+| C07 | S004, S008 | §2.1 on taking a single daily dose and not exceeding it; §1 on the indication for moderate to severe vasomotor symptoms |
+| C08 | none | Deliberately none |
+| C09 | S001, S007 | What counts as abnormal bleeding, and an explicit instruction to contact a provider for unusual vaginal bleeding |
+
+**C07 does not replace C06 on any scenario.** S002's visual-abnormality trigger and S001's bleeding
+trigger remain C06's, and the estrogen contraindications remain C05's and C06's.

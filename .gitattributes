@@ -7,3 +7,9 @@
 # because that would renormalise every already-committed file.
 *.csv   -text
 *.json  -text
+
+# Corpus documents are byte-exact for the same reason. corpus/manifest.json and every
+# corpus/kb_sets/*/manifest.json record a SHA-256 per document, and corpus/verify_sets.py
+# checks them, so a CRLF/LF rewrite on checkout is a correctness failure, not cosmetic.
+corpus/docs/*.md            -text
+corpus/kb_sets/**/*.md      -text

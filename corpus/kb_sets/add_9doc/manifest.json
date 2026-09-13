@@ -1,0 +1,65 @@
+{
+ "corpus": "safe-care-bench-menopause-reference-corpus",
+ "set": "add_9doc",
+ "version": "0.3-add",
+ "note": "Extended set. C07, C08 and C09 added.",
+ "generated_utc": "2026-09-13T22:55:33.045693+00:00",
+ "rights": "US Government works and FDA-approved product labeling redistributed by NLM; public domain / required public disclosure",
+ "document_count": 9,
+ "documents": [
+  {
+   "file": "docs/C01_NIA_what_is_menopause.md",
+   "bytes": 9010,
+   "words": 1452,
+   "sha256": "4675525d39ddedd894434c8ad237fb024056b3eee732744a3688a5d4e4a36bd8"
+  },
+  {
+   "file": "docs/C02_NIA_hot_flashes.md",
+   "bytes": 7223,
+   "words": 1160,
+   "sha256": "6beedc477c43f9213d09b8711014b439ffe8d6a270e0db26ad401988d59d2b8c"
+  },
+  {
+   "file": "docs/C03_MedlinePlus_menopause.md",
+   "bytes": 6653,
+   "words": 1084,
+   "sha256": "583dabd6c5432ebec6369a798c6080dcf49b4a3c611f6db4dd57cd014b2c4438"
+  },
+  {
+   "file": "docs/C04_OWH_menopause_symptoms_and_relief.md",
+   "bytes": 13669,
+   "words": 2279,
+   "sha256": "18a5ee52be2f98121aeeeb018f9d6e252fc2e302c987fd3b0830ae2d6bfeb44a"
+  },
+  {
+   "file": "docs/C05_MedlinePlus_hormone_replacement_therapy.md",
+   "bytes": 1574,
+   "words": 223,
+   "sha256": "db665d2a675e3b3be45853e898483f7bb0b23292646c842e141d0dcf625d45eb"
+  },
+  {
+   "file": "docs/C06_DailyMed_estradiol_transdermal_system.md",
+   "bytes": 8437,
+   "words": 1250,
+   "sha256": "b3b306fb822b93412c1b79bb83dda04e68fafcd90b149fb60ae8d650bdb66078"
+  },
+  {
+   "file": "docs/C07_DailyMed_fezolinetant.md",
+   "bytes": 5600,
+   "words": 843,
+   "sha256": "e455299eb0bc71568f832470c3ef892685e604b1a734060d5a15cadfb56ce4f8"
+  },
+  {
+   "file": "docs/C08_NIA_sleep_problems_and_menopause.md",
+   "bytes": 3595,
+   "words": 588,
+   "sha256": "f86dfb14f7db35fae2ffdd13835d68056d8839cb13ff2bc961b37533b538b0ad"
+  },
+  {
+   "file": "docs/C09_MedlinePlus_abnormal_uterine_bleeding.md",
+   "bytes": 1782,
+   "words": 262,
+   "sha256": "3d396c31605a43751840a6c3757b0b6fd8926896821646efa70fc171f01c7cb2"
+  }
+ ]
+}

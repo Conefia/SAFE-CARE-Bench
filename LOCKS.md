@@ -40,8 +40,21 @@ methodological choices and are not frozen by this lock.
 
 ## Lock B — the realised design annex
 
-**Not yet set.** Records the realised rater-conversation design before any returned rating is opened.
-Adds no methodology.
+**Set 5 October 2026, before any returned primary rating was opened.** Five days after the date in the
+analysis plan. The lock is an ordering, and the ordering holds: no primary rating had been opened, scored
+or inspected.
+
+**Records:** all twelve assignment indices filled, 24 conversations at six ratings each (144), 48 rater
+pairs sharing at least four conversations, a connected rater-conversation graph, first-seen configuration
+balanced three and three in every scenario, the three labels that changed holder before any data existed,
+and the four second-reading packets dispatched. **Records the Run 3 export on record** (annex section 5) and **the clinician key on file** (annex section 6), replacing the 18 September key hash, which does not reproduce. **Affirms that no element of Lock A changed.** Adds no
+methodology.
+
+| File | SHA-256 |
+|---|---|
+| `LOCK_B_REALISED_DESIGN.md` | `9268f5c19c51e727473e926b62a02d066361ca3297f4f7724b4ab45d3e6d006b` |
+
+The annex is released with the paper.
 
 ## Clinician answer key
 

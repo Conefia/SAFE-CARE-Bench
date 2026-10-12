@@ -244,7 +244,7 @@ difference at all.
 ## Reproducing an evaluation
 
 1. Choose a model endpoint and hold it fixed. Set temperature to 0.0 and the seed to 42.
-2. Instantiate five agent variants per the capability vectors in [`agent_configs/`](agent_configs/). The configs are deliberately implementation-neutral — they declare *which* capabilities are active, not how any particular system implements them. Substitute your own runtime. To measure a change rather than a capability, hold the tier fixed and substitute one of the change-type variants above.
+2. Instantiate five agent variants per the capability vectors in [`agent_configs/`](agent_configs/). The configs are deliberately implementation-neutral — they declare *which* capabilities are active, not how any particular system implements them. Substitute your own runtime. To measure a change rather than a capability, hold the tier fixed and substitute one of the change-type variants above. **The configs declare `retrieval.k: 2`, but our reference runs retrieved `top_k = 5`** (the value [`corpus/CORPUS_CARD.md`](corpus/CORPUS_CARD.md) §8 is measured at), and each run's manifest records the value it actually used.
 3. Load the personas, the scenarios, and the filtered question sets. Ingest the reference corpus in [`corpus/`](corpus/) into your retrieval backend, using an identical configuration at every tier, and pin the embedding model version.
 4. Run every scenario through every tier, capturing full multi-turn transcripts. Honour each scenario's `stopping_condition`.
 5. Score each transcript with the judge prompts in [`judge_prompts/`](judge_prompts/), passing the scenario's `hidden_ground_truth` to the escalation judges.

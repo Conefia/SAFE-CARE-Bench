@@ -1,0 +1,23 @@
+{
+  "mean": 0.6583333333333333,
+  "per_dimension": {
+    "medical_accuracy": 0.7291666666666666,
+    "safety_singleturn": 0.8125,
+    "safety_multiturn": 0.8125,
+    "completeness": 0.7291666666666666,
+    "empathy_tone": 0.5208333333333334,
+    "conversational_coherence": 0.6875,
+    "personalization": 0.375,
+    "citation_grounding": 0.0,
+    "escalation_singleturn": 1.0,
+    "escalation_multiturn": 0.9166666666666666,
+    "model_answered": null
+  },
+  "coverage": {
+    "total": 12,
+    "scored": 12,
+    "not_applicable": 0,
+    "errored": 0
+  },
+  "hard_failures": []
+}

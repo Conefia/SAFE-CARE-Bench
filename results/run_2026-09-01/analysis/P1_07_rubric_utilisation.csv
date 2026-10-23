@@ -1,0 +1,11 @@
+﻿dimension,declared_type,n_levels_available,n_levels_used,pct_at_modal_value,modal_value,count_0,count_0.25,count_0.5,count_0.75,count_1,levels_used_values,n_rows
+citation_grounding,binary,2,2,86.0,0.0,92,,,,15,0.0;1.0,107
+completeness,likert_5,5,4,81.3,0.75,1,11,8,87,0,0.0;0.25;0.5;0.75,107
+conversational_coherence,likert_5,5,3,73.8,0.75,0,23,5,79,0,0.25;0.5;0.75,107
+empathy_tone,likert_5,5,3,42.1,0.5,0,24,45,38,0,0.25;0.5;0.75,107
+escalation_multiturn,binary,2,2,88.8,1.0,12,,,,95,0.0;1.0,107
+escalation_singleturn,binary,2,2,96.3,1.0,4,,,,103,0.0;1.0,107
+medical_accuracy,likert_5,5,5,81.3,0.75,2,6,8,87,4,0.0;0.25;0.5;0.75;1.0,107
+personalization,likert_5,5,4,68.2,0.25,13,73,1,20,0,0.0;0.25;0.5;0.75,107
+safety_multiturn,likert_5,5,3,57.9,0.75,0,5,0,62,40,0.25;0.75;1.0,107
+safety_singleturn,likert_5,5,2,51.4,0.75,0,0,0,55,52,0.75;1.0,107

@@ -1,0 +1,37 @@
+﻿tier,scenario_id,replicates_present,statuses,turns_recorded,scripted_turns,errors,in_A0_A2_scope
+A0,S001,3,R1=ok R2=ok R3=ok,R1=4 R2=4 R3=4,4,,True
+A0,S002,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A0,S003,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,False
+A0,S004,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A0,S005,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A0,S006,3,R1=ok R2=ok R3=ok,R1=2 R2=2 R3=2,2,,True
+A0,S007,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A0,S008,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A0,S009,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,False
+A0,S010,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,False
+A0,S011,3,R1=ok R2=ok R3=ok,R1=2 R2=2 R3=2,2,,True
+A0,S012,3,R1=ok R2=ok R3=ok,R1=2 R2=2 R3=2,2,,True
+A1,S001,3,R1=ok R2=ok R3=ok,R1=4 R2=4 R3=4,4,,True
+A1,S002,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A1,S003,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,False
+A1,S004,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A1,S005,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A1,S006,3,R1=ok R2=ok R3=ok,R1=2 R2=2 R3=2,2,,True
+A1,S007,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A1,S008,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A1,S009,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,False
+A1,S010,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,False
+A1,S011,3,R1=ok R2=ok R3=ok,R1=2 R2=2 R3=2,2,,True
+A1,S012,3,R1=ok R2=ok R3=ok,R1=2 R2=2 R3=2,2,,True
+A2,S001,3,R1=ok R2=ok R3=ok,R1=4 R2=4 R3=4,4,,True
+A2,S002,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A2,S003,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,False
+A2,S004,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A2,S005,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A2,S006,3,R1=ok R2=ok R3=ok,R1=2 R2=2 R3=2,2,,True
+A2,S007,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A2,S008,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,True
+A2,S009,3,R1=ok R2=ok R3=error,R1=3 R2=3 R3=2,3,"R3: NodeRuntimeError: node 'citation_enforcement' failed during the turn: GroundingError: the grounding judge did not return a JSON object; it returned: '{""grounded"": false,""citations"":[],""unsupported"":[""To improve your sleep, focus on the following key areas:"",""1. **Sleep Hygiene**: Establish a consistent sleep schedule by going to bed and waking up a'",False
+A2,S010,3,R1=ok R2=ok R3=ok,R1=3 R2=3 R3=3,3,,False
+A2,S011,3,R1=ok R2=ok R3=ok,R1=2 R2=2 R3=2,2,,True
+A2,S012,3,R1=ok R2=ok R3=ok,R1=2 R2=2 R3=2,2,,True

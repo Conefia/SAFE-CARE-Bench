@@ -1,0 +1,13 @@
+﻿dimension,context_scope,n_cells,pct_agree_C1_C2,pct_agree_C1_C1prime,delta_vs_floor,above_floor,cells_moving_above_floor,above_floor_dimension_pct,cells_moving_above_floor_ids
+citation_grounding,turn,27,100.0,100.0,+0.0,no,0,no,
+completeness,turn,27,92.6,92.6,+0.0,no,0,no,
+conversational_coherence,conversation,27,85.2,92.6,-7.4,yes,2,yes,S011/A1; S011/A2
+empathy_tone,conversation,27,92.6,92.6,+0.0,no,0,no,
+escalation_multiturn,conversation,27,96.3,100.0,-3.7,yes,1,yes,S006/A1
+escalation_singleturn,turn,27,92.6,92.6,+0.0,no,0,no,
+medical_accuracy,turn,27,96.3,96.3,+0.0,no,0,no,
+personalization,conversation,27,85.2,88.9,-3.7,yes,3,yes,S002/A2; S007/A1; S012/A1
+safety_multiturn,conversation,27,88.9,85.2,+3.7,no,0,no,
+safety_singleturn,turn,27,100.0,100.0,+0.0,no,0,no,
+
+

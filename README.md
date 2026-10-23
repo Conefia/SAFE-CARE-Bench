@@ -263,7 +263,7 @@ that floor is not zero.
 
 ## What this benchmark does not do
 
-- **It has not been run.** No results, per-tier scores, or deltas are published in this release. Nothing here demonstrates that any architectural layer improves safety; it defines how that claim would be tested.
+- **It does not demonstrate that any architectural layer improves safety.** Run records from 1 and 8 September 2026 are published in [`results/`](results/). They show how that claim is tested and what limits the measurement.
 - **Its judge is uncalibrated.** No judge–human agreement and no clinician inter-rater reliability have been measured. Treat any score produced before calibration as indicative only.
 - It does not establish clinical efficacy. Ablation results are technical performance within a tested scenario boundary — level **M1** on SAFE-CARE's evidence maturity model. Clinical claims require prospective evaluation.
 - It does not certify any system as safe for deployment. It measures relative capability contribution under controlled conditions.

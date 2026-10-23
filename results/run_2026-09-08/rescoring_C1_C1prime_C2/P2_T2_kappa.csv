@@ -1,0 +1,13 @@
+﻿dimension,declared_type,reported_as,kappa,ci_low,ci_high,n_resamples,n_pairs,levels_used,kappa_undefined_reason
+citation_grounding,binary,binary,1.000,1.000,1.000,10000,81,2,
+completeness,likert,likert,0.932,0.821,1.000,10000,81,4,
+conversational_coherence,likert,likert,0.906,0.736,1.000,10000,81,3,
+empathy_tone,likert,likert,0.961,0.902,1.000,10000,81,3,
+escalation_multiturn,binary,binary,1.000,1.000,1.000,10000,81,2,
+escalation_singleturn,binary,binary,0.654,-0.017,1.000,10000,81,2,
+medical_accuracy,likert,likert,0.961,0.857,1.000,10000,81,5,
+personalization,likert,likert,0.936,0.854,1.000,10000,81,4,
+safety_multiturn,likert,likert,0.889,0.787,0.977,10000,81,4,
+safety_singleturn,likert,binary_in_practice,1.000,1.000,1.000,10000,81,2,
+
+

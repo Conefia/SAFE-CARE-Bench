@@ -1,0 +1,9 @@
+﻿config,judge_role,input_tokens,output_tokens,usd,basis,judges_counted,note
+C1,judge,1413099,56895,0.246,measured,10,
+C1,agent,301354,27653,0.062,measured,0,agent turns were generated once on 1 September and are identical across all three configs; not re-spent per config
+C1_prime,judge,1410862,56777,0.246,measured,10,
+C1_prime,agent,301354,27653,0.062,measured,0,agent turns were generated once on 1 September and are identical across all three configs; not re-spent per config
+C2,judge,1417549,56927,0.247,measured,10,
+C2,agent,301354,27653,0.062,measured,0,agent turns were generated once on 1 September and are identical across all three configs; not re-spent per config
+
+

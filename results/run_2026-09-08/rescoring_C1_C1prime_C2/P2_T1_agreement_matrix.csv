@@ -1,0 +1,8 @@
+﻿measurement_id,source_run,comparison,unit,denominator_definition,n_units,n_agreeing,pct_agreement,status
+M1,sep01,within_run_across_repeats,cell,"scenario x tier x dimension, in-scope; 3 repeats collapsed",270,226,83.7,carried_from_phase1
+M2,C1,within_run_across_repeats,cell,"scenario x tier x dimension, in-scope; 3 repeats collapsed",270,227,84.1,measured
+M3,C1_vs_C1_prime,run_vs_run,row,"scenario x tier x repeat x dimension, all scored rows",1070,1040,97.2,carried_from_phase1
+M4,C1_vs_C1_prime,run_vs_run,cell,"scenario x tier x dimension, in-scope; 3 repeats collapsed",270,254,94.1,measured
+M5,sep01_vs_C1,run_vs_run,row,"scenario x tier x repeat x dimension, all scored rows",1070,1021,95.4,carried_from_phase1
+
+

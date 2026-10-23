@@ -1,0 +1,33 @@
+﻿dimension,tier,mean_of_scenario_means,sd_across_scenarios,se,n_scenarios,se_ratio_vs_pooled,n_means_at_0,n_means_at_1,n_means_between,distribution_warning
+citation_grounding,A0,0.000,0.000,0.000,9,not_recorded,9,0,0,degenerate: all 9 scenario means at 0.000; no between-scenario variance to summarise
+citation_grounding,A1,0.185,0.338,0.113,9,1.48,6,1,2,
+citation_grounding,A2,0.185,0.377,0.126,9,1.65,7,1,1,"boundary-clustered: 7 scenario means at 0.0, 1 at 1.0, 1 between; normal-theory interval not a fair summary - use the counts"
+completeness,A0,0.750,0.000,0.000,9,not_recorded,0,0,9,degenerate: all 9 scenario means at 0.750; no between-scenario variance to summarise
+completeness,A1,0.630,0.162,0.054,9,1.40,0,0,9,
+completeness,A2,0.611,0.186,0.062,9,1.61,0,0,9,
+conversational_coherence,A0,0.750,0.000,0.000,9,not_recorded,0,0,9,degenerate: all 9 scenario means at 0.750; no between-scenario variance to summarise
+conversational_coherence,A1,0.694,0.118,0.039,9,1.41,0,0,9,
+conversational_coherence,A2,0.648,0.155,0.052,9,1.43,0,0,9,
+empathy_tone,A0,0.602,0.190,0.063,9,1.76,0,0,9,
+empathy_tone,A1,0.537,0.240,0.080,9,1.75,0,0,9,
+empathy_tone,A2,0.519,0.194,0.065,9,1.73,0,0,9,
+escalation_multiturn,A0,0.889,0.333,0.111,9,1.80,1,8,0,"boundary-clustered: 1 scenario means at 0.0, 8 at 1.0, 0 between; normal-theory interval not a fair summary - use the counts"
+escalation_multiturn,A1,0.889,0.333,0.111,9,1.80,1,8,0,"boundary-clustered: 1 scenario means at 0.0, 8 at 1.0, 0 between; normal-theory interval not a fair summary - use the counts"
+escalation_multiturn,A2,0.778,0.441,0.147,9,1.80,2,7,0,"boundary-clustered: 2 scenario means at 0.0, 7 at 1.0, 0 between; normal-theory interval not a fair summary - use the counts"
+escalation_singleturn,A0,1.000,0.000,0.000,9,not_recorded,0,9,0,degenerate: all 9 scenario means at 1.000; no between-scenario variance to summarise
+escalation_singleturn,A1,1.000,0.000,0.000,9,not_recorded,0,9,0,degenerate: all 9 scenario means at 1.000; no between-scenario variance to summarise
+escalation_singleturn,A2,0.889,0.236,0.079,9,1.27,0,7,2,
+medical_accuracy,A0,0.741,0.028,0.009,9,1.00,0,0,9,
+medical_accuracy,A1,0.759,0.088,0.029,9,1.39,0,0,9,
+medical_accuracy,A2,0.620,0.229,0.076,9,1.56,0,0,9,
+personalization,A0,0.380,0.270,0.090,9,1.78,1,0,8,
+personalization,A1,0.315,0.231,0.077,9,1.63,1,0,8,
+personalization,A2,0.259,0.206,0.069,9,1.77,1,0,8,
+safety_multiturn,A0,0.806,0.132,0.044,9,1.43,0,2,7,
+safety_multiturn,A1,0.843,0.106,0.035,9,1.49,0,2,7,
+safety_multiturn,A2,0.787,0.301,0.100,9,1.58,0,5,4,
+safety_singleturn,A0,0.880,0.119,0.040,9,1.61,0,4,5,
+safety_singleturn,A1,0.907,0.121,0.040,9,1.70,0,5,4,
+safety_singleturn,A2,0.963,0.084,0.028,9,1.62,0,7,2,
+
+

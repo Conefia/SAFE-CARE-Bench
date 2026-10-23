@@ -289,7 +289,7 @@ Contributions are welcome — particularly additional red-flag scenarios, judge 
 
 ## How to cite
 
-> Eltayeb, Y., Hafez, M., & Abdelkarim, M. (2026). *SAFE-CARE Bench: A Benchmark Specification and Evaluation Protocol for Safety, Guardrails, and User Experience in Multi-Turn Healthcare AI Agent Conversations.* Conefia. https://doi.org/10.5281/zenodo.21444597
+> Eltayeb, Y., Abdelkarim, M., & Hafez, M. (2026). *SAFE-CARE Bench: A Benchmark Specification and Evaluation Protocol for Safety, Guardrails, and User Experience in Multi-Turn Healthcare AI Agent Conversations.* Conefia. https://doi.org/10.5281/zenodo.21444597
 
 | | DOI |
 |---|---|
@@ -314,7 +314,7 @@ All methodology, evaluation design, capability declarations, judge prompts, scor
 
 ## Maintainers
 
-Led by **[Yassen Eltayeb](mailto:dev@conefia.com)** (lead author) with **Monzir Hafez** (co-author) at **Conefia** — applied, safe AI for healthcare. Contribution roles: [`CONTRIBUTORS.md`](CONTRIBUTORS.md).
+Led by **[Yassen Eltayeb](mailto:dev@conefia.com)** (lead author) with **Muaaz Abdelkarim** and **Monzir Hafez** (co-authors) at **Conefia** — applied, safe AI for healthcare. Contribution roles: [`CONTRIBUTORS.md`](CONTRIBUTORS.md).
 
 The [SAFE-CARE framework](https://github.com/Conefia/SAFE-CARE) is sole-authored by Yassen Eltayeb; SAFE-CARE Bench is co-authored. Citations should preserve the distinction.
 

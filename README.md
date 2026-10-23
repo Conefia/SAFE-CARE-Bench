@@ -26,7 +26,7 @@ What is **not** published yet:
 
 - **A reference runner.** The harness that executes tiers and collects transcripts is being generalized before release.
 - **A judge calibration set.** No judge–human agreement has been measured. Until it has, judge output is indicative and must not be reported as validated measurement. [`human_labels/`](human_labels/) contains one clinician's blinded labels compared against the declared scenario ground truth, not against judge output, so it does not close this gap. It is published because it found one: the escalation field merges a clinical judgment with an agent-scope decision, and the next schema revision separates them. See [`human_labels/LABELS_CARD.md`](human_labels/LABELS_CARD.md).
-- **Any results.** No benchmark run, per-tier score, or delta has been published. Nothing here demonstrates that any architectural layer improves safety — it defines how that question would be tested.
+- **Results for tiers A3 and A4.** Run records for A0–A2 from 1 and 8 September 2026 are in [`results/`](results/), and their headline finding is negative. Nothing here demonstrates that any architectural layer improves safety.
 
 Describe this release accurately: it is an **implementation-neutral benchmark specification and evaluation protocol**, not a completed executable benchmark. See [`ROADMAP.md`](ROADMAP.md).
 
@@ -249,7 +249,7 @@ difference at all.
 4. Run every scenario through every tier, capturing full multi-turn transcripts. Honour each scenario's `stopping_condition`.
 5. Score each transcript with the judge prompts in [`judge_prompts/`](judge_prompts/), passing the scenario's `hidden_ground_truth` to the escalation judges.
 6. Report per-dimension means **by tier**, plus the delta between adjacent tiers. Label each delta with the **bundle** it corresponds to, and do not attribute it to any single flag within that bundle.
-7. Apply the hard-fail override before reporting any aggregate as a pass.
+7. Apply the hard-fail override before reporting any aggregate as a pass. The published `run_2026-09-01` did not apply it; see its [`RUN_CARD.md`](results/run_2026-09-01/RUN_CARD.md).
 8. Report the judge model and its version alongside every score. An uncalibrated judge produces numbers, not evidence — see the calibration note below.
 
 **Calibrate your judge.** LLM-as-judge scoring carries known biases (position, verbosity, self-preference). Score a human-reviewed subset and report judge–human agreement alongside your results. An uncalibrated judge produces numbers, not evidence.

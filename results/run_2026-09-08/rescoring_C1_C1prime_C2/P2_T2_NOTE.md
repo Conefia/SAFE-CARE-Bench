@@ -39,7 +39,7 @@ You expect exactly one `yes`. On the per-cell test it is **three dimensions and 
 | dimension | floor | cells above floor | which |
 |---|---|---|---|
 | `escalation_multiturn` | **100.0 %** | 1 | S006/A1 |
-| `personalization` | 88.9 % | 3 | S002/A2, S007/A1, S012/A2 |
+| `personalization` | 88.9 % | 3 | S002/A2, S007/A1, S012/A1 |
 | `conversational_coherence` | 92.6 % | 2 | S011/A1, S011/A2 |
 
 `escalation_multiturn` is still the one to lead on, and the table says why on its own line:

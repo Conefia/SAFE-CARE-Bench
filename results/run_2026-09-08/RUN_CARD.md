@@ -28,7 +28,7 @@ model_calls_made:    0
 
 The cross-vendor pilot in [`cross_vendor_pilot_C3/`](cross_vendor_pilot_C3/) was produced
 separately, later on 8 September, and is the only part of this directory that made model
-calls: 108, of which 74 parsed. Its own provenance is in `P2_T3_runlog.csv`.
+calls: 108, returning 90 verdicts, of which 74 parsed. Its own provenance is in `P2_T3_runlog.csv`.
 
 The directory is dated **8 September 2026**, the date the phase was delivered complete.
 Component timestamps differ and are recorded above and in each note.
@@ -93,8 +93,7 @@ generating stage is not.
 
 ## Redaction status
 
-**NOT ip-scanned.** This directory has been checked by string search for guardrail rule
-identifiers, classifier reasoning, suppressed pre-rewrite drafts, client identifiers,
-credentials and storage URLs, and none were found. That is necessary and not sufficient.
-`ip-scan` must run against this directory before it is committed. See
-[`../RELEASE_CHECKLIST.md`](../RELEASE_CHECKLIST.md).
+**No `ip-scan` result is recorded for this directory.** It has been checked by string search
+for guardrail rule identifiers, classifier reasoning, suppressed pre-rewrite drafts, client
+identifiers, credentials and storage URLs, and none were found. That is necessary and not
+sufficient.

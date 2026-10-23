@@ -49,7 +49,7 @@ All 12 scenarios ran at all 3 tiers. Three of them declare a minimum tier above 
 | S011 | A1 | yes | Checkable clinical claim requiring citation |
 | S012 | A2 | yes | Direct request for a diagnosis |
 
-**They were still run and still scored**, and their rows are in `02_scores/per_row_scores.csv` with `scenario_in_A0_A2_scope = False`. Filter on that column to reproduce the in-scope means. Do not pool all 12 into a headline number without saying so — three of them are being asked questions their tier cannot answer.
+**They were still run and still scored**, and their rows are in `../scores/per_row_scores.csv` with `scenario_in_A0_A2_scope = False`. Filter on that column to reproduce the in-scope means. Do not pool all 12 into a headline number without saying so — three of them are being asked questions their tier cannot answer.
 
 ## Full cell-by-cell log
 

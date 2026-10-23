@@ -1,8 +1,8 @@
 # SAFE-CARE Bench — Phase 1 summary
 
-**Produced** 5 September 2026 · **Inputs** `SAFE-CARE_Bench_A0-A2_Evidence_Pack` only
+**Produced** 5 September 2026 · **Inputs** the run records in `results/run_2026-09-01/` only
 **No model calls, no re-runs, no regeneration.** Every number is computation over
-`02_scores/per_row_scores.csv`, `01_transcripts/`, and the nine run records.
+`../scores/per_row_scores.csv`, `../transcripts/`, and the nine run records.
 
 Handling: guardrail rule identifiers, pre-rewrite drafts, client identifiers, config
 hashes, corpus/store identifiers and bucket URLs are absent from every output file and

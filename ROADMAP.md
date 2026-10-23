@@ -3,7 +3,7 @@
 SAFE-CARE Bench is an active work in progress. This file states honestly what exists, what is
 coming, and what is deliberately out of scope.
 
-## Available now — v0.1.1
+## Available now — v0.1.2
 
 - [x] A0–A4 tier definitions with explicit 10-flag capability vectors, implementation-neutral
 - [x] `delta_from_previous` block on every tier naming exactly which flags the rung enables
@@ -61,8 +61,8 @@ coming, and what is deliberately out of scope.
 
 These are stated openly because a benchmark that hides its limitations is worse than no benchmark.
 
-1. **No results have been published.** Nothing in this repository demonstrates that any
-   architectural layer improves safety. It defines how that question would be tested.
+1. **Only A0–A2 run records are published** ([`results/`](results/)), and their headline finding is
+   negative. Nothing in this repository demonstrates that any architectural layer improves safety.
 2. **No runner ships yet.** Two teams implementing these declarations against different runtimes may
    produce materially different agents. Treat this release as an implementation-neutral
    specification, not a turnkey benchmark.

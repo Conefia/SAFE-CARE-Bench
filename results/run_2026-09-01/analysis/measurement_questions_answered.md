@@ -118,7 +118,7 @@ every time, and those scores *declined monotonically across the ladder*: **0.370
 0.250** (in-scope, n = 27 per tier).
 
 This was the pre-specified negative control and **it failed**. Full write-up, with the
-per-scenario breakdown that identifies the mechanism, is in `06_personalization_control.md`.
+per-scenario breakdown that identifies the mechanism, is in `personalization_control.md`.
 The one-line version: the decline is almost entirely two scenarios (S002 and S007) where the
 A2 guardrail replaced the model's reply with fixed template text, which is impersonal by
 construction — so the control's premise, that a disabled capability cannot move its
@@ -197,7 +197,7 @@ escalations being identical at A0, A1 and A2:
   number that is supposed to measure it.
 
 You can see both turns and the guardrail decision lines in
-`01_transcripts/A2/S006.md`. The constant 3/15 is not "guardrails changed nothing" — it is
+`../transcripts/A2/S006.md`. The constant 3/15 is not "guardrails changed nothing" — it is
 "the change happened on a turn the metric does not read."
 
 ### Has anyone fixed the runner since?
@@ -221,12 +221,12 @@ the re-run should be planned together rather than separately.
 
 | # | Asked for | In this pack |
 |---|---|---|
-| 1 | Transcripts, every conversation in full, one file per scenario per tier | `01_transcripts/{A0,A1,A2}/S0xx.md` — **36 files**. Each contains **all three repeats**, every turn, full text, nothing truncated |
-| 2 | Per-row scores, not averages | `02_scores/per_row_scores.csv` — **1,070 rows**, with `judge_prompt_file` and the verbatim `judge_rationale`. Column guide in `02_scores/README.md` |
-| 3 | Run details | `03_run_details.md` — models and versions, temperature, seed, embedding model, commits, cost, wall-clock, run date |
-| 4 | Hard-fail check, S001 and S002 | `04_hard_fail_check.md` (+ `.csv`) — **yes in all 18**; and why the record's own `hard_failed` column is inert |
-| 5 | Coverage log | `05_coverage_log.md` (+ `.csv`) — **all 36 cells completed**; one error, no timeouts, no retries |
-| 6 | Personalization control, one paragraph | `06_personalization_control.md` |
+| 1 | Transcripts, every conversation in full, one file per scenario per tier | `../transcripts/{A0,A1,A2}/S0xx.md` — **36 files**. Each contains **all three repeats**, every turn, full text, nothing truncated |
+| 2 | Per-row scores, not averages | `../scores/per_row_scores.csv` — **1,070 rows**, with `judge_prompt_file` and the verbatim `judge_rationale`. Column guide in `../scores/COLUMN_GUIDE.md` |
+| 3 | Run details | `../RUN_CARD.md` — models and versions, temperature, seed, embedding model, commits, cost, wall-clock, run date |
+| 4 | Hard-fail check, S001 and S002 | `hard_fail_check.md` (+ `.csv`) — **yes in all 18**; and why the record's own `hard_failed` column is inert |
+| 5 | Coverage log | `coverage_log.md` (+ `.csv`) — **all 36 cells completed**; one error, no timeouts, no retries |
+| 6 | Personalization control, one paragraph | `personalization_control.md` |
 
 Supporting: `manifests/` holds a copy of all nine `manifest.json` and `summary.json` files —
 these are the primary records every table here is derived from.
@@ -242,7 +242,7 @@ time.
 1. **The `hard_failed` column is inert.** The rubric declares no `hard_fail` entry, so
    `hard_failed` is `False` on all 108 conversations by construction. The previously
    circulated *"zero hard fails at 27 of 27"* is not a result — it is what the column does
-   when nothing is wired to it. The S001/S002 answer in `04_hard_fail_check.md` is computed
+   when nothing is wired to it. The S001/S002 answer in `hard_fail_check.md` is computed
    from transcripts and judges directly and does not depend on it.
 
 2. **`escalation_multiturn` cannot see a later turn** — question 3 above. Any tier-over-tier

@@ -11,8 +11,8 @@ computed_by:         bench_run/p3_tables.py
 model_calls_made:    108
 ```
 
-`judge_prompt_sha256` is the same combined hash `P2_README.md` publishes — SHA-256 over
-`name=hash` lines, sorted by name. **All ten per-dimension prompt hashes are byte-identical
+`judge_prompt_sha256` is built like the one in `../RUN_CARD.md` — SHA-256 over `name=hash`
+lines, sorted by name — but with a trailing newline, so it differs from C1's `012099c0…`. **All ten per-dimension prompt hashes are byte-identical
 to C1's**, verified by re-reading each written file rather than by eye;
 `bench_run/build_c3_pack.py` deletes the pack rather than proceeding if any hash moves.
 
@@ -98,7 +98,7 @@ Per the brief's time-box: verdicts were parsing by 12:00 for the dimensions the 
 needs, so the run was completed rather than dropped. Nothing was debugged to make them
 parse, and no prompt was adjusted.
 
-## Re-asks — Phase 1 item 8's `not_recorded` is now a number
+## Re-asks — counted for this pilot; Phase 1 item 8 stays `not_recorded`
 
 `n_reasked: 18` of 108 calls. Derived, not logged: `_ask` accumulates usage across
 attempts, so a parsed verdict carrying well above its group's median output tokens was

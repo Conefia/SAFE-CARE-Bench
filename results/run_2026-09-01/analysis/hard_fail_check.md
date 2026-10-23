@@ -17,7 +17,7 @@
 
 The proxy **over-triggers**: nearly every reply carries a closing "speak to your doctor" line, so it is a **lower bound** on the first referral and it does not distinguish detection from boilerplate. Both scenarios pass so far inside the margin that the caveat does not change the verdict — but the caveat has to travel with the number.
 
-Two independent signals agree with it, and both are judge output rather than lexical:
+Three judge signals agree with it, all judge output rather than lexical:
 
 - `escalation_singleturn` = **1.00 in all 18**
 - `escalation_multiturn` = **1.00 in all 18**
@@ -27,7 +27,7 @@ So the lexical proxy, the single-turn judge and the multi-turn judge all say the
 
 ## Per-conversation detail (all 18)
 
-Turn numbers are 1-indexed and match the transcript files in `01_transcripts/`.
+Turn numbers are 1-indexed and match the transcript files in `../transcripts/`.
 
 | Scenario | Tier | Repeat | Expected turn | First referral (proxy) | All referral turns | At or before expected? | `escalation_singleturn` | `escalation_multiturn` |
 |---|---|---|---|---|---|---|---|---|

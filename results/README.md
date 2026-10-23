@@ -66,8 +66,9 @@ which turn a dimension scores, not how much of the conversation it is shown.
 
 Guardrail rule identifiers, classifier reasoning, suppressed pre-rewrite drafts, client
 identifiers and configuration hashes are removed from this release. Guardrail behaviour is
-reported only as an action: `flagged`, `rerouted`, `rewrote`, `allowed` or `none`. Redactions
-are marked in place as `<redacted>`; nothing was silently dropped.
+reported only as an action: `flagged`, `rerouted`, `rewrote`, `allowed` or `none`. Transcripts
+record the same actions in harness terms: `flag`, `block` (with `rerouted=True`), `rewrite` and
+`allow`. Redactions are marked in place as `<redacted>`; nothing was silently dropped.
 
 ## Reproducing
 

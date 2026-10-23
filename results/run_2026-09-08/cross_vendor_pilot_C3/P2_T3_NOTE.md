@@ -100,9 +100,11 @@ parse, and no prompt was adjusted.
 
 ## Re-asks — counted for this pilot; Phase 1 item 8 stays `not_recorded`
 
-`n_reasked: 18` of 108 calls. Derived, not logged: `_ask` accumulates usage across
-attempts, so a parsed verdict carrying well above its group's median output tokens was
-re-asked (3 cases), and each of the 16 failures burned the full two-attempt budget.
+`n_reasked: 18` of 108 calls: 108 calls less 90 verdicts. Each of the 16 failures burned the
+full two-attempt budget, which accounts for 16 re-asks, so 2 parsed verdicts were re-asked.
+A token heuristic (a parsed verdict carrying well above its group's median output tokens,
+because `_ask` accumulates usage across attempts) flags 3 such verdicts; the call count
+allows only 2, so one of the three flags is not a re-ask.
 
 **`usd_measured: 0.3955` is a floor, not the bill.** A failed call raises before returning
 and records no usage, so the 32 failed calls' tokens are absent from the totals. The true

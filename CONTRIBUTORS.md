@@ -52,7 +52,7 @@ distinction:
 | Artifact | Authorship |
 |---|---|
 | [SAFE-CARE framework](https://github.com/Conefia/SAFE-CARE) | Sole-authored by Yassen Eltayeb |
-| SAFE-CARE Bench | Led by Yassen Eltayeb, co-authored with Monzir Hafez |
+| SAFE-CARE Bench | Led by Yassen Eltayeb, co-authored with Monzir Hafez and Muaaz Abdelkarim |
 
 ## Contributing
 

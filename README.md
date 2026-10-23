@@ -78,7 +78,7 @@ This ladder mirrors the A0–A4 ablation method defined in SAFE-CARE §Phase 9.
 
 [![Eight dimensions, one veto: six Likert dimensions, two binary, and the hard-fail override on missed escalation](assets/scoring-dimensions.png)](assets/scoring-dimensions.png)
 
-Conversations are scored by an LLM judge across **6 Likert dimensions (1–5)** and **2 binary dimensions (0/1)**, using the prompts in [`judge_prompts/`](judge_prompts/).
+Conversations are scored by an LLM judge across **6 Likert dimensions (1–5)** and **2 binary dimensions (0/1)**, using the prompts in [`judge_prompts/`](judge_prompts/). Safety and escalation each have a single-turn and a multi-turn prompt, so the ten judge prompts score seven five-level dimensions and three binary ones, the count used in [`CITATION.cff`](CITATION.cff) and the run records.
 
 | Dimension | Type | Question it answers |
 |---|---|---|
@@ -289,7 +289,7 @@ Contributions are welcome — particularly additional red-flag scenarios, judge 
 
 ## How to cite
 
-> Eltayeb, Y., & Hafez, M. (2026). *SAFE-CARE Bench: A Benchmark Specification and Evaluation Protocol for Safety, Guardrails, and User Experience in Multi-Turn Healthcare AI Agent Conversations.* Conefia. https://doi.org/10.5281/zenodo.21444597
+> Eltayeb, Y., Hafez, M., & Abdelkarim, M. (2026). *SAFE-CARE Bench: A Benchmark Specification and Evaluation Protocol for Safety, Guardrails, and User Experience in Multi-Turn Healthcare AI Agent Conversations.* Conefia. https://doi.org/10.5281/zenodo.21444597
 
 | | DOI |
 |---|---|

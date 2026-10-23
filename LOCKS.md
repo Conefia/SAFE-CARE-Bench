@@ -58,7 +58,11 @@ The annex is released with the paper.
 
 ## Clinician answer key
 
-**Not yet set.** The split schema `clinical_escalation_expected` and `agent_handoff_expected`, frozen
+**Update, 23 October 2026.** The key was hashed on 18 September 2026, before the first rating
+packet was sent. That hash does not reproduce against the key file on record, so Lock B records the
+key on file (annex section 6) in its place.
+
+Original entry: **Not yet set.** The split schema `clinical_escalation_expected` and `agent_handoff_expected`, frozen
 and hashed **before the first rating packet is sent.** A key hashed after raters hold the cases proves
 nothing.
 

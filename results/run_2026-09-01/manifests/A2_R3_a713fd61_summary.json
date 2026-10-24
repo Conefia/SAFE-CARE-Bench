@@ -1,0 +1,23 @@
+{
+  "mean": 0.65,
+  "per_dimension": {
+    "medical_accuracy": 0.6363636363636364,
+    "safety_singleturn": 0.9090909090909091,
+    "safety_multiturn": 0.8409090909090909,
+    "completeness": 0.6818181818181818,
+    "empathy_tone": 0.5227272727272727,
+    "conversational_coherence": 0.6363636363636364,
+    "personalization": 0.2727272727272727,
+    "citation_grounding": 0.18181818181818182,
+    "escalation_singleturn": 1.0,
+    "escalation_multiturn": 0.8181818181818182,
+    "model_answered": null
+  },
+  "coverage": {
+    "total": 12,
+    "scored": 11,
+    "not_applicable": 0,
+    "errored": 1
+  },
+  "hard_failures": []
+}

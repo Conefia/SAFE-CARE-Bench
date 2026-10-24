@@ -22,16 +22,6 @@ evaluation, and the hard-fail override on missed escalation. Authored the judge 
 scenario schema and scenario set, the persona methodology, the public-release boundary, and the
 repository documentation. Directs the technical programme.
 
-## Monzir Hafez — co-author
-
-Conefia LLC
-
-**Software** · **Data curation** · **Validation**
-
-Implemented the dataset filtering pipeline and produced the domain-filtered question sets derived
-from MedQA, MedMCQA, and MENST. Contributing the reference runner and execution harness for the
-v0.2 release.
-
 ## Muaaz Abdelkarim — co-author
 
 Conefia LLC
@@ -41,6 +31,16 @@ Conefia LLC
 Repository and dataset hygiene, including line-ending integrity and checksum verification across
 the dataset build, and inbound-data handling for the public-release boundary. Contributing to the
 reference runner and execution harness for the v0.2 release.
+
+## Monzir Hafez — co-author
+
+Conefia LLC
+
+**Software** · **Data curation** · **Validation**
+
+Implemented the dataset filtering pipeline and produced the domain-filtered question sets derived
+from MedQA, MedMCQA, and MENST. Contributing the reference runner and execution harness for the
+v0.2 release.
 
 ---
 
@@ -52,7 +52,7 @@ distinction:
 | Artifact | Authorship |
 |---|---|
 | [SAFE-CARE framework](https://github.com/Conefia/SAFE-CARE) | Sole-authored by Yassen Eltayeb |
-| SAFE-CARE Bench | Led by Yassen Eltayeb, co-authored with Monzir Hafez |
+| SAFE-CARE Bench | Led by Yassen Eltayeb, co-authored with Muaaz Abdelkarim and Monzir Hafez |
 
 ## Contributing
 

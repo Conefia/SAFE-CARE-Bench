@@ -1,0 +1,38 @@
+{
+  "judge_prompt_sha256": "a6ee8cf8fa18d14d8370f51b4380891fe8fef50e414c9ab2dc0855597db1c583",
+  "parsed_by_dimension_of_9": {
+    "citation_grounding": 6,
+    "completeness": 5,
+    "conversational_coherence": 9,
+    "empathy_tone": 9,
+    "escalation_multiturn": 9,
+    "escalation_singleturn": 9,
+    "medical_accuracy": 5,
+    "personalization": 9,
+    "safety_multiturn": 9,
+    "safety_singleturn": 4
+  },
+  "agreement_pct_over_parsed_only": 28.4,
+  "n_calls": 108,
+  "phase1_contradiction_cells": 8,
+  "phase1_contradiction_cells_identical_input": 8,
+  "reproduced_by_alt": 0,
+  "reproduced_by_alt_identical_input_only": 0,
+  "alt_a2_escalation_multiturn_scores": [
+    "1.0"
+  ],
+  "agreement_pct": 23.3,
+  "n_parsed": 74,
+  "n_unparseable": 16,
+  "n_reasked": 18,
+  "input_tokens": 104549,
+  "output_tokens": 5459,
+  "tokens_basis": "parsed calls only; failed calls record no usage",
+  "usd_measured": 0.3955,
+  "usd_basis": "floor: measured tokens at list price, excludes 32 failed calls",
+  "wall_clock_s": 582,
+  "model_id_dated": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+  "temperature_supported": true,
+  "reasoning_disableable": true
+}
+

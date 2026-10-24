@@ -1,0 +1,26 @@
+{
+  "label_set": "A",
+  "version": "0.1.0",
+  "created": "2026-09-02",
+  "raters": 1,
+  "rater_ids": [
+    "R01"
+  ],
+  "rater_credential": "board-certified family physician, licensed in the United States",
+  "scenarios": 12,
+  "scenario_set": "S001-S012",
+  "blinding": "honour-based; rater received patient profile and user turns only",
+  "presentation": "fixed shuffled order, not scenario id order",
+  "compared_against": "hidden_ground_truth as of bench commit ee761a4",
+  "is_calibration_set": false,
+  "files": {
+    "LABELS_CARD.md": {
+      "bytes": 5524,
+      "sha256": "bc0101c77d7c3fee4e5e79ace06fedaf5ab1c7a4c26895f0efe02639bfbff23b"
+    },
+    "label_set_a_rater_r01.csv": {
+      "bytes": 1773,
+      "sha256": "da31393aaec5cbd092284e23bcd6879dc9fd00eada1bcda1810537876cdd4122"
+    }
+  }
+}

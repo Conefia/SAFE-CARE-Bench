@@ -1,0 +1,4 @@
+n_calls,n_parsed,n_unparseable,n_reasked,input_tokens,output_tokens,tokens_basis,usd_measured,usd_basis,wall_clock_s,model_id_dated,temperature_supported,reasoning_disableable
+108,74,16,18,104549,5459,parsed calls only; failed calls record no usage,0.3955,"floor: measured tokens at list price, excludes 32 failed calls",582,us.anthropic.claude-sonnet-4-5-20250929-v1:0,True,True
+
+

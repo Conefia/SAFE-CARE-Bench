@@ -91,7 +91,8 @@ def read_scores(run_dir, judge=None, scoring_config=None):
     number no single judge produced.
     """
     path = _scores_file(run_dir)
-    with open(path, encoding="utf-8", newline="") as f:
+    # utf-8-sig: the published per_row_scores.csv starts with a byte-order mark
+    with open(path, encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
         header = reader.fieldnames or []
         col = {role: next((a for a in aliases if a in header), None) for role, aliases in COLUMNS.items()}

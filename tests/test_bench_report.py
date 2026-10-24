@@ -229,6 +229,16 @@ class ReportTests(unittest.TestCase):
         self.assertIn("choose one with --judge", err)
         self.assertEqual(run_cli(run, "--out", self.out, "--judge", "J1")[0], 0)
 
+    def test_scores_csv_with_byte_order_mark_reads_the_same(self):
+        run = make_run(self.tmp)
+        plain = self.report(run)
+        path = os.path.join(run, "scores", "per_row_scores.csv")
+        with open(path, encoding="utf-8") as f:
+            text = f.read()
+        with open(path, "w", encoding="utf-8-sig", newline="") as f:
+            f.write(text)
+        self.assertEqual(self.report(run), plain)
+
     def test_all_seven_sections_in_order(self):
         text = self.report(make_run(self.tmp))
         headings = re.findall(r"^## (\d)\. ", text, re.M)

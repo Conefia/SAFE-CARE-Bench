@@ -8,9 +8,10 @@ calibration status, what was run, and the limitations that apply.
 
 Usage
 -----
-    python -m bench_report results/run_2026-09-01 --out report.md
-    python -m bench_report results/run_2026-09-01 --out report.md --final \\
-        --deny-list /path/outside/repo/deny.txt --ip-scan "ip-scan"
+    python -m bench_report results/run_2026-09-01 --out report.draft.md
+    # then, in the engine repo: /ip-check report report.draft.md  ->  report.draft.md.verdict
+    python -m bench_report results/run_2026-09-01 --final --draft report.draft.md \\
+        --verdict /outside/repo/report.draft.md.verdict --deny-list /outside/repo/deny.txt --out report.md
 
 Design notes
 ------------
@@ -22,9 +23,11 @@ Design notes
   judge rationales, engine paths) is never read into it.
 * Output is deterministic: the same run directory gives a byte-identical report.
   Nothing time-dependent is written.
-* Without `--final` the report carries a DRAFT banner. `--final` fails closed: it
-  refuses to write unless the deny-list check and ip-scan both pass, and both must
-  be configured.
+* A draft and its final report are the same bytes; only the `*.draft.md` name
+  marks a draft. `--final` fails closed: it publishes the draft unchanged only if
+  the draft is what the run renders now, the ip-check verdict's sha256 matches it
+  with every item PASS and no NEEDS HUMAN, and the deny list passes. The verdict
+  and the deny list must both be configured and live outside this repository.
 """
 
 __version__ = "0.2.0"

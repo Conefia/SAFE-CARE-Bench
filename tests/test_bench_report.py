@@ -9,7 +9,7 @@ no data from any real run. Test 1 against `results/run_2026-09-01` runs only whe
 that directory and `tests/expected/run_2026-09-01.json` are both present.
 """
 
-import contextlib, csv, io, json, os, re, shutil, sys, tempfile, unittest
+import contextlib, csv, hashlib, io, json, os, re, shutil, tempfile, unittest
 
 from bench_report.__main__ import main
 from bench_report.report import DIMENSION_NAMES
@@ -141,7 +141,8 @@ class ReportTests(unittest.TestCase):
 
     def setUp(self):
         self.tmp = tempfile.mkdtemp()
-        self.out = os.path.join(self.tmp, "report.md")
+        self.out = os.path.join(self.tmp, "report.draft.md")
+        self.final_out = os.path.join(self.tmp, "report.md")
 
     def tearDown(self):
         shutil.rmtree(self.tmp)
@@ -158,8 +159,29 @@ class ReportTests(unittest.TestCase):
             f.write("# private deny list\n" + "\n".join(entries) + "\n")
         return path
 
-    def ip_scan(self, exit_code):
-        return '"%s" -c "import sys; sys.exit(%d)"' % (sys.executable, exit_code)
+    def draft(self, run):
+        """Write a draft, return (draft path, its bytes)."""
+        code, err = run_cli(run, "--out", self.out)
+        self.assertEqual(code, 0, err)
+        with open(self.out, "rb") as f:
+            return self.out, f.read()
+
+    def verdict(self, draft_bytes, **overrides):
+        """A verdict that clears `draft_bytes`, with any field overridden."""
+        fields = dict(ip_check_verdict="1", report_sha256=hashlib.sha256(draft_bytes).hexdigest(),
+                      report_file=os.path.basename(self.out), checked_by="Test Checker",
+                      checked_utc="2026-10-27T12:00:00Z", ip_check_commit="e" * 40,
+                      item_1="PASS", item_2="PASS", item_3="N/A", item_4="PASS", item_5="PASS",
+                      item_6="N/A", item_7="PASS", bottom_line="SAFE TO PUSH")
+        fields.update(overrides)
+        path = os.path.join(self.tmp, "report.draft.md.verdict")
+        with open(path, "w", encoding="utf-8", newline="\n") as f:
+            f.write("".join("%s: %s\n" % kv for kv in fields.items() if kv[1] is not None))
+        return path
+
+    def final(self, run, draft, verdict, deny=None):
+        return run_cli(run, "--final", "--draft", draft, "--verdict", verdict, "--out", self.final_out,
+                       "--deny-list", deny or self.deny_list(PLANTED_RULE))
 
     # -- Test 1: numbers -----------------------------------------------------
     def test_numbers_synthetic(self):
@@ -198,46 +220,101 @@ class ReportTests(unittest.TestCase):
     # -- Test 2: leak check --------------------------------------------------
     def test_planted_rule_id_refuses_final_and_names_the_line(self):
         run = make_run(self.tmp, bench_version="v0.2.0 " + PLANTED_RULE)
-        draft = self.report(run)
-        draft_line = next(i for i, l in enumerate(draft.splitlines(), 1) if PLANTED_RULE in l)
-        os.remove(self.out)
-        code, err = run_cli(run, "--out", self.out, "--final",
-                            "--deny-list", self.deny_list(PLANTED_RULE), "--ip-scan", self.ip_scan(0))
+        draft, data = self.draft(run)
+        draft_line = next(i for i, l in enumerate(data.decode("utf-8").splitlines(), 1) if PLANTED_RULE in l)
+        code, err = self.final(run, draft, self.verdict(data))
         self.assertEqual(code, 2)
-        self.assertRegex(err, r"report line \d+ matches deny-list entry on line 2")
+        self.assertIn("report line %d matches deny-list entry on line 2" % draft_line, err)
         self.assertNotIn(PLANTED_RULE, err)
-        self.assertFalse(os.path.exists(self.out))
-        self.assertFalse(os.path.exists(self.out + ".unchecked"))
-        reported = int(re.search(r"report line (\d+)", err).group(1))
-        self.assertEqual(reported, draft_line - 2)   # the final report has no two-line DRAFT banner
+        self.assertFalse(os.path.exists(self.final_out))
 
-    def test_failed_ip_scan_refuses_final(self):
-        code, err = run_cli(make_run(self.tmp), "--out", self.out, "--final",
-                            "--deny-list", self.deny_list(PLANTED_RULE), "--ip-scan", self.ip_scan(1))
+    def test_clean_final_is_the_checked_draft_byte_for_byte(self):
+        run = make_run(self.tmp)
+        draft, data = self.draft(run)
+        code, err = self.final(run, draft, self.verdict(data))
+        self.assertEqual(code, 0, err)
+        with open(self.final_out, "rb") as f:
+            self.assertEqual(f.read(), data)
+        self.assertNotIn(b"DRAFT", data)
+
+    def test_cleared_item_counts_as_pass(self):
+        run = make_run(self.tmp)
+        draft, data = self.draft(run)
+        code, err = self.final(run, draft, self.verdict(data, item_2="PASS (cleared by Yassen 2026-10-27)"))
+        self.assertEqual(code, 0, err)
+
+    def test_verdict_that_does_not_clear_the_draft_refuses(self):
+        run = make_run(self.tmp)
+        draft, data = self.draft(run)
+        cases = {
+            "stale hash": (dict(report_sha256="0" * 64), "does not match the verdict"),
+            "do not push": (dict(item_5="FAIL", bottom_line="DO NOT PUSH"), "item_5 is FAIL"),
+            "needs human": (dict(item_4="NEEDS HUMAN"), "item_4 is NEEDS HUMAN"),
+            "other file": (dict(report_file="other.draft.md"), "the verdict is for other.draft.md"),
+        }
+        for name, (fields, message) in cases.items():
+            code, err = self.final(run, draft, self.verdict(data, **fields))
+            self.assertEqual(code, 2, name)
+            self.assertIn(message, err, name)
+            self.assertFalse(os.path.exists(self.final_out), name)
+
+    def test_verdict_missing_who_when_or_commit_refuses(self):
+        run = make_run(self.tmp)
+        draft, data = self.draft(run)
+        for key in ("checked_by", "checked_utc", "ip_check_commit"):
+            code, err = self.final(run, draft, self.verdict(data, **{key: None}))
+            self.assertEqual(code, 2, key)
+            self.assertIn("verdict is missing: %s" % key, err)
+        code, err = self.final(run, draft, self.verdict(data, ip_check_commit="abc123"))
         self.assertEqual(code, 2)
-        self.assertIn("ip-scan failed", err)
-        self.assertFalse(os.path.exists(self.out))
-        self.assertFalse(os.path.exists(self.out + ".unchecked"))
+        self.assertIn("ip_check_commit is not in the expected form", err)
+
+    def test_draft_edited_after_the_check_refuses(self):
+        run = make_run(self.tmp)
+        draft, data = self.draft(run)
+        verdict = self.verdict(data)
+        with open(draft, "ab") as f:
+            f.write(b"edited\n")
+        code, err = self.final(run, draft, verdict)
+        self.assertEqual(code, 2)
+        self.assertIn("not what this run renders", err)
+        self.assertFalse(os.path.exists(self.final_out))
 
     def test_final_fails_closed_without_checks(self):
         run = make_run(self.tmp)
-        for args in ((), ("--deny-list", self.deny_list(PLANTED_RULE)), ("--ip-scan", self.ip_scan(0))):
-            code, err = run_cli(run, "--out", self.out, "--final", *args)
+        draft, data = self.draft(run)
+        verdict, deny = self.verdict(data), self.deny_list(PLANTED_RULE)
+        for args in (("--verdict", verdict, "--deny-list", deny),
+                     ("--draft", draft, "--deny-list", deny),
+                     ("--draft", draft, "--verdict", verdict)):
+            env = os.environ.pop("SAFE_CARE_DENY_LIST", None)
+            try:
+                code, err = run_cli(run, "--final", "--out", self.final_out, *args)
+            finally:
+                if env is not None:
+                    os.environ["SAFE_CARE_DENY_LIST"] = env
             self.assertEqual(code, 2, args)
-            self.assertFalse(os.path.exists(self.out))
+            self.assertFalse(os.path.exists(self.final_out))
 
-    def test_deny_list_inside_repo_is_refused(self):
-        code, err = run_cli(make_run(self.tmp), "--out", self.out, "--final",
-                            "--deny-list", os.path.join(BENCH_ROOT, "README.md"), "--ip-scan", self.ip_scan(0))
+    def test_deny_list_or_verdict_inside_repo_is_refused(self):
+        run = make_run(self.tmp)
+        draft, data = self.draft(run)
+        inside = os.path.join(BENCH_ROOT, "README.md")
+        for verdict, deny in ((self.verdict(data), inside), (inside, None)):
+            code, err = self.final(run, draft, verdict, deny)
+            self.assertEqual(code, 2)
+            self.assertIn("outside the public bench repository", err)
+
+    def test_draft_needs_a_draft_name_and_final_a_published_one(self):
+        run = make_run(self.tmp)
+        code, err = run_cli(run, "--out", self.final_out)
+        self.assertEqual(code, 1)
+        self.assertIn("must end in .draft.md", err)
+        draft, data = self.draft(run)
+        code, err = run_cli(run, "--final", "--draft", draft, "--verdict", self.verdict(data), "--out", draft,
+                            "--deny-list", self.deny_list(PLANTED_RULE))
         self.assertEqual(code, 2)
-        self.assertIn("outside the public bench repository", err)
-
-    def test_clean_final_is_written_without_draft_banner(self):
-        code, err = run_cli(make_run(self.tmp), "--out", self.out, "--final",
-                            "--deny-list", self.deny_list(PLANTED_RULE), "--ip-scan", self.ip_scan(0))
-        self.assertEqual(code, 0, err)
-        with open(self.out, encoding="utf-8") as f:
-            self.assertNotIn("DRAFT", f.read())
+        self.assertIn("must be the published name", err)
 
     def test_card_fields_outside_allow_list_never_reach_the_report(self):
         text = self.report(make_run(self.tmp))
@@ -248,7 +325,7 @@ class ReportTests(unittest.TestCase):
     # -- Test 3: same input ---------------------------------------------------
     def test_same_input_gives_byte_identical_reports(self):
         run = make_run(self.tmp)
-        second = os.path.join(self.tmp, "again.md")
+        second = os.path.join(self.tmp, "again.draft.md")
         self.assertEqual(run_cli(run, "--out", self.out)[0], 0)
         self.assertEqual(run_cli(run, "--out", second)[0], 0)
         with open(self.out, "rb") as a, open(second, "rb") as b:

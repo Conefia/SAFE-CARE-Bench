@@ -342,12 +342,12 @@ SECTIONS = [section_summary, section_scores, section_differences, section_missed
             section_calibration, section_run, section_limitations]
 
 
-def render(run, final=False):
+def render(run):
+    """The report text. A draft and its final report are the same bytes; only the
+    file name (`*.draft.md`) marks a draft, so the checked text is the published text."""
     ctx = build_context(run)
     title = run["card"].get("run_id", run["name"])
     lines = ["# SAFE-CARE Bench evaluation report: `%s`" % title, ""]
-    if not final:
-        lines += ["> **DRAFT.** Not checked against the deny list or ip-scan. Do not send outside Conefia.", ""]
     for section in SECTIONS:
         lines += section(run, ctx) + [""]
     return "\n".join(lines).rstrip("\n") + "\n"

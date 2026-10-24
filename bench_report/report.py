@@ -21,7 +21,7 @@ DIMENSIONS = [
 DIMENSION_NAMES = dict(DIMENSIONS)
 
 UNCALIBRATED = "Judge not calibrated against clinicians for this domain; treat scores as indicative."
-NOT_RECORDED = "not recorded in the run card"
+NOT_RECORDED = "not recorded in the run card or manifests"
 
 # ROADMAP limitations that apply to a report, by bold title. A title missing from
 # ROADMAP.md is an error, so a reworded limitation cannot silently drop out.
@@ -60,12 +60,40 @@ def _dimensions(rows):
     return known + sorted(present - set(known))
 
 
-def _stats(values):
-    values = [v for v in values if v is not None]
-    if not values:
+def _dim_order(dim):
+    order = [d for d, _ in DIMENSIONS]
+    return (order.index(dim) if dim in order else len(order), dim)
+
+
+def _stats(rows):
+    """Mean and standard deviation across scenarios; n is the number of scenarios.
+
+    Each scenario's repeats are averaged first. Repeats of one scenario are not
+    independent, so the scenario, not the conversation, is the unit of analysis.
+    """
+    by_scenario = {}
+    for r in rows:
+        if r["score"] is not None:
+            by_scenario.setdefault(r["scenario"], []).append(r["score"])
+    if not by_scenario:
         return None
-    sd = statistics.stdev(values) if len(values) > 1 else None
-    return {"mean": statistics.fmean(values), "sd": sd, "n": len(values)}
+    means = [statistics.fmean(v) for _, v in sorted(by_scenario.items())]
+    sd = statistics.stdev(means) if len(means) > 1 else None
+    return {"mean": statistics.fmean(means), "sd": sd, "n": len(means)}
+
+
+def _seeds(card):
+    return [v if k == "seed" else "%s %s" % (k, v) for k, v in card.items() if "seed" in k]
+
+
+def _manifest_values(run, arm, key):
+    return sorted(run["manifests"]["arms"].get(arm, {}).get(key, ()))
+
+
+def _judge_models(run, card):
+    from_card = ["%s %s" % (k, v) for k, v in card.items() if k.startswith("judge") and k.endswith("model_id")]
+    return from_card or ["`%s`" % m for m in _distinct(
+        m for j in run["manifests"]["judges"].values() for m in j["model"])]
 
 
 def _distinct(values):
@@ -83,7 +111,7 @@ def build_context(run):
     rows = run["rows"]
     arms = sorted({r["arm"] for r in rows}, key=_arm_order)
     dims = _dimensions(rows)
-    stats = {(a, d): _stats([r["score"] for r in rows if r["arm"] == a and r["dimension"] == d])
+    stats = {(a, d): _stats([r for r in rows if r["arm"] == a and r["dimension"] == d])
              for a in arms for d in dims}
     ladder = [a for a in arms if a in TIERS]
     steps = []
@@ -104,10 +132,11 @@ def build_context(run):
 def section_summary(run, ctx):
     card, rows = run["card"], run["rows"]
     scenarios = sorted({r["scenario"] for r in rows})
-    conversations = {r["conversation"] for r in rows}
-    seeds = ["%s %s" % (k, v) for k, v in card.items() if "seed" in k]
-    judges = ["%s %s" % (k, v) for k, v in card.items() if k.startswith("judge") and k.endswith("model_id")]
-    models = _distinct(r["agent_model"] for r in rows) or _distinct([card.get("agent_model_id")])
+    conversations = {(r["arm"], r["scenario"], r["conversation"]) for r in rows}
+    seeds = _seeds(card)
+    judges = _judge_models(run, card)
+    models = (_distinct(r["agent_model"] for r in rows) or _distinct([card.get("agent_model_id")])
+              or _distinct(m for a in ctx["arms"] for m in _manifest_values(run, a, "model")))
     values = [r["score"] for r in rows if r["score"] is not None]
     scale = "0 to 1 (normalised)" if values and min(values) >= 0 and max(values) <= 1 else "as recorded (not normalised)"
     selection = ", ".join("%s = %s" % kv for kv in sorted(run["selection"].items())) or "all rows"
@@ -116,6 +145,16 @@ def section_summary(run, ctx):
         "- **Run:** `%s`" % card.get("run_id", run["name"]),
         "- **Tiers and arms evaluated:** %s" % ", ".join("`%s`" % a for a in ctx["arms"]),
         "- **Scenarios:** %d (%s)" % (len(scenarios), ", ".join(scenarios)),
+    ]
+    scope = run["scope"]
+    if scope["excluded"] and not scope["included"]:
+        lines.append("- **Scenarios left out:** %s, which the run marks out of scope for its tiers (`%s`). "
+                     "Every number below excludes them; `--all-scenarios` includes them."
+                     % (", ".join(scope["excluded"]), scope["column"]))
+    elif scope["excluded"]:
+        lines.append("- **Out-of-scope scenarios included:** %s are marked out of scope for these tiers "
+                     "(`%s`) and are pooled in every number below." % (", ".join(scope["excluded"]), scope["column"]))
+    lines += [
         "- **Conversations scored:** %d" % len(conversations),
         "- **Seeds:** %s" % ("; ".join(seeds) or NOT_RECORDED),
         "- **Generation model:** %s" % (", ".join("`%s`" % m for m in models) or NOT_RECORDED),
@@ -129,8 +168,9 @@ def section_summary(run, ctx):
 
 def section_scores(run, ctx):
     lines = ["## 2. Scores by tier", "",
-             "Per-dimension mean, standard deviation and n, over scored conversations. "
-             "Rows a judge could not score are left out of n.", ""]
+             "Per-dimension mean ± standard deviation across scenarios, with n the number of scenarios. "
+             "Each scenario's repeats are averaged first, because repeats of one scenario are not "
+             "independent: the scenario is the unit of analysis. Rows a judge could not score are left out.", ""]
     body = []
     for d in ctx["dims"]:
         row = [DIMENSION_NAMES.get(d, d)]
@@ -208,6 +248,11 @@ def section_missed(run, ctx):
         where = ", ".join("%s ×%d" % (s, n) for s, n in sorted(m["scenarios"].items())) or "none"
         body.append(["`%s`" % a, m["expected"], m["missed"], m["unscored"], where])
     lines += _table(["Tier", "Conversations expecting escalation", "Missed", "Not scored", "Scenarios missed"], body)
+    fired = run["manifests"]["hard_fail_fired"]
+    if fired and not any(fired) and any(m["missed"] for m in missed.values()):
+        lines += ["", "**This report applies the override; the run did not.** No manifest of this run records "
+                  "the hard-fail override firing (`hard_fail_fired` is false in all %d), so the run's own "
+                  "pass/fail fields count none of the misses above." % len(fired)]
     unknown = sorted(set().union(*(m["unknown"] for m in missed.values())))
     if unknown:
         lines += ["", "Scenarios %s are not in this bench version's scenario set, so their escalation "
@@ -226,7 +271,8 @@ def section_run(run, ctx):
     body, undigested = [], []
     for a in ctx["arms"]:
         arm_rows = [r for r in rows if r["arm"] == a]
-        configs = _distinct(r["config_sha256"] for r in arm_rows) or ["not recorded"]
+        configs = (_distinct(r["config_sha256"] for r in arm_rows) or _manifest_values(run, a, "spec_hash")
+                   or ["not recorded"])
         raw = {(r["corpus_sha256"] or "").strip() for r in arm_rows}
         corpus = _distinct(raw)
         if corpus:
@@ -236,27 +282,46 @@ def section_run(run, ctx):
         else:
             corpus_cell = "**none recorded**"
             undigested.append(a)
-        models = _distinct(r["agent_model"] for r in arm_rows) or ["not recorded"]
+        models = _distinct(r["agent_model"] for r in arm_rows) or _manifest_values(run, a, "model") or ["not recorded"]
         body.append(["`%s`" % a, ", ".join("`%s`" % c if c != "not recorded" else c for c in configs),
                      corpus_cell, ", ".join(models)])
-    lines += _table(["Arm", "Config sha256", "Corpus digest", "Agent model"], body) + [""]
+    lines += _table(["Arm", "Config sha256 (agent spec hash)", "Corpus digest", "Agent model"], body) + [""]
     if undigested:
         lines += ["**No corpus digest is recorded for %s.** This report cannot show which corpus text "
                   "those arms retrieved from." % ", ".join("`%s`" % a for a in undigested), ""]
     verified = card.get("corpus.verified") or card.get("corpus_verified")
     prompts = ["`%s` %s" % (k, v) for k, v in card.items() if k.startswith("judge_prompt_sha256")]
-    judges = ["%s %s" % (k, v) for k, v in card.items() if k.startswith("judge") and k.endswith("model_id")]
-    seeds = ["%s %s" % (k, v) for k, v in card.items() if "seed" in k]
+    judges = _judge_models(run, card)
+    seeds = _seeds(card)
+    scenario_sets = run["manifests"]["scenario_sets"]
+    if "scenario_set_sha256" in card:
+        scenario_set = card["scenario_set_sha256"]
+    elif len(scenario_sets) == 1:
+        scenario_set = ("no single digest; per-scenario sha256 for %d scenarios, identical in every manifest"
+                        % len(next(iter(scenario_sets))))
+    elif scenario_sets:
+        scenario_set = "**per-scenario digests differ between manifests**"
+    else:
+        scenario_set = NOT_RECORDED
     started, finished = run["dates"]
     lines += [
         "- **Corpus verified by preflight:** %s" % (verified or "not recorded; this run has no corpus preflight result"),
-        "- **Scenario set sha256:** %s" % card.get("scenario_set_sha256", NOT_RECORDED),
+        "- **Scenario set sha256:** %s" % scenario_set,
         "- **Judge models:** %s" % ("; ".join(judges) or NOT_RECORDED),
-        "- **Judge prompt hashes:** %s" % ("; ".join(prompts) or NOT_RECORDED),
+        "- **Judge prompt hashes:** %s" % ("; ".join(prompts) or ("see table below" if run["manifests"]["judges"]
+                                                                 else NOT_RECORDED)),
         "- **Seeds:** %s" % ("; ".join(seeds) or NOT_RECORDED),
+        "- **Bench commit:** %s" % card.get("bench_repo_ref", NOT_RECORDED),
         "- **Run dates:** first call %s; last call %s; card produced %s" % (
             started or "not recorded", finished or "not recorded", card.get("produced_utc", "not recorded")),
     ]
+    if run["manifests"]["judges"] and not prompts:
+        body = []
+        for dim, j in sorted(run["manifests"]["judges"].items(), key=lambda kv: _dim_order(kv[0])):
+            body.append([DIMENSION_NAMES.get(dim, dim), ", ".join("`%s`" % m for m in sorted(j["model"])) or "not recorded",
+                         ", ".join("`%s`" % h for h in sorted(j["prompt_hash"])) or "not recorded"])
+        lines += ["", "Judge per dimension, from the manifests:", ""]
+        lines += _table(["Dimension", "Judge model", "Prompt sha256"], body)
     return lines
 
 

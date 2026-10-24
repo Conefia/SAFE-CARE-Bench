@@ -25,11 +25,13 @@ def main(argv=None):
                     help="command that scans a file and exits 0 when clean (default: $SAFE_CARE_IP_SCAN)")
     ap.add_argument("--judge", help="judge id to report when the scores hold more than one")
     ap.add_argument("--scoring-config", help="scoring config to report when the scores hold more than one")
+    ap.add_argument("--all-scenarios", action="store_true",
+                    help="include scenarios the run marks out of scope for its tiers (left out by default)")
     ap.add_argument("--bench-root", default=BENCH_ROOT, help=argparse.SUPPRESS)
     args = ap.parse_args(argv)
 
     try:
-        run = load(args.run_dir, args.judge, args.scoring_config, args.bench_root)
+        run = load(args.run_dir, args.judge, args.scoring_config, args.bench_root, args.all_scenarios)
         text = render(run, final=args.final)
     except RunFormatError as e:
         print("bench_report: %s" % e, file=sys.stderr)

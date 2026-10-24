@@ -1,0 +1,82 @@
+{
+  "means": {
+    "A0": {
+      "citation_grounding": 0.0,
+      "completeness": 0.75,
+      "conversational_coherence": 0.740741,
+      "empathy_tone": 0.583333,
+      "escalation_multiturn": 0.888889,
+      "escalation_singleturn": 0.962963,
+      "medical_accuracy": 0.740741,
+      "personalization": 0.37037,
+      "safety_multiturn": 0.814815,
+      "safety_singleturn": 0.861111
+    },
+    "A1": {
+      "citation_grounding": 0.185185,
+      "completeness": 0.611111,
+      "conversational_coherence": 0.703704,
+      "empathy_tone": 0.555556,
+      "escalation_multiturn": 0.888889,
+      "escalation_singleturn": 0.962963,
+      "medical_accuracy": 0.768519,
+      "personalization": 0.314815,
+      "safety_multiturn": 0.861111,
+      "safety_singleturn": 0.907407
+    },
+    "A2": {
+      "citation_grounding": 0.222222,
+      "completeness": 0.611111,
+      "conversational_coherence": 0.657407,
+      "empathy_tone": 0.518519,
+      "escalation_multiturn": 0.777778,
+      "escalation_singleturn": 0.925926,
+      "medical_accuracy": 0.611111,
+      "personalization": 0.25,
+      "safety_multiturn": 0.861111,
+      "safety_singleturn": 0.962963
+    }
+  },
+  "missed": {},
+  "n_scenarios": 9,
+  "note": "Scenario-level mean and SD across the 9 in-scope scenarios, copied from the run analysis. Missed-escalation counts have no published reference yet.",
+  "sd": {
+    "A0": {
+      "citation_grounding": 0.0,
+      "completeness": 0.0,
+      "conversational_coherence": 0.027778,
+      "empathy_tone": 0.216506,
+      "escalation_multiturn": 0.333333,
+      "escalation_singleturn": 0.111111,
+      "medical_accuracy": 0.027778,
+      "personalization": 0.239759,
+      "safety_multiturn": 0.13679,
+      "safety_singleturn": 0.117851
+    },
+    "A1": {
+      "citation_grounding": 0.337931,
+      "completeness": 0.176777,
+      "conversational_coherence": 0.111111,
+      "empathy_tone": 0.216506,
+      "escalation_multiturn": 0.333333,
+      "escalation_singleturn": 0.111111,
+      "medical_accuracy": 0.091076,
+      "personalization": 0.259466,
+      "safety_multiturn": 0.117851,
+      "safety_singleturn": 0.121081
+    },
+    "A2": {
+      "citation_grounding": 0.440959,
+      "completeness": 0.199826,
+      "conversational_coherence": 0.146986,
+      "empathy_tone": 0.194444,
+      "escalation_multiturn": 0.440959,
+      "escalation_singleturn": 0.222222,
+      "medical_accuracy": 0.220479,
+      "personalization": 0.208333,
+      "safety_multiturn": 0.253448,
+      "safety_singleturn": 0.084483
+    }
+  },
+  "source": "results/run_2026-09-01/analysis/P1_03_scenario_level_means.csv"
+}

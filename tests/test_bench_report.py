@@ -12,6 +12,7 @@ that directory and `tests/expected/run_2026-09-01.json` are both present.
 import contextlib, csv, io, json, os, re, shutil, sys, tempfile, unittest
 
 from bench_report.__main__ import main
+from bench_report.report import DIMENSION_NAMES
 from bench_report.run import BENCH_ROOT
 
 PLANTED_RULE = "RULE-ESC-017"
@@ -79,6 +80,51 @@ def make_run(root, corpus_digest=True, bench_version="v0.2.0-test"):
     return run
 
 
+ENGINE_COMMIT = "deadbeef" * 5
+
+
+def make_published_run(root):
+    """The same scores in the published layout: tier/replicate columns, a scope column,
+    a prose run card with tables, and manifests carrying a provenance block. S003 is
+    marked out of scope."""
+    run = os.path.join(root, "run_published")
+    os.makedirs(os.path.join(run, "scores"))
+    os.makedirs(os.path.join(run, "manifests"))
+    with open(os.path.join(run, "RUN_CARD.md"), "w", encoding="utf-8", newline="\n") as f:
+        f.write("# Run card - test\n\n## Determinism\n\n| | |\n|---|---|\n"
+                "| Seed | **not exposed by the provider** |\n\n## Provenance\n\n"
+                "| Repo | Commit | Clean? |\n|---|---|---|\n"
+                "| Engine | `" + ENGINE_COMMIT + "` | **dirty** |\n"
+                "| Bench | `" + "b" * 40 + "` | **dirty** |\n")
+    header = ["scenario_id", "tier", "dimension", "judge_model", "replicate", "run_id", "score",
+              "scenario_in_A0_A2_scope"]
+    with open(os.path.join(run, "scores", "per_row_scores.csv"), "w", encoding="utf-8-sig", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=header)
+        w.writeheader()
+        for (arm, scenario, rep), values in sorted(SCORES.items()):
+            for dim, value in zip(DIMS, values):
+                if value is None:
+                    continue
+                w.writerow({"scenario_id": scenario, "tier": arm, "dimension": dim, "judge_model": "judge-model",
+                            "replicate": "R%d" % rep, "run_id": "%s-%d" % (arm, rep), "score": value,
+                            "scenario_in_A0_A2_scope": scenario != "S003"})
+    for arm in ("A0", "A1", "A2"):
+        provenance = {
+            "engine": {"commit": ENGINE_COMMIT[:7]},
+            "agent": {"id": arm, "spec_hash": arm.lower() * 32},
+            "model": {"model_id": "gen-model"},
+            "scenarios": {"scenarios": {"S001": "1" * 64, "S003": "3" * 64}},
+            "execution": {"hard_fail_fired": False},
+            "judge": {d: {"model_id": "judge-model", "prompt_hash": d[0] * 64} for d in DIMS},
+        }
+        with open(os.path.join(run, "manifests", "%s_R1_manifest.json" % arm), "w", encoding="utf-8") as f:
+            json.dump({"run_id": arm, "started_at": "2026-09-01T10:00:00Z", "finished_at": "2026-09-01T11:00:00Z",
+                       "provenance": provenance}, f)
+        with open(os.path.join(run, "manifests", "%s_R1_summary.json" % arm), "w", encoding="utf-8") as f:
+            json.dump({"mean": 0.5}, f)
+    return run
+
+
 def run_cli(*args):
     err, out = io.StringIO(), io.StringIO()
     with contextlib.redirect_stderr(err), contextlib.redirect_stdout(out):
@@ -119,11 +165,13 @@ class ReportTests(unittest.TestCase):
     def test_numbers_synthetic(self):
         text = self.report(make_run(self.tmp))
         scores = section(text, 2)
-        self.assertIn("| Medical accuracy | 0.375 ± 0.144 (n=4) | 0.625 ± 0.144 (n=4) | 0.917 ± 0.144 (n=3) |", scores)
+        # scenario means first: A2 is S001 1.00 and S003 0.75 (its second repeat is unscored)
+        self.assertIn("| Medical accuracy | 0.375 ± 0.000 (n=2) | 0.625 ± 0.177 (n=2) | 0.875 ± 0.177 (n=2) |", scores)
         self.assertNotIn("0.123", text)
+        self.assertIn("- **Conversations scored:** 12", text)
         self.assertIn("### `A0` → `A1`: Grounding (capability bundle)", text)
         self.assertIn("### `A1` → `A2`: Safety control (single capability)", text)
-        self.assertIn("| Medical accuracy | 0.375 (n=4) | 0.625 (n=4) | +0.250 |", text)
+        self.assertIn("| Medical accuracy | 0.375 (n=2) | 0.625 (n=2) | +0.250 |", text)
         missed = section(text, 4)
         self.assertIn("| `A0` | 2 | 2 | 0 | S001 ×2 |", missed)
         self.assertIn("| `A1` | 2 | 1 | 0 | S001 ×1 |", missed)
@@ -134,13 +182,16 @@ class ReportTests(unittest.TestCase):
         and os.path.isfile(os.path.join(BENCH_ROOT, "tests", "expected", "run_2026-09-01.json")),
         "needs results/run_2026-09-01 and tests/expected/run_2026-09-01.json")
     def test_numbers_run_2026_09_01(self):
-        """Every mean and missed-escalation count matches the run card and the paper."""
+        """Every mean and SD matches the run's published scenario-level analysis."""
         with open(os.path.join(BENCH_ROOT, "tests", "expected", "run_2026-09-01.json"), encoding="utf-8") as f:
             expected = json.load(f)
         text = self.report(os.path.join(BENCH_ROOT, "results", "run_2026-09-01"))
-        for arm, dims in expected["means"].items():
-            for dim, value in dims.items():
-                self.assertRegex(text, re.escape("%.3f" % value), "%s %s" % (arm, dim))
+        scores = section(text, 2)
+        arms = sorted(expected["means"])
+        for dim in expected["means"][arms[0]]:
+            cells = ["%.3f ± %.3f (n=%d)" % (expected["means"][a][dim], expected["sd"][a][dim], expected["n_scenarios"])
+                     for a in arms]
+            self.assertIn("| %s | %s |" % (DIMENSION_NAMES[dim], " | ".join(cells)), scores, dim)
         for arm, count in expected["missed"].items():
             self.assertRegex(section(text, 4), r"\| `%s` \| \d+ \| %d \|" % (re.escape(arm), count))
 
@@ -238,6 +289,39 @@ class ReportTests(unittest.TestCase):
         with open(path, "w", encoding="utf-8-sig", newline="") as f:
             f.write(text)
         self.assertEqual(self.report(run), plain)
+
+    # -- Published run format ---------------------------------------------------
+    def test_published_format_leaves_out_of_scope_scenarios_by_default(self):
+        text = self.report(make_published_run(self.tmp))
+        self.assertIn("- **Scenarios:** 1 (S001)", text)
+        self.assertIn("- **Scenarios left out:** S003", text)
+        self.assertIn("- **Conversations scored:** 6", text)
+        self.assertIn("| Medical accuracy | 0.375 ± – (n=1) | 0.750 ± – (n=1) | 1.000 ± – (n=1) |", section(text, 2))
+
+    def test_all_scenarios_matches_the_synthetic_run(self):
+        code, err = run_cli(make_published_run(self.tmp), "--out", self.out, "--all-scenarios")
+        self.assertEqual(code, 0, err)
+        with open(self.out, encoding="utf-8") as f:
+            text = f.read()
+        self.assertIn("- **Out-of-scope scenarios included:** S003", text)
+        self.assertIn("- **Conversations scored:** 12", text)
+        self.assertEqual(section(text, 2), section(self.report(make_run(self.tmp)), 2))
+
+    def test_published_provenance_comes_from_manifests_and_card_tables(self):
+        text = self.report(make_published_run(self.tmp))
+        self.assertIn("- **Seeds:** not exposed by the provider", text)
+        self.assertIn("- **Bench commit:** %s (tree dirty at run time)" % ("b" * 40), text)
+        self.assertIn("- **Generation model:** `gen-model`", text)
+        what_was_run = section(text, 6)
+        self.assertIn("`%s`" % ("a1" * 32), what_was_run)
+        self.assertIn("| Medical accuracy | `judge-model` | `%s` |" % ("m" * 64), what_was_run)
+        self.assertIn("per-scenario sha256 for 2 scenarios, identical in every manifest", what_was_run)
+        self.assertNotIn("deadbee", text)
+
+    def test_missed_escalations_note_when_the_run_did_not_apply_the_override(self):
+        missed = section(self.report(make_published_run(self.tmp)), 4)
+        self.assertIn("**This report applies the override; the run did not.**", missed)
+        self.assertNotIn("the run did not", section(self.report(make_run(self.tmp)), 4))
 
     def test_all_seven_sections_in_order(self):
         text = self.report(make_run(self.tmp))

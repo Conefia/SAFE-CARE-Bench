@@ -22,14 +22,20 @@ CARD_KEYS = re.compile(
     r"|corpus_manifest_sha256|corpus_digest|corpus[._]verified|\S*seed\S*"
     r"|judge_calibration|conversations_generated|conversations_errored)$")
 
+# Run-card table rows a report may print, as {row label: card key}. Published
+# cards are prose with tables rather than a key block; only these rows are read.
+CARD_ROWS = {"Seed": "seed", "Bench": "bench_repo_ref"}
+
 # Score columns, by role. The first alias present in the file is used.
+# A conversation is identified by arm, scenario and this column together.
 COLUMNS = {
     "arm":             ("arm_id", "tier", "agent_id"),
     "scenario":        ("scenario_id",),
-    "conversation":    ("conversation_id",),
+    "conversation":    ("conversation_id", "replicate"),
     "dimension":       ("dimension",),
     "score":           ("score_normalised", "score", "score_raw"),
-    "judge":           ("judge_id",),
+    "in_scope":        ("scenario_in_A0_A2_scope",),
+    "judge":           ("judge_id", "judge_model"),
     "judge_pass":      ("judge_pass",),
     "scoring_config":  ("scoring_config",),
     "parse_ok":        ("parse_ok",),
@@ -59,6 +65,15 @@ def read_card(run_dir):
         m = re.match(r"^([A-Za-z0-9_.]+):\s*(.*?)\s*(?:\s#.*)?$", line)
         if m and CARD_KEYS.match(m.group(1)) and m.group(2):
             card[m.group(1)] = m.group(2)
+    for line in text.splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) < 2 or cells[0] not in CARD_ROWS or CARD_ROWS[cells[0]] in card:
+            continue
+        value = re.sub(r"[`*]", "", cells[1]).strip()
+        if cells[0] == "Bench" and len(cells) > 2 and "dirty" in cells[2].lower():
+            value += " (tree dirty at run time)"
+        if value:
+            card[CARD_ROWS[cells[0]]] = value
     return card
 
 
@@ -83,12 +98,14 @@ def _score(value, parse_ok):
     return float(value)
 
 
-def read_scores(run_dir, judge=None, scoring_config=None):
+def read_scores(run_dir, judge=None, scoring_config=None, all_scenarios=False):
     """Return the primary score rows and a note of how they were selected.
 
     Primary means judge pass 1. If more than one judge or scoring config remains
     after that, the caller must name one: pooling them silently would report a
-    number no single judge produced.
+    number no single judge produced. Scenarios the run marks out of scope for its
+    tiers are dropped unless `all_scenarios` is set, so the headline matches the
+    run card's denominators.
     """
     path = _scores_file(run_dir)
     # utf-8-sig: the published per_row_scores.csv starts with a byte-order mark
@@ -100,6 +117,12 @@ def read_scores(run_dir, judge=None, scoring_config=None):
         if missing:
             raise RunFormatError("scores file has no column for: %s" % ", ".join(missing))
         raw = list(reader)
+
+    excluded = []
+    if col["in_scope"]:
+        excluded = sorted({r[col["scenario"]] for r in raw if r[col["in_scope"]].strip().lower() == "false"})
+        if not all_scenarios:
+            raw = [r for r in raw if r[col["scenario"]] not in excluded]
 
     selection = {}
     if col["judge_pass"]:
@@ -131,23 +154,67 @@ def read_scores(run_dir, judge=None, scoring_config=None):
             "corpus_sha256": get("corpus_sha256"),
             "agent_model": get("agent_model"),
         })
-    return rows, selection, {"corpus_column": col["corpus_sha256"] is not None}
+    scope = {"column": col["in_scope"], "excluded": excluded, "included": all_scenarios}
+    return rows, selection, {"corpus_column": col["corpus_sha256"] is not None, "scope": scope}
 
 
 # ---------------------------------------------------------------------------
-# Manifests: dates only
+# Manifests: dates and the provenance fields a report may print
 # ---------------------------------------------------------------------------
-def read_dates(run_dir):
+def _get(data, *keys):
+    for k in keys:
+        if not isinstance(data, dict):
+            return None
+        data = data.get(k)
+    return data
+
+
+def read_manifests(run_dir):
+    """Dates, plus per-arm provenance from manifests that carry a `provenance` block.
+
+    Only named fields are read: agent spec hash, generation model, judge model and
+    prompt hash per dimension, per-scenario digests, and whether the run's own
+    hard-fail override fired. Engine commits and paths are never read.
+    """
     starts, ends = [], []
+    arms, judges, scenario_sets, hard_fail = {}, {}, set(), []
     for path in sorted(glob.glob(os.path.join(run_dir, "manifests", "*.json"))):
         with open(path, encoding="utf-8") as f:
             data = json.load(f)
-        if isinstance(data, dict):
-            if isinstance(data.get("started_at"), str):
-                starts.append(data["started_at"])
-            if isinstance(data.get("finished_at"), str):
-                ends.append(data["finished_at"])
-    return (min(starts) if starts else None, max(ends) if ends else None)
+        if not isinstance(data, dict):
+            continue
+        if isinstance(data.get("started_at"), str):
+            starts.append(data["started_at"])
+        if isinstance(data.get("finished_at"), str):
+            ends.append(data["finished_at"])
+        prov = data.get("provenance")
+        if not isinstance(prov, dict):
+            continue
+        arm = _get(prov, "agent", "id")
+        if isinstance(arm, str):
+            entry = arms.setdefault(arm, {"spec_hash": set(), "model": set()})
+            for key, value in (("spec_hash", _get(prov, "agent", "spec_hash")),
+                               ("model", _get(prov, "model", "model_id"))):
+                if isinstance(value, str):
+                    entry[key].add(value)
+        for dim, judge in sorted((_get(prov, "judge") or {}).items()):
+            entry = judges.setdefault(dim, {"model": set(), "prompt_hash": set()})
+            for key, value in (("model", _get(judge, "model_id")), ("prompt_hash", _get(judge, "prompt_hash"))):
+                if isinstance(value, str):
+                    entry[key].add(value)
+        digests = _get(prov, "scenarios", "scenarios")
+        if isinstance(digests, dict):
+            scenario_sets.add(tuple(sorted(digests.items())))
+        fired = _get(prov, "execution", "hard_fail_fired")
+        if isinstance(fired, bool):
+            hard_fail.append(fired)
+    return {
+        "dates": (min(starts) if starts else None, max(ends) if ends else None),
+        "arms": arms,
+        "judges": judges,
+        "scenario_sets": scenario_sets,
+        "hard_fail_fired": hard_fail,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -204,18 +271,21 @@ def read_limitations(bench_root=BENCH_ROOT):
 
 
 # ---------------------------------------------------------------------------
-def load(run_dir, judge=None, scoring_config=None, bench_root=BENCH_ROOT):
+def load(run_dir, judge=None, scoring_config=None, bench_root=BENCH_ROOT, all_scenarios=False):
     run_dir = os.path.abspath(run_dir)
     if not os.path.isdir(run_dir):
         raise RunFormatError("not a directory: %s" % run_dir)
-    rows, selection, info = read_scores(run_dir, judge, scoring_config)
+    rows, selection, info = read_scores(run_dir, judge, scoring_config, all_scenarios)
+    manifests = read_manifests(run_dir)
     return {
         "name": os.path.basename(run_dir.rstrip("\\/")),
         "card": read_card(run_dir),
         "rows": rows,
         "selection": selection,
+        "scope": info["scope"],
         "corpus_column": info["corpus_column"],
-        "dates": read_dates(run_dir),
+        "dates": manifests["dates"],
+        "manifests": manifests,
         "scenarios": read_scenarios(bench_root),
         "tiers": read_tiers(bench_root),
         "limitations": read_limitations(bench_root),

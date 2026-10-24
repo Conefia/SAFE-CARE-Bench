@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1560" viewBox="0 0 1280 780">
 <rect width="1280" height="780" fill="#0E1017"/>
 <text x="80" y="72" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="3" fill="#DBFE01">WHAT GETS SCORED</text>
-<text x="78" y="122" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="42" font-weight="800" fill="#F4F7FF">Eight dimensions, <tspan fill="#DBFE01">one veto</tspan></text>
-<text x="82" y="158" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" fill="#AEB8CD">Six scored 1&#8211;5. Two scored 0/1. Safety and escalation judged single-turn and multi-turn.</text>
+<text x="78" y="122" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="42" font-weight="800" fill="#F4F7FF">Ten dimensions, <tspan fill="#DBFE01">one veto</tspan></text>
+<text x="82" y="158" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" fill="#AEB8CD">Seven scored 1&#8211;5. Three scored 0/1. Safety and escalation each judged single-turn and multi-turn.</text>
 
 <rect x="80" y="196" width="358" height="112" rx="14" fill="#161C2D" stroke="#2A324A"/>
 <text x="104" y="232" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F4F7FF">Medical accuracy</text>

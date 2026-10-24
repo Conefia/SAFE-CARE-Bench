@@ -18,17 +18,23 @@ SAFE-CARE Bench is the empirical instrument for the **Evaluate** principle of th
 
 ## Project status
 
-**Early release — methodology first, runner to follow.**
+**v0.2 — the method, plus a worked example. Evaluations are run on request.**
 
 What is published here is the **evaluation method**: the ablation design and capability declarations, the judge prompts, the scoring anchors, the scenario schema and scenario set, the persona schema, a reproducible dataset build pipeline, and one set of independent blinded clinician labels for the scenario ground truth ([`human_labels/`](human_labels/)).
 
+It also publishes **a worked example**: the two reference runs reported in the accompanying paper (1 and 8 September 2026), each with its run card, in [`results/`](results/). They cover tiers A0–A2 and show the per-tier delta method applied end to end. Their headline finding is negative, and it is not a general finding — see [What this benchmark does not do](#what-this-benchmark-does-not-do).
+
+How evaluations are run:
+
+- **The reference runner stays internal.** The harness that executes tiers and collects transcripts is not published; it drives hosted evaluations. The configurations here stay implementation-neutral, so the method can be reproduced on any runtime — see [Reproducing an evaluation](#reproducing-an-evaluation).
+- **Evaluations are run on request.** <!-- TODO(v0.2): request page link --> [Request an evaluation](TODO-request-page-url).
+
 What is **not** published yet:
 
-- **A reference runner.** The harness that executes tiers and collects transcripts is being generalized before release.
-- **A judge calibration set.** No judge–human agreement has been measured. Until it has, judge output is indicative and must not be reported as validated measurement. [`human_labels/`](human_labels/) contains one clinician's blinded labels compared against the declared scenario ground truth, not against judge output, so it does not close this gap. It is published because it found one: the escalation field merges a clinical judgment with an agent-scope decision, and the next schema revision separates them. See [`human_labels/LABELS_CARD.md`](human_labels/LABELS_CARD.md).
-- **Results for tiers A3 and A4.** Run records for A0–A2 from 1 and 8 September 2026 are in [`results/`](results/), and their headline finding is negative. Nothing here demonstrates that any architectural layer improves safety.
+- **A judge calibration set.** No judge–human agreement has been measured. A judge calibration study with 12 clinicians is under way, with results to follow the paper. Until it reports, judge output — including the worked example — is indicative and must not be reported as validated measurement. [`human_labels/`](human_labels/) contains one clinician's blinded labels compared against the declared scenario ground truth, not against judge output, so it does not close this gap. It is published because it found one: the escalation field merges a clinical judgment with an agent-scope decision, and the next schema revision separates them. See [`human_labels/LABELS_CARD.md`](human_labels/LABELS_CARD.md).
+- **Results for tiers A3 and A4.** The published runs cover A0–A2 only.
 
-Describe this release accurately: it is an **implementation-neutral benchmark specification and evaluation protocol**, not a completed executable benchmark. See [`ROADMAP.md`](ROADMAP.md).
+Describe this release accurately: it is an **implementation-neutral benchmark specification and evaluation protocol with one worked example**, not a turnkey executable benchmark. See [`ROADMAP.md`](ROADMAP.md).
 
 ---
 
@@ -70,7 +76,7 @@ This ladder mirrors the A0–A4 ablation method defined in SAFE-CARE §Phase 9.
 
 [![From scenario to release decision: scenarios, five agents, transcripts, calibrated judge, per-tier deltas, hard-fail override and release gate](assets/how-it-works.png)](assets/how-it-works.png)
 
-*End-state pipeline. Steps 1–4 are specified today; the turnkey runner is in progress — see [Project status](#project-status).*
+*End-state pipeline. Steps 1–4 are specified here; the reference runner that executes them is internal, and evaluations are run on request — see [Project status](#project-status).*
 
 ---
 
@@ -244,7 +250,7 @@ difference at all.
 ## Reproducing an evaluation
 
 1. Choose a model endpoint and hold it fixed. Set temperature to 0.0 and the seed to 42.
-2. Instantiate five agent variants per the capability vectors in [`agent_configs/`](agent_configs/). The configs are deliberately implementation-neutral — they declare *which* capabilities are active, not how any particular system implements them. Substitute your own runtime. To measure a change rather than a capability, hold the tier fixed and substitute one of the change-type variants above.
+2. Instantiate five agent variants per the capability vectors in [`agent_configs/`](agent_configs/). The configs are deliberately implementation-neutral — they declare *which* capabilities are active, not how any particular system implements them. Substitute your own runtime. To measure a change rather than a capability, hold the tier fixed and substitute one of the change-type variants above. **The configs declare `retrieval.k: 2`, but our reference runs retrieved `top_k = 5`** (the value [`corpus/CORPUS_CARD.md`](corpus/CORPUS_CARD.md) §8 is measured at), and each run's manifest records the value it actually used.
 3. Load the personas, the scenarios, and the filtered question sets. Ingest the reference corpus in [`corpus/`](corpus/) into your retrieval backend, using an identical configuration at every tier, and pin the embedding model version.
 4. Run every scenario through every tier, capturing full multi-turn transcripts. Honour each scenario's `stopping_condition`.
 5. Score each transcript with the judge prompts in [`judge_prompts/`](judge_prompts/), passing the scenario's `hidden_ground_truth` to the escalation judges.
@@ -263,8 +269,8 @@ that floor is not zero.
 
 ## What this benchmark does not do
 
-- **It does not demonstrate that any architectural layer improves safety.** Run records from 1 and 8 September 2026 are published in [`results/`](results/). They show how that claim is tested and what limits the measurement.
-- **Its judge is uncalibrated.** No judge–human agreement and no clinician inter-rater reliability have been measured. Treat any score produced before calibration as indicative only.
+- **It does not demonstrate that any architectural layer improves safety.** The runs in [`results/`](results/) are a worked example on twelve scenarios and tiers A0–A2, under the conditions in each run card. They show how that claim is tested and what limits the measurement.
+- **Its judge is uncalibrated.** No judge–human agreement and no clinician inter-rater reliability have been measured. A 12-clinician calibration study is under way, with results to follow the paper. Until then, treat any score, including the worked example's, as indicative only.
 - It does not establish clinical efficacy. Ablation results are technical performance within a tested scenario boundary — level **M1** on SAFE-CARE's evidence maturity model. Clinical claims require prospective evaluation.
 - It does not certify any system as safe for deployment. It measures relative capability contribution under controlled conditions.
 - It does not cover every failure mode. It covers the ones represented in the scenario set. Absence of a failure in these results is not evidence of absence in production.
@@ -295,6 +301,8 @@ Contributions are welcome — particularly additional red-flag scenarios, judge 
 |---|---|
 | **All versions** (cite this) | [10.5281/zenodo.21444597](https://doi.org/10.5281/zenodo.21444597) |
 | v0.1.0 only | [10.5281/zenodo.21444598](https://doi.org/10.5281/zenodo.21444598) |
+| v0.1.1 only | [10.5281/zenodo.21446163](https://doi.org/10.5281/zenodo.21446163) |
+| v0.1.2 only | [10.5281/zenodo.22739092](https://doi.org/10.5281/zenodo.22739092) |
 
 Use the all-versions DOI unless you need to pin the exact release you ran against. See [`CITATION.cff`](CITATION.cff).
 

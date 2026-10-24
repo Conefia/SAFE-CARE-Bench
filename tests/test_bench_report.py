@@ -14,6 +14,7 @@ import contextlib, csv, hashlib, io, json, os, re, shutil, tempfile, unittest
 from bench_report.__main__ import main
 from bench_report.report import DIMENSION_NAMES
 from bench_report.run import BENCH_ROOT
+from bench_report.shapes import text_hits
 
 PLANTED_RULE = "RULE-ESC-017"
 FAKE_KB = "FAKEKB0001"
@@ -316,6 +317,61 @@ class ReportTests(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertIn("must be the published name", err)
 
+    # -- Shape checks -----------------------------------------------------------
+    def test_shape_rules_catch_synthetic_identifiers(self):
+        # every value here is made up; none comes from any real run or account
+        planted = {
+            "10-character resource id": "kb FAKEKB0001 here",
+            "ARN": "arn:aws:bedrock:us-east-1:000000000000:knowledge-base/x",
+            "storage URL": "see s3://example-bucket/path",
+            "AWS access key": "AKIAEXAMPLEEXAMPLE00",
+            "AWS account id": "account 000000000000",
+            "UUID": "run 00000000-0000-4000-8000-000000000000",
+            "base64 blob": "Zm9vYmFyRXhhbXBsZUJhc2U2NFN0cmluZzEyMzQ1",
+            "email address": "someone@example.com",
+            "local path": r"C:\Users\someone\run",
+            "long hex outside an allowed hash": "hash " + "ab" * 32,
+        }
+        for rule, line in planted.items():
+            self.assertIn((1, rule), text_hits(line), rule)
+
+    def test_shape_rules_allow_what_reports_print(self):
+        allowed = [
+            "| `A0` | `%s` | **none recorded** | gpt-4o-mini |" % ("a0" * 32),
+            "- **Bench commit:** `%s` (tree dirty at run time)" % ("e" * 40),
+            "- **Run dates:** first call 2026-09-01T16:26:57.586955Z",
+            "| Medical accuracy | 0.741 ± 0.028 (n=9) | 0.6583333333333333 |",
+            "| `A1` | 15 | 4 | 0 | S006 ×3, S012 ×1 |",
+            "GUARDRAILS ESCALATION",   # ten capital letters, no digit: a word, not an id
+        ]
+        for line in allowed:
+            self.assertEqual(text_hits(line), [], line)
+
+    @unittest.skipUnless(os.path.isdir(os.path.join(BENCH_ROOT, "results", "run_2026-09-01")),
+                         "needs results/run_2026-09-01")
+    def test_no_shape_findings_on_the_published_run(self):
+        run = os.path.join(BENCH_ROOT, "results", "run_2026-09-01")
+        for extra in ((), ("--all-scenarios",)):
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                self.assertEqual(main([run, "--out", self.out] + list(extra)), 0)
+            self.assertNotIn("shape check", out.getvalue(), extra)
+
+    def test_planted_id_warns_on_draft_and_refuses_final_without_echoing_it(self):
+        run = make_run(self.tmp, bench_version="v0.2.0 " + FAKE_KB)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(main([run, "--out", self.out]), 0)
+        self.assertIn("warning: shape check, field run card bench_version: unexpected shape", out.getvalue())
+        self.assertRegex(out.getvalue(), r"report line \d+: 10-character resource id")
+        with open(self.out, "rb") as f:
+            data = f.read()
+        code, err = self.final(run, self.out, self.verdict(data))
+        self.assertEqual(code, 2)
+        self.assertIn("10-character resource id", err)
+        self.assertNotIn(FAKE_KB, err + out.getvalue())
+        self.assertFalse(os.path.exists(self.final_out))
+
     def test_card_fields_outside_allow_list_never_reach_the_report(self):
         text = self.report(make_run(self.tmp))
         self.assertNotIn(FAKE_KB, text)
@@ -387,7 +443,7 @@ class ReportTests(unittest.TestCase):
     def test_published_provenance_comes_from_manifests_and_card_tables(self):
         text = self.report(make_published_run(self.tmp))
         self.assertIn("- **Seeds:** not exposed by the provider", text)
-        self.assertIn("- **Bench commit:** %s (tree dirty at run time)" % ("b" * 40), text)
+        self.assertIn("- **Bench commit:** `%s` (tree dirty at run time)" % ("b" * 40), text)
         self.assertIn("- **Generation model:** `gen-model`", text)
         what_was_run = section(text, 6)
         self.assertIn("`%s`" % ("a1" * 32), what_was_run)

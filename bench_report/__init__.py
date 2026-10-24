@@ -26,7 +26,8 @@ Design notes
 * A draft and its final report are the same bytes; only the `*.draft.md` name
   marks a draft. `--final` fails closed: it publishes the draft unchanged only if
   the draft is what the run renders now, the ip-check verdict's sha256 matches it
-  with every item PASS and no NEEDS HUMAN, and the deny list passes. The verdict
+  with every item PASS and no NEEDS HUMAN, and the deny list and the shape checks
+  (`shapes.py`) pass. A draft run prints the same findings as warnings. The verdict
   and the deny list must both be configured and live outside this repository.
 """
 

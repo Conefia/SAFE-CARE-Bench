@@ -10,6 +10,7 @@ import argparse, os, sys
 from .check import CheckError, deny_hits, load_deny_list, read_verdict, verdict_problems
 from .report import render
 from .run import BENCH_ROOT, RunFormatError, load
+from .shapes import field_problems, text_hits
 
 DRAFT_SUFFIX = ".draft.md"
 
@@ -25,6 +26,12 @@ def write_bytes(path, data):
 def refuse(message):
     print("refused: %s" % message, file=sys.stderr)
     return 2
+
+
+def shape_findings(run, text):
+    """Shape-check findings as printable lines; they name places and rules, never values."""
+    return (["field %s: %s" % p for p in field_problems(run)]
+            + ["report line %d: %s" % h for h in text_hits(text)])
 
 
 def main(argv=None):
@@ -60,6 +67,8 @@ def main(argv=None):
             return 1
         write_bytes(args.out, data)
         print("draft written: %s" % args.out)
+        for finding in shape_findings(run, data.decode("utf-8")):
+            print("warning: shape check, %s" % finding)
         if args.deny_list:
             try:
                 hits = deny_hits(data.decode("utf-8"), load_deny_list(args.deny_list))
@@ -88,11 +97,12 @@ def main(argv=None):
     problems = verdict_problems(verdict, draft, os.path.basename(args.draft))
     if problems:
         return refuse("the ip-check verdict does not clear this draft:\n  " + "\n  ".join(problems))
-    hits = deny_hits(draft.decode("utf-8"), entries)
-    if hits:
-        for report_line, deny_line in hits:
-            print("refused: report line %d matches deny-list entry on line %d" % (report_line, deny_line),
-                  file=sys.stderr)
+    text = draft.decode("utf-8")
+    findings = ["report line %d matches deny-list entry on line %d" % h for h in deny_hits(text, entries)]
+    findings += ["shape check, %s" % f for f in shape_findings(run, text)]
+    if findings:
+        for finding in findings:
+            print("refused: %s" % finding, file=sys.stderr)
         return 2
 
     write_bytes(args.out, draft)

@@ -49,6 +49,14 @@ def _fmt(x):
     return "%.3f" % x
 
 
+def _code(value):
+    """A version or commit in backticks, keeping a trailing note outside them."""
+    if not value:
+        return None
+    head, _, note = value.partition(" ")
+    return "`%s`%s" % (head, " " + note if note else "")
+
+
 def _arm_order(arm):
     base = arm.split("-")[0]
     return (TIERS.index(base) if base in TIERS else len(TIERS), arm != base, arm)
@@ -160,7 +168,7 @@ def section_summary(run, ctx):
         "- **Generation model:** %s" % (", ".join("`%s`" % m for m in models) or NOT_RECORDED),
         "- **Judge model:** %s" % ("; ".join(judges) or NOT_RECORDED),
         "- **Scores used:** %s; scale %s" % (selection, scale),
-        "- **Bench version:** %s" % (card.get("bench_version") or card.get("bench_repo_ref") or NOT_RECORDED),
+        "- **Bench version:** %s" % (_code(card.get("bench_version") or card.get("bench_repo_ref")) or NOT_RECORDED),
         "- **Report generator:** bench_report %s" % __version__,
     ]
     return lines
@@ -290,12 +298,12 @@ def section_run(run, ctx):
         lines += ["**No corpus digest is recorded for %s.** This report cannot show which corpus text "
                   "those arms retrieved from." % ", ".join("`%s`" % a for a in undigested), ""]
     verified = card.get("corpus.verified") or card.get("corpus_verified")
-    prompts = ["`%s` %s" % (k, v) for k, v in card.items() if k.startswith("judge_prompt_sha256")]
+    prompts = ["`%s` `%s`" % (k, v) for k, v in card.items() if k.startswith("judge_prompt_sha256")]
     judges = _judge_models(run, card)
     seeds = _seeds(card)
     scenario_sets = run["manifests"]["scenario_sets"]
     if "scenario_set_sha256" in card:
-        scenario_set = card["scenario_set_sha256"]
+        scenario_set = "`%s`" % card["scenario_set_sha256"]
     elif len(scenario_sets) == 1:
         scenario_set = ("no single digest; per-scenario sha256 for %d scenarios, identical in every manifest"
                         % len(next(iter(scenario_sets))))
@@ -311,7 +319,7 @@ def section_run(run, ctx):
         "- **Judge prompt hashes:** %s" % ("; ".join(prompts) or ("see table below" if run["manifests"]["judges"]
                                                                  else NOT_RECORDED)),
         "- **Seeds:** %s" % ("; ".join(seeds) or NOT_RECORDED),
-        "- **Bench commit:** %s" % card.get("bench_repo_ref", NOT_RECORDED),
+        "- **Bench commit:** %s" % (_code(card.get("bench_repo_ref")) or NOT_RECORDED),
         "- **Run dates:** first call %s; last call %s; card produced %s" % (
             started or "not recorded", finished or "not recorded", card.get("produced_utc", "not recorded")),
     ]

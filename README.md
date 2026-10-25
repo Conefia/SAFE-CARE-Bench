@@ -265,6 +265,16 @@ on its own; re-generate an identical configuration and report how much *that* mo
 two configurations is uninterpretable without the floor it is read against, and at temperature zero
 that floor is not zero.
 
+### Generating a report
+
+[`bench_report/`](bench_report/) turns a published run directory into a Markdown report with seven fixed sections: summary, scores by tier, paired differences between adjacent tiers, missed escalations, calibration status, what was run, and the limitations that apply. It is a formatter only, in standard-library Python (tested on 3.12). It calls no model and runs no agent.
+
+```bash
+python -m bench_report results/run_2026-09-01 --out report.draft.md
+```
+
+It reads only allow-listed fields from the run card, the manifests and the scores file, and the same run directory always gives a byte-identical report. Scenarios a run marks out of scope for its tiers are left out and named in the summary; `--all-scenarios` puts them back. The missed-escalation count applies the hard-fail override, whether or not the run did. `--final` is the maintainers' release step, which publishes a draft only after it passes the release check. Run the tests with `python -m unittest discover -s tests`.
+
 ---
 
 ## What this benchmark does not do

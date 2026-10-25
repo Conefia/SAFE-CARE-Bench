@@ -32,7 +32,7 @@ CARD_SHAPES = [
     (re.compile(r"run_id"), _ID),
     (re.compile(r"produced_utc"), _UTC),
     (re.compile(r"bench_version"), re.compile(r"v?[0-9][A-Za-z0-9.+-]{0,39}")),
-    (re.compile(r"bench_repo_ref"), re.compile(r"[0-9a-f]{7,40}( \(tree dirty at run time\))?")),
+    (re.compile(r"bench_repo_ref|engine_repo_ref"), re.compile(r"[0-9a-f]{7,40}( \(tree dirty at run time\))?")),
     (re.compile(r"agent_model_id|judge(_\d+)?_model_id"), _MODEL),
     (re.compile(r"judge_prompt_sha256\S*|scenario_set_sha256|corpus_manifest_sha256|corpus_digest"), _SHA256),
     (re.compile(r"conversations_generated|conversations_errored"), re.compile(r"\d{1,6}")),

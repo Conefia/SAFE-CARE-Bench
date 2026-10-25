@@ -24,7 +24,16 @@ CARD_KEYS = re.compile(
 
 # Run-card table rows a report may print, as {row label: card key}. Published
 # cards are prose with tables rather than a key block; only these rows are read.
-CARD_ROWS = {"Seed": "seed", "Bench": "bench_repo_ref"}
+# The engine repository is private, but its commit names the version that ran.
+CARD_ROWS = {"Seed": "seed", "Bench": "bench_repo_ref", "Engine": "engine_repo_ref"}
+
+# Run-card headings a report may point to, as {key: heading pattern}. Only the
+# section number is kept, never the text under the heading.
+CARD_SECTIONS = {
+    "models": re.compile(r"^## (\d+)\. Models\b", re.M),
+    "defects": re.compile(r"^## (\d+)\. Known defects\b", re.M),
+}
+DIVERGENCES = re.compile(r"^### .*declared divergences", re.M | re.I)
 
 # Score columns, by role. The first alias present in the file is used.
 # A conversation is identified by arm, scenario and this column together.
@@ -70,11 +79,28 @@ def read_card(run_dir):
         if len(cells) < 2 or cells[0] not in CARD_ROWS or CARD_ROWS[cells[0]] in card:
             continue
         value = re.sub(r"[`*]", "", cells[1]).strip()
-        if cells[0] == "Bench" and len(cells) > 2 and "dirty" in cells[2].lower():
+        if cells[0] in ("Bench", "Engine") and len(cells) > 2 and "dirty" in cells[2].lower():
             value += " (tree dirty at run time)"
         if value:
             card[CARD_ROWS[cells[0]]] = value
     return card
+
+
+def read_card_sections(run_dir):
+    """{key: section number} for the run-card sections a report points readers to."""
+    with open(os.path.join(run_dir, "RUN_CARD.md"), encoding="utf-8") as f:
+        text = f.read()
+    sections = {}
+    for key, pattern in CARD_SECTIONS.items():
+        m = pattern.search(text)
+        if m:
+            sections[key] = m.group(1)
+    m = DIVERGENCES.search(text)
+    if m:
+        parents = re.findall(r"^## (\d+)\. ", text[:m.start()], re.M)
+        if parents:
+            sections["divergences"] = parents[-1]
+    return sections
 
 
 # ---------------------------------------------------------------------------
@@ -174,7 +200,8 @@ def read_manifests(run_dir):
 
     Only named fields are read: agent spec hash, generation model, judge model and
     prompt hash per dimension, per-scenario digests, and whether the run's own
-    hard-fail override fired. Engine commits and paths are never read.
+    hard-fail override fired. Engine commits and paths are never read from here;
+    the report takes the engine commit from the run card only.
     """
     starts, ends = [], []
     arms, judges, scenario_sets, hard_fail = {}, {}, set(), []
@@ -280,6 +307,7 @@ def load(run_dir, judge=None, scoring_config=None, bench_root=BENCH_ROOT, all_sc
     return {
         "name": os.path.basename(run_dir.rstrip("\\/")),
         "card": read_card(run_dir),
+        "card_sections": read_card_sections(run_dir),
         "rows": rows,
         "selection": selection,
         "scope": info["scope"],

@@ -12,8 +12,8 @@ that directory and `tests/expected/run_2026-09-01.json` are both present.
 import contextlib, csv, hashlib, io, json, os, re, shutil, tempfile, unittest
 
 from bench_report.__main__ import main
-from bench_report.report import DIMENSION_NAMES
-from bench_report.run import BENCH_ROOT
+from bench_report.report import DIMENSION_NAMES, build_context, missed_escalations
+from bench_report.run import BENCH_ROOT, load
 from bench_report.shapes import text_hits
 
 PLANTED_RULE = "RULE-ESC-017"
@@ -82,21 +82,24 @@ def make_run(root, corpus_digest=True, bench_version="v0.2.0-test"):
 
 
 ENGINE_COMMIT = "deadbeef" * 5
+MANIFEST_ENGINE_COMMIT = "f00dfac"
 
 
 def make_published_run(root):
     """The same scores in the published layout: tier/replicate columns, a scope column,
-    a prose run card with tables, and manifests carrying a provenance block. S003 is
-    marked out of scope."""
+    a prose run card with numbered sections and tables, and manifests carrying a
+    provenance block. S003 is marked out of scope."""
     run = os.path.join(root, "run_published")
     os.makedirs(os.path.join(run, "scores"))
     os.makedirs(os.path.join(run, "manifests"))
     with open(os.path.join(run, "RUN_CARD.md"), "w", encoding="utf-8", newline="\n") as f:
-        f.write("# Run card - test\n\n## Determinism\n\n| | |\n|---|---|\n"
-                "| Seed | **not exposed by the provider** |\n\n## Provenance\n\n"
+        f.write("# Run card - test\n\n## 2. Models\n\nAn alias only.\n\n## 3. Determinism\n\n| | |\n|---|---|\n"
+                "| Seed | **not exposed by the provider** |\n\n## 4. Provenance\n\n"
                 "| Repo | Commit | Clean? |\n|---|---|---|\n"
                 "| Engine | `" + ENGINE_COMMIT + "` | **dirty** |\n"
-                "| Bench | `" + "b" * 40 + "` | **dirty** |\n")
+                "| Bench | `" + "b" * 40 + "` | **dirty** |\n\n"
+                "## 5. Retrieval\n\n### Two declared divergences from the published specification\n\n"
+                "## 8. Known defects in this run\n\n1. Something.\n")
     header = ["scenario_id", "tier", "dimension", "judge_model", "replicate", "run_id", "score",
               "scenario_in_A0_A2_scope"]
     with open(os.path.join(run, "scores", "per_row_scores.csv"), "w", encoding="utf-8-sig", newline="") as f:
@@ -111,7 +114,7 @@ def make_published_run(root):
                             "scenario_in_A0_A2_scope": scenario != "S003"})
     for arm in ("A0", "A1", "A2"):
         provenance = {
-            "engine": {"commit": ENGINE_COMMIT[:7]},
+            "engine": {"commit": MANIFEST_ENGINE_COMMIT},
             "agent": {"id": arm, "spec_hash": arm.lower() * 32},
             "model": {"model_id": "gen-model"},
             "scenarios": {"scenarios": {"S001": "1" * 64, "S003": "3" * 64}},
@@ -194,29 +197,68 @@ class ReportTests(unittest.TestCase):
         self.assertIn("- **Conversations scored:** 12", text)
         self.assertIn("### `A0` → `A1`: Grounding (capability bundle)", text)
         self.assertIn("### `A1` → `A2`: Safety control (single capability)", text)
-        self.assertIn("| Medical accuracy | 0.375 (n=2) | 0.625 (n=2) | +0.250 |", text)
+        # paired by scenario: S001 +0.375, S003 +0.125; t on 1 df is 12.706, SD 0.177, n 2
+        self.assertIn("| Medical accuracy | 0.375 | 0.625 | +0.250 (n=2) | [-1.338, +1.838] | 2 / 0 / 0 |",
+                      section(text, 3))
         missed = section(text, 4)
-        self.assertIn("| `A0` | 2 | 2 | 0 | S001 ×2 |", missed)
-        self.assertIn("| `A1` | 2 | 1 | 0 | S001 ×1 |", missed)
-        self.assertIn("| `A2` | 2 | 0 | 0 | none |", missed)
+        self.assertIn("| `A0` | 2 | 2 | 1 | 0 | S001 ×2 |", missed)
+        self.assertIn("| `A1` | 2 | 1 | 0 | 0 | S001 ×1 |", missed)
+        self.assertIn("| `A2` | 2 | 0 | 0 | 0 | none |", missed)
+        self.assertIn("| `A0` | S001 | A0_S001_R01 | Escalation, single-turn and Escalation, multi-turn |", missed)
+        self.assertIn("| `A0` | S001 | A0_S001_R02 | Escalation, multi-turn |", missed)
+        self.assertIn("| `A1` | S001 | A1_S001_R02 | Escalation, single-turn |", missed)
+        self.assertNotIn("S003", missed)
+
+    def test_paired_difference_that_does_not_move_prints_plus_zero(self):
+        text = self.report(make_run(self.tmp))
+        # escalation_multiturn at A1 and A2 is 1.0 in every scenario
+        self.assertIn("| Escalation, multi-turn | 1.000 | 1.000 | +0.000 (n=2) | [+0.000, +0.000] | 0 / 0 / 2 |",
+                      section(text, 3))
+        self.assertNotIn("-0.000", text)
+
+    def test_t_critical_values(self):
+        from bench_report.report import _t_975
+        self.assertEqual(_t_975(8), 2.306)
+        # beyond the table: the expansion stays within 0.001 of the exact values 2.021 and 2.000
+        self.assertAlmostEqual(_t_975(40), 2.021, delta=0.001)
+        self.assertAlmostEqual(_t_975(60), 2.000, delta=0.001)
 
     @unittest.skipUnless(
         os.path.isdir(os.path.join(BENCH_ROOT, "results", "run_2026-09-01"))
         and os.path.isfile(os.path.join(BENCH_ROOT, "tests", "expected", "run_2026-09-01.json")),
         "needs results/run_2026-09-01 and tests/expected/run_2026-09-01.json")
     def test_numbers_run_2026_09_01(self):
-        """Every mean and SD matches the run's published scenario-level analysis."""
+        """Every mean and SD matches the run's published scenario-level analysis, the
+        paired differences match the paper's Table 1, and S001/S002 have no misses."""
         with open(os.path.join(BENCH_ROOT, "tests", "expected", "run_2026-09-01.json"), encoding="utf-8") as f:
             expected = json.load(f)
-        text = self.report(os.path.join(BENCH_ROOT, "results", "run_2026-09-01"))
+        run_dir = os.path.join(BENCH_ROOT, "results", "run_2026-09-01")
+        text = self.report(run_dir)
         scores = section(text, 2)
         arms = sorted(expected["means"])
         for dim in expected["means"][arms[0]]:
             cells = ["%.3f ± %.3f (n=%d)" % (expected["means"][a][dim], expected["sd"][a][dim], expected["n_scenarios"])
                      for a in arms]
             self.assertIn("| %s | %s |" % (DIMENSION_NAMES[dim], " | ".join(cells)), scores, dim)
-        for arm, count in expected["missed"].items():
-            self.assertRegex(section(text, 4), r"\| `%s` \| \d+ \| %d \|" % (re.escape(arm), count))
+
+        differences = section(text, 3)
+        for row in expected["paired_table_1"]:
+            step = re.search(r"^### `%s` → `%s`.*?(?=^### |\Z)" % (row["lo"], row["hi"]), differences, re.S | re.M)
+            self.assertIsNotNone(step, row)
+            cells = "| %+.3f (n=%d) | [%+.3f, %+.3f] | %d / %d / %d |" % (
+                row["mean"], expected["n_scenarios"], row["ci"][0], row["ci"][1], row["up"], row["down"], row["same"])
+            self.assertRegex(step.group(0), r"\| %s \| [\d.]+ \| [\d.]+ %s"
+                             % (re.escape(DIMENSION_NAMES[row["dimension"]]), re.escape(cells)))
+
+        run = load(run_dir)
+        missed = missed_escalations(run, build_context(run))
+        clean = expected["no_misses"]
+        self.assertEqual(len({(r["arm"], r["scenario"], r["conversation"]) for r in run["rows"]
+                              if r["scenario"] in clean["scenarios"]}), clean["conversations"])
+        self.assertEqual([m for a in missed.values() for m in a["misses"] if m[0] in clean["scenarios"]], [])
+        both = [[a, s, c] for a, m in sorted(missed.items()) for s, c, zero in m["misses"] if len(zero) == 2]
+        self.assertEqual(both, expected["both_judges_zero"])
+        self.assertIn("**S006:** the multi-turn escalation judge reads only the turn", section(text, 4))
 
     # -- Test 2: leak check --------------------------------------------------
     def test_planted_rule_id_refuses_final_and_names_the_line(self):
@@ -341,7 +383,11 @@ class ReportTests(unittest.TestCase):
             "- **Bench commit:** `%s` (tree dirty at run time)" % ("e" * 40),
             "- **Run dates:** first call 2026-09-01T16:26:57.586955Z",
             "| Medical accuracy | 0.741 ± 0.028 (n=9) | 0.6583333333333333 |",
-            "| `A1` | 15 | 4 | 0 | S006 ×3, S012 ×1 |",
+            "| `A1` | 15 | 4 | 0 | 0 | S006 ×3, S012 ×1 |",
+            "| `A1` | S012 | R3 | Escalation, single-turn |",
+            "| Medical accuracy | 0.769 | 0.611 | -0.157 (n=9) | [-0.312, -0.002] | 0 / 6 / 3 |",
+            "- **Generation model:** `gpt-4o-mini` (alias; no dated snapshot recorded, see run card §2)",
+            "- **Engine commit (private repository):** `%s` (tree dirty at run time)" % ("d" * 40),
             "GUARDRAILS ESCALATION",   # ten capital letters, no digit: a word, not an id
         ]
         for line in allowed:
@@ -444,12 +490,27 @@ class ReportTests(unittest.TestCase):
         text = self.report(make_published_run(self.tmp))
         self.assertIn("- **Seeds:** not exposed by the provider", text)
         self.assertIn("- **Bench commit:** `%s` (tree dirty at run time)" % ("b" * 40), text)
-        self.assertIn("- **Generation model:** `gen-model`", text)
+        self.assertIn("- **Engine commit (private repository):** `%s` (tree dirty at run time)" % ENGINE_COMMIT, text)
+        self.assertIn("- **Generation model:** `gen-model` (alias; no dated snapshot recorded, see run card §2)", text)
+        self.assertIn("- **Judge model:** `judge-model` (alias; no dated snapshot recorded, see run card §2)", text)
         what_was_run = section(text, 6)
+        self.assertIn("| Arm | Agent spec hash |", what_was_run)
         self.assertIn("`%s`" % ("a1" * 32), what_was_run)
         self.assertIn("| Medical accuracy | `judge-model` | `%s` |" % ("m" * 64), what_was_run)
         self.assertIn("per-scenario sha256 for 2 scenarios, identical in every manifest", what_was_run)
-        self.assertNotIn("deadbee", text)
+        # the engine commit comes from the run card only, never from a manifest
+        self.assertNotIn(MANIFEST_ENGINE_COMMIT, text)
+
+    def test_dated_model_has_no_alias_note_and_unrecorded_engine_commit_is_stated(self):
+        text = self.report(make_run(self.tmp))
+        self.assertIn("- **Generation model:** `gen-model-2026-01-01`\n", text)
+        self.assertIn("- **Engine commit (private repository):** not recorded in the run card or manifests", text)
+
+    def test_limitations_point_to_the_run_cards_defects_and_divergences(self):
+        limitations = section(self.report(make_published_run(self.tmp)), 7)
+        self.assertIn("Defects specific to this run are in its run card: §8 for its known defects and §5 for its "
+                      "declared divergences from the published specification.", limitations)
+        self.assertNotIn("Defects specific", section(self.report(make_run(self.tmp)), 7))
 
     def test_missed_escalations_note_when_the_run_did_not_apply_the_override(self):
         missed = section(self.report(make_published_run(self.tmp)), 4)

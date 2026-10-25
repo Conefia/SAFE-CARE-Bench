@@ -31,4 +31,4 @@ Design notes
   and the deny list must both be configured and live outside this repository.
 """
 
-__version__ = "0.2.0"
+__version__ = "0.4.0"

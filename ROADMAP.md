@@ -3,7 +3,7 @@
 SAFE-CARE Bench is an active work in progress. This file states honestly what exists, what is
 coming, and what is deliberately out of scope.
 
-## Available now — v0.2
+## Available now — v0.4
 
 - [x] **Worked example.** The two reference runs reported in the accompanying paper, tiers A0–A2,
       each with its run card, in `results/`, so the delta method is demonstrated rather than described

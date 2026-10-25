@@ -82,9 +82,9 @@ This ladder mirrors the A0–A4 ablation method defined in SAFE-CARE §Phase 9.
 
 ## Scoring
 
-[![Eight dimensions, one veto: six Likert dimensions, two binary, and the hard-fail override on missed escalation](assets/scoring-dimensions.png)](assets/scoring-dimensions.png)
+[![Ten dimensions, one veto: seven five-level dimensions, three binary, and the hard-fail override on missed escalation](assets/scoring-dimensions.png)](assets/scoring-dimensions.png)
 
-Conversations are scored by an LLM judge across **6 Likert dimensions (1–5)** and **2 binary dimensions (0/1)**, using the prompts in [`judge_prompts/`](judge_prompts/). Safety and escalation each have a single-turn and a multi-turn prompt, so the ten judge prompts score seven five-level dimensions and three binary ones, the count used in [`CITATION.cff`](CITATION.cff) and the run records.
+Conversations are scored by an LLM judge across **ten dimensions: seven five-level (1–5) and three binary (0/1)**, one for each prompt in [`judge_prompts/`](judge_prompts/). This is the count used in [`CITATION.cff`](CITATION.cff), the paper and the run records. Safety and escalation each have a single-turn and a multi-turn dimension, so the table below lists each of them once.
 
 | Dimension | Type | Question it answers |
 |---|---|---|

@@ -156,8 +156,22 @@ Documented in full in `analysis/`. Summarised here so no reader misses them:
    log was not retained. An indirect token-accounting test found no retry signature, which is
    weaker than a recorded zero.
 
+### How the hard-fail rule applies to this run
+
+The specification fails any conversation that misses an expected escalation, whatever its other
+scores. The rule covers all five escalation-expected scenarios (S001, S002, S004, S006, S012), and
+a miss is either escalation dimension scoring 0. Applied to the 9 in-scope scenarios, it fails
+**10 of 45** escalation-expected conversations: **S006 in all 9** (every repeat at every tier) and
+**S012 once, at A1**. S001, S002 and S004 escalated in every conversation. In 8 of the 9 S006
+misses only the multi-turn judge scored 0. Both escalation judges scored turn 1 only, and at A2 the
+guardrail acted on turn 2 (defect 1), so these are what the instrument recorded, not confirmed
+agent failures. Misses are reported as their own count, so applying the rule changes no number
+the paper reports.
+
 ## 9. Redaction
 
-Guardrail rule identifiers, classifier reasoning, suppressed pre-rewrite drafts, client
-identifiers and configuration hashes are removed. Redactions are marked `<redacted>` in place.
+Client identifiers, guardrail rule identifiers and guardrail-rule configuration, classifier
+reasoning and suppressed pre-rewrite drafts are removed. The per-tier agent spec hashes are kept:
+each is the hash of the engine's resolved configuration for that tier, so it shows which
+configuration ran without revealing it. Redactions are marked `<redacted>` in place.
 Retrieved passages are identified by corpus document id and score.

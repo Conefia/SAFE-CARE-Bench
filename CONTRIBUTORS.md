@@ -29,8 +29,8 @@ Conefia LLC
 **Software** · **Data curation**
 
 Repository and dataset hygiene, including line-ending integrity and checksum verification across
-the dataset build, and inbound-data handling for the public-release boundary. Contributing to the
-reference runner and execution harness for the v0.2 release.
+the dataset build, and inbound-data handling for the public-release boundary. Contributed to the
+reference runner and execution harness behind the published runs.
 
 ## Monzir Hafez — co-author
 
@@ -39,8 +39,8 @@ Conefia LLC
 **Software** · **Data curation** · **Validation**
 
 Implemented the dataset filtering pipeline and produced the domain-filtered question sets derived
-from MedQA, MedMCQA, and MENST. Contributing the reference runner and execution harness for the
-v0.2 release.
+from MedQA, MedMCQA, and MENST. Contributed to the reference runner and execution harness behind
+the published runs.
 
 ---
 

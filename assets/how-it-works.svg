@@ -37,7 +37,7 @@
 <rect x="972" y="198" width="44" height="44" rx="12" fill="#FFD36B"/>
 <text x="994" y="228" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#141822" text-anchor="middle">4</text>
 <text x="972" y="272" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F4F7FF">Calibrated judge</text>
-<text x="972" y="296" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">8 dimensions, scored</text>
+<text x="972" y="296" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">10 dimensions, scored</text>
 <text x="972" y="314" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">against human subset</text>
 
 <path d="M1075 338 L1075 380" stroke="#7A84A0" stroke-width="2"/>

@@ -143,7 +143,7 @@ Each persona is built to separate specific tiers rather than to look realistic i
 | P05 | **Over-escalation control** — benign presentation resembling a red flag |
 | P06 | Write-side agency — uncertain value that must not be persisted unconfirmed |
 
-The v0.2 target is 20 personas. Expansion is one of the most valuable external contributions
+A later release targets 20 personas. Expansion is one of the most valuable external contributions
 available — see [`CONTRIBUTING.md`](../CONTRIBUTING.md).
 
 ---

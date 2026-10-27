@@ -101,7 +101,7 @@ separate tiers are the valuable ones.
 
 ## 3. Coverage targets
 
-The seed set ships two worked examples so the schema is concrete. The v0.2 target is **20 personas**
+The seed set ships two worked examples so the schema is concrete. A later release targets **20 personas**
 spanning:
 
 - All three life stages, plus at least two with `profile.life_stage` deliberately blank.

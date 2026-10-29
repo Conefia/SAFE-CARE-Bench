@@ -13,3 +13,17 @@
 # checks them, so a CRLF/LF rewrite on checkout is a correctness failure, not cosmetic.
 corpus/docs/*.md            -text
 corpus/kb_sets/**/*.md      -text
+
+# The retrieval corpus is checksummed the same way, in corpus/manifest.json, but it
+# is Markdown and was not covered by the two rules above — so with core.autocrlf=true
+# Git rewrote all six documents to CRLF on a Windows checkout and every working-tree
+# digest disagreed with the manifest, which computes over LF bytes. Nothing was
+# corrupted and Excel was never involved; the LF-normalised digest matches exactly.
+#
+# `text eol=lf` rather than `-text`: these are prose documents that get reviewed, so
+# keeping them diffable matters, and forcing LF in the working tree is what makes the
+# checksum true on every platform.
+#
+# After changing this, run `git add --renormalize .` once — an attribute alone does
+# not rewrite files already in the working tree.
+corpus/** text eol=lf

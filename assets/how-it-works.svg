@@ -1,61 +1,59 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1520" viewBox="0 0 1280 760">
-<rect width="1280" height="760" fill="#0E1017"/>
-<text x="80" y="72" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="3" fill="#DBFE01">HOW IT WORKS</text>
-<text x="78" y="122" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="42" font-weight="800" fill="#F4F7FF">From scenario to <tspan fill="#DBFE01">release decision</tspan></text>
-
-<rect x="80" y="176" width="230" height="150" rx="14" fill="#161C2D" stroke="#2A324A"/>
-<rect x="102" y="198" width="44" height="44" rx="12" fill="#7E8FFF"/>
-<text x="124" y="228" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#141822" text-anchor="middle">1</text>
-<text x="102" y="272" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F4F7FF">Scenarios</text>
-<text x="102" y="296" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">Synthetic personas +</text>
-<text x="102" y="314" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">filtered clinical sets</text>
-
-<path d="M322 251 L358 251" stroke="#7A84A0" stroke-width="2"/>
-<path d="M352 245 L360 251 L352 257 Z" fill="#7A84A0"/>
-
-<rect x="370" y="176" width="230" height="150" rx="14" fill="#161C2D" stroke="#2A324A"/>
-<rect x="392" y="198" width="44" height="44" rx="12" fill="#66F0FF"/>
-<text x="414" y="228" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#141822" text-anchor="middle">2</text>
-<text x="392" y="272" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F4F7FF">Five agents</text>
-<text x="392" y="296" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">A0 to A4, identical</text>
-<text x="392" y="314" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">model and seed</text>
-
-<path d="M612 251 L648 251" stroke="#7A84A0" stroke-width="2"/>
-<path d="M642 245 L650 251 L642 257 Z" fill="#7A84A0"/>
-
-<rect x="660" y="176" width="230" height="150" rx="14" fill="#161C2D" stroke="#2A324A"/>
-<rect x="682" y="198" width="44" height="44" rx="12" fill="#93F5A3"/>
-<text x="704" y="228" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#141822" text-anchor="middle">3</text>
-<text x="682" y="272" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F4F7FF">Transcripts</text>
-<text x="682" y="296" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">Full multi-turn</text>
-<text x="682" y="314" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">conversations captured</text>
-
-<path d="M902 251 L938 251" stroke="#7A84A0" stroke-width="2"/>
-<path d="M932 245 L940 251 L932 257 Z" fill="#7A84A0"/>
-
-<rect x="950" y="176" width="250" height="150" rx="14" fill="#161C2D" stroke="#2A324A"/>
-<rect x="972" y="198" width="44" height="44" rx="12" fill="#FFD36B"/>
-<text x="994" y="228" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="22" font-weight="800" fill="#141822" text-anchor="middle">4</text>
-<text x="972" y="272" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F4F7FF">Calibrated judge</text>
-<text x="972" y="296" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">8 dimensions, scored</text>
-<text x="972" y="314" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="14" fill="#AEB8CD">against human subset</text>
-
-<path d="M1075 338 L1075 380" stroke="#7A84A0" stroke-width="2"/>
-<path d="M1069 374 L1075 382 L1081 374 Z" fill="#7A84A0"/>
-
-<rect x="80" y="392" width="1120" height="120" rx="14" fill="#161C2D" stroke="#2A324A"/>
-<text x="104" y="428" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F4F7FF">5 · Per-tier scores and adjacent deltas</text>
-<text x="104" y="456" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" fill="#AEB8CD">Each capability layer is attributed a measured contribution — evidence, not intuition.</text>
-<text x="104" y="486" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" fill="#AEB8CD">Report means by tier, the delta between tiers, and judge&#8211;human agreement.</text>
-
-<path d="M640 524 L640 566" stroke="#7A84A0" stroke-width="2"/>
-<path d="M634 560 L640 568 L646 560 Z" fill="#7A84A0"/>
-
-<rect x="80" y="578" width="550" height="94" rx="14" fill="#1A1418" stroke="#F0555F"/>
-<text x="104" y="612" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#F0555F">Hard-fail override</text>
-<text x="104" y="642" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" fill="#AEB8CD">A missed escalation blocks release. No average overrides it.</text>
-
-<rect x="650" y="578" width="550" height="94" rx="14" fill="#141A16" stroke="#93F5A3"/>
-<text x="674" y="612" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#93F5A3">Release gate</text>
-<text x="674" y="642" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" fill="#AEB8CD">All gates passed and owned. Incidents become regression tests.</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="2560" height="1680" viewBox="0 0 1280 840" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTozNmZjMzY0NS0yYjEwLTQzYWYtODE4Ny0zNzZhN2UyNjllYTYAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaFli3+SUmDteUKiAxqafzewAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDoxMzNhOTFmMi0wMTQyLTRlMDAtOTJiMi1jNDAxMDhiZGYyOTVscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoKBQCze/zUijyAOsgIVk1PQAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggll9QF2S7p2NS7zq+GS1kEDJgscAxr5+Qh+JnPsj2ZP+kZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaNQnbQpVsLLHlwb8uzm1oFgAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCDX0C2itDHTEt1xl8e0LlP+9QYbr9WWjeWMqwvy44GEvmRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBiZZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjM2ZmMzNjQ1LTJiMTAtNDNhZi04MTg3LTM3NmE3ZTI2OWVhNi9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOmQyZTVhMzVlLTVlM2QtNGYwMS04ZmYxLWQ5MjBlNDIyNDhkOHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCCWX1AXZLunY1LvOr4ZLWQQMmCxwDGvn5CH4mc+yPZk/6JjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggtQG5MUXMI7NCiVDNRRaDIugvy/PtIquPJUi+G7HO4lWiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggBiRIasz6s4WwTxw0s70xKFirAO081QIZGfFTD7w3jXZ0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQEjcefNzHD6JT6ruREcs/5FgfEUpAfT07/nw2eX86T1wQKfMxjAakq0ulXTQ2hijX3ut2FENJ7dM6L0DGH9ozKM=</c2pa:manifest></metadata>
+<rect width="1280" height="840" fill="#0E1017"/>
+<text x="80.0" y="72.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#DBFE01" letter-spacing="3">HOW IT WORKS</text>
+<text x="78" y="126" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="46" font-weight="800" fill="#F4F7FF">From scenario to <tspan fill="#DBFE01">release decision</tspan></text>
+<rect x="80.0" y="182.0" width="241.0" height="200.0" rx="16" fill="#161C2D" stroke="#34405E" stroke-width="1.5"/>
+<rect x="102.0" y="204" width="50" height="50" rx="14" fill="#7E8FFF"/>
+<text x="127.0" y="238.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="24" font-weight="800" text-anchor="middle" fill="#141822">1</text>
+<text x="102.0" y="290.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="21" font-weight="700" fill="#F4F7FF">Scenarios</text>
+<text x="102.0" y="318.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#C9D1E2">Personas and clinical</text>
+<text x="102.0" y="340.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#C9D1E2">sets, in a fixed,</text>
+<text x="102.0" y="362.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#C9D1E2">versioned corpus</text>
+<path d="M329.0 282.0 L348.0 282.0" stroke="#E3E8F5" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M365.0 282.0 L348.0 291.5 L348.0 272.5 Z" fill="#E3E8F5" stroke="#E3E8F5" stroke-width="1.5" stroke-linejoin="round"/>
+<rect x="373.0" y="182.0" width="241.0" height="200.0" rx="16" fill="#161C2D" stroke="#34405E" stroke-width="1.5"/>
+<rect x="395.0" y="204" width="50" height="50" rx="14" fill="#66F0FF"/>
+<text x="420.0" y="238.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="24" font-weight="800" text-anchor="middle" fill="#141822">2</text>
+<text x="395.0" y="290.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="21" font-weight="700" fill="#F4F7FF">Five agents</text>
+<text x="395.0" y="318.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#C9D1E2">A0 to A4: same model,</text>
+<text x="395.0" y="340.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#C9D1E2">same seed, one layer</text>
+<text x="395.0" y="362.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#C9D1E2">added at each tier</text>
+<path d="M622.0 282.0 L641.0 282.0" stroke="#E3E8F5" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M658.0 282.0 L641.0 291.5 L641.0 272.5 Z" fill="#E3E8F5" stroke="#E3E8F5" stroke-width="1.5" stroke-linejoin="round"/>
+<rect x="666.0" y="182.0" width="241.0" height="200.0" rx="16" fill="#161C2D" stroke="#34405E" stroke-width="1.5"/>
+<rect x="688.0" y="204" width="50" height="50" rx="14" fill="#93F5A3"/>
+<text x="713.0" y="238.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="24" font-weight="800" text-anchor="middle" fill="#141822">3</text>
+<text x="688.0" y="290.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="21" font-weight="700" fill="#F4F7FF">Transcripts</text>
+<text x="688.0" y="318.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#C9D1E2">Full conversations,</text>
+<text x="688.0" y="340.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#C9D1E2">with the turns each</text>
+<text x="688.0" y="362.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#C9D1E2">judge reads declared</text>
+<path d="M915.0 282.0 L934.0 282.0" stroke="#E3E8F5" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M951.0 282.0 L934.0 291.5 L934.0 272.5 Z" fill="#E3E8F5" stroke="#E3E8F5" stroke-width="1.5" stroke-linejoin="round"/>
+<rect x="959.0" y="182.0" width="241.0" height="200.0" rx="16" fill="#161C2D" stroke="#34405E" stroke-width="1.5"/>
+<rect x="981.0" y="204" width="50" height="50" rx="14" fill="#FFD36B"/>
+<text x="1006.0" y="238.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="24" font-weight="800" text-anchor="middle" fill="#141822">4</text>
+<text x="981.0" y="290.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="21" font-weight="700" fill="#F4F7FF">Calibrated judge</text>
+<text x="981.0" y="318.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#C9D1E2">10 dimensions,</text>
+<text x="981.0" y="340.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#C9D1E2">checked against</text>
+<text x="981.0" y="362.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="16" fill="#C9D1E2">clinician ratings</text>
+<path d="M1079.5 390.0 L1079.5 405.0" stroke="#E3E8F5" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M1079.5 422.0 L1070.0 405.0 L1089.0 405.0 Z" fill="#E3E8F5" stroke="#E3E8F5" stroke-width="1.5" stroke-linejoin="round"/>
+<rect x="80.0" y="430.0" width="1120.0" height="134.0" rx="16" fill="#161C2D" stroke="#34405E" stroke-width="1.5"/>
+<text x="106.0" y="472.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#F4F7FF">5 · Per-tier scores and adjacent deltas</text>
+<text x="106.0" y="506.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="17" fill="#C9D1E2">Each capability layer gets a measured contribution: evidence, not intuition.</text>
+<text x="106.0" y="534.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="17" fill="#C9D1E2">Reported by tier and by dimension, against the noise floor and judge&#8211;clinician agreement.</text>
+<path d="M640 570 L640 590" stroke="#E3E8F5" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M355 590 L925 590" stroke="#E3E8F5" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M355.0 590.0 L355.0 601.0" stroke="#FF6B74" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M355.0 618.0 L345.5 601.0 L364.5 601.0 Z" fill="#FF6B74" stroke="#FF6B74" stroke-width="1.5" stroke-linejoin="round"/>
+<path d="M925.0 590.0 L925.0 601.0" stroke="#93F5A3" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M925.0 618.0 L915.5 601.0 L934.5 601.0 Z" fill="#93F5A3" stroke="#93F5A3" stroke-width="1.5" stroke-linejoin="round"/>
+<rect x="80.0" y="626.0" width="550.0" height="130.0" rx="16" fill="#2A1418" stroke="#FF6B74" stroke-width="2"/>
+<text x="106.0" y="670.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#FF6B74">Hard-fail conditions</text>
+<text x="106.0" y="704.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="17" fill="#C9D1E2">Checked before any average.</text>
+<text x="106.0" y="730.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="17" fill="#C9D1E2">A missed escalation blocks release.</text>
+<rect x="650.0" y="626.0" width="550.0" height="130.0" rx="16" fill="#12241A" stroke="#93F5A3" stroke-width="2"/>
+<text x="676.0" y="670.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#93F5A3">Release gate</text>
+<text x="676.0" y="704.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="17" fill="#C9D1E2">A named owner records the decision on</text>
+<text x="676.0" y="730.0" font-family="Poppins, Helvetica, Arial, sans-serif" font-size="17" fill="#C9D1E2">this evidence: enable, restrict or reject.</text>
 </svg>

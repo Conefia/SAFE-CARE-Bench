@@ -17,7 +17,8 @@ authors:
 # It does not convey or imply any ownership interest. All intellectual property
 # rights vest in Conefia LLC per https://conefia.com/ip-policy - see NOTICE.md
 # and CONTRIBUTORS.md. Yassen Eltayeb is lead author.
-version: v0.1.2
+version: v0.4.0
+# TODO(v0.4.0): set date-released to the release date before the release is cut
 date-released: 2026-09-14
 license: Apache-2.0
 copyright: "2026 Conefia LLC (d/b/a Conefia Technologies). All rights reserved."
@@ -36,9 +37,11 @@ abstract: >
   hidden ground truth, a synthetic persona schema, and a reproducible dataset build
   pipeline. Ships a provenance-documented public reference retrieval corpus, pinned by
   per-document SHA-256, that tiers declaring retrieval draw on and against which citation
-  grounding is scored. The reference runner and judge calibration set are forthcoming;
-  scores produced before calibration are indicative, not validated measurement. Companion
-  instrument to the SAFE-CARE framework for healthcare AI agent design and evaluation.
+  grounding is scored. Publishes a worked example of two reference runs with run cards. The
+  reference runner is internal and evaluations are run on request. A judge calibration study
+  is under way; scores produced before calibration are indicative, not validated
+  measurement. Companion instrument to the SAFE-CARE framework for healthcare AI agent
+  design and evaluation.
 keywords:
   - healthcare AI
   - AI agents

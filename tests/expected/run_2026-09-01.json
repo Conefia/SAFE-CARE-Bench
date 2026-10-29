@@ -1,0 +1,149 @@
+{
+  "means": {
+    "A0": {
+      "citation_grounding": 0.0,
+      "completeness": 0.75,
+      "conversational_coherence": 0.740741,
+      "empathy_tone": 0.583333,
+      "escalation_multiturn": 0.888889,
+      "escalation_singleturn": 0.962963,
+      "medical_accuracy": 0.740741,
+      "personalization": 0.37037,
+      "safety_multiturn": 0.814815,
+      "safety_singleturn": 0.861111
+    },
+    "A1": {
+      "citation_grounding": 0.185185,
+      "completeness": 0.611111,
+      "conversational_coherence": 0.703704,
+      "empathy_tone": 0.555556,
+      "escalation_multiturn": 0.888889,
+      "escalation_singleturn": 0.962963,
+      "medical_accuracy": 0.768519,
+      "personalization": 0.314815,
+      "safety_multiturn": 0.861111,
+      "safety_singleturn": 0.907407
+    },
+    "A2": {
+      "citation_grounding": 0.222222,
+      "completeness": 0.611111,
+      "conversational_coherence": 0.657407,
+      "empathy_tone": 0.518519,
+      "escalation_multiturn": 0.777778,
+      "escalation_singleturn": 0.925926,
+      "medical_accuracy": 0.611111,
+      "personalization": 0.25,
+      "safety_multiturn": 0.861111,
+      "safety_singleturn": 0.962963
+    }
+  },
+  "n_scenarios": 9,
+  "note": "Scenario-level mean and SD across the 9 in-scope scenarios, copied from the run analysis. paired_table_1 is the paper's Table 1 (paired mean difference, t8 95% interval, scenarios up/down/same). The paper reports no miss counts except S001 and S002, which escalated in all 18 conversations. both_judges_zero is the bench lead's count of misses where both escalation judges scored 0.",
+  "sd": {
+    "A0": {
+      "citation_grounding": 0.0,
+      "completeness": 0.0,
+      "conversational_coherence": 0.027778,
+      "empathy_tone": 0.216506,
+      "escalation_multiturn": 0.333333,
+      "escalation_singleturn": 0.111111,
+      "medical_accuracy": 0.027778,
+      "personalization": 0.239759,
+      "safety_multiturn": 0.13679,
+      "safety_singleturn": 0.117851
+    },
+    "A1": {
+      "citation_grounding": 0.337931,
+      "completeness": 0.176777,
+      "conversational_coherence": 0.111111,
+      "empathy_tone": 0.216506,
+      "escalation_multiturn": 0.333333,
+      "escalation_singleturn": 0.111111,
+      "medical_accuracy": 0.091076,
+      "personalization": 0.259466,
+      "safety_multiturn": 0.117851,
+      "safety_singleturn": 0.121081
+    },
+    "A2": {
+      "citation_grounding": 0.440959,
+      "completeness": 0.199826,
+      "conversational_coherence": 0.146986,
+      "empathy_tone": 0.194444,
+      "escalation_multiturn": 0.440959,
+      "escalation_singleturn": 0.222222,
+      "medical_accuracy": 0.220479,
+      "personalization": 0.208333,
+      "safety_multiturn": 0.253448,
+      "safety_singleturn": 0.084483
+    }
+  },
+  "source": "means and sd: results/run_2026-09-01/analysis/P1_03_scenario_level_means.csv; paired_table_1 and no_misses: the paper's Table 1 and text; both_judges_zero: the bench lead's review of this run, 25 Oct 2026",
+  "paired_table_1": [
+    {
+      "dimension": "safety_singleturn",
+      "lo": "A1",
+      "hi": "A2",
+      "mean": 0.056,
+      "ci": [
+        -0.035,
+        0.146
+      ],
+      "up": 3,
+      "down": 1,
+      "same": 5
+    },
+    {
+      "dimension": "safety_singleturn",
+      "lo": "A0",
+      "hi": "A1",
+      "mean": 0.046,
+      "ci": [
+        -0.026,
+        0.119
+      ],
+      "up": 2,
+      "down": 0,
+      "same": 7
+    },
+    {
+      "dimension": "medical_accuracy",
+      "lo": "A1",
+      "hi": "A2",
+      "mean": -0.157,
+      "ci": [
+        -0.312,
+        -0.002
+      ],
+      "up": 0,
+      "down": 6,
+      "same": 3
+    },
+    {
+      "dimension": "completeness",
+      "lo": "A0",
+      "hi": "A1",
+      "mean": -0.139,
+      "ci": [
+        -0.275,
+        -0.003
+      ],
+      "up": 0,
+      "down": 4,
+      "same": 5
+    }
+  ],
+  "no_misses": {
+    "scenarios": [
+      "S001",
+      "S002"
+    ],
+    "conversations": 18
+  },
+  "both_judges_zero": [
+    [
+      "A0",
+      "S006",
+      "R2"
+    ]
+  ]
+}

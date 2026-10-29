@@ -3,13 +3,21 @@
 SAFE-CARE Bench is an active work in progress. This file states honestly what exists, what is
 coming, and what is deliberately out of scope.
 
-## Available now — v0.1.2
+## Available now — v0.4
+
+- [x] **Worked example.** The two reference runs reported in the accompanying paper, tiers A0–A2,
+      each with its run card, in `results/`, so the delta method is demonstrated rather than described
+- [x] **Evaluations on request.** The reference runner stays internal and drives hosted
+      evaluations; the configurations here stay implementation-neutral
+
+## Available since v0.1.1
 
 - [x] A0–A4 tier definitions with explicit 10-flag capability vectors, implementation-neutral
 - [x] `delta_from_previous` block on every tier naming exactly which flags the rung enables
 - [x] Ten LLM-judge prompts with strict JSON output contracts, including separate single-turn and
       multi-turn safety and escalation judges
-- [x] Full scoring anchors for 6 Likert and 2 binary dimensions
+- [x] Full scoring anchors for 7 Likert and 3 binary dimensions (safety and escalation each scored
+      single-turn and multi-turn)
 - [x] Machine-readable scenario schema with declared `hidden_ground_truth`
 - [x] Twelve multi-turn scenarios covering gradual risk emergence, stale memory, medication
       boundaries, prompt injection, overreliance, and over-escalation controls
@@ -22,15 +30,11 @@ coming, and what is deliberately out of scope.
 - [x] Public-domain reference retrieval corpus with per-document provenance, declared
       fidelity, scenario coverage map, and checksummed manifest (`corpus/`)
 
-## Next — v0.2
+## Next
 
-- [ ] **Reference runner.** A minimal, provider-agnostic harness that executes the five tiers and
-      collects transcripts against a fixed schema. This is the largest remaining gap: until it
-      ships, the repository is a specification rather than an executable benchmark.
-- [ ] **Worked example.** One complete run with published per-tier results, so the delta method is
-      demonstrated rather than described.
-- [ ] **Judge calibration set.** A human-scored subset with reported judge–human agreement. Until
-      this exists, all judge output is uncalibrated.
+- [ ] **Judge calibration set.** A human-scored subset with reported judge–human agreement. A
+      12-clinician calibration study is under way, with results to follow the paper. Until it
+      reports, all judge output is uncalibrated.
 - [ ] **MedMCQA rebuild.** Regenerate from the train split via `datasets/build.py`, complete manual
       review, and restore the file from quarantine. See [`datasets/DATASET_CARD.md`](datasets/DATASET_CARD.md).
 - [ ] **Manual dataset review.** Adjudicate rows admitted as `context_term_with_support` and record
@@ -50,6 +54,7 @@ coming, and what is deliberately out of scope.
 - [ ] Cost and latency instrumentation per tier: the safety gain of a layer is only actionable
       alongside what it costs
 - [ ] Semantic or embedding-based dataset filtering as a complement to the keyword gate
+- [ ] A public reference runner, if researchers need one to reproduce results independently
 
 ## Out of scope
 
@@ -61,13 +66,17 @@ coming, and what is deliberately out of scope.
 
 These are stated openly because a benchmark that hides its limitations is worse than no benchmark.
 
-1. **Only A0–A2 run records are published** ([`results/`](results/)), and their headline finding is
-   negative. Nothing in this repository demonstrates that any architectural layer improves safety.
-2. **No runner ships yet.** Two teams implementing these declarations against different runtimes may
-   produce materially different agents. Treat this release as an implementation-neutral
+1. **Only A0–A2 run records are published** ([`results/`](results/)), as one worked example, and
+   their headline finding is negative. They demonstrate the delta method on twelve scenarios under
+   the conditions in each run card. Nothing in this repository demonstrates that any architectural
+   layer improves safety.
+2. **The reference runner is not published.** Evaluations are run on request on the internal
+   harness. Two teams implementing these declarations against different runtimes may produce
+   materially different agents. Treat the configurations as an implementation-neutral
    specification, not a turnkey benchmark.
 3. **The judge is uncalibrated.** No judge–human agreement and no clinician inter-rater reliability
-   have been measured. Scores are indicative and must not be reported as validated measurement.
+   have been measured; the 12-clinician calibration study has not yet reported. Scores, including
+   the worked example's, are indicative and must not be reported as validated measurement.
 4. **Adjacent tiers differ by capability bundles, not single flags.** Only A1→A2 is a one-variable
    delta. Do not attribute a bundle effect to any single member.
 5. **Single clinical domain.** All current scenarios are menopause and perimenopause. Generalization

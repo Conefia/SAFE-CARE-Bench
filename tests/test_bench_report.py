@@ -14,7 +14,7 @@ import contextlib, csv, hashlib, io, json, os, re, shutil, tempfile, unittest
 from bench_report.__main__ import main
 from bench_report.report import DIMENSION_NAMES, build_context, missed_escalations
 from bench_report.run import BENCH_ROOT, load
-from bench_report.shapes import text_hits
+from bench_report.shapes import field_problems, text_hits
 
 PLANTED_RULE = "RULE-ESC-017"
 FAKE_KB = "FAKEKB0001"
@@ -422,6 +422,27 @@ class ReportTests(unittest.TestCase):
         self.assertNotIn("No corpus digest is recorded", what_was_run)
         for internal in ("JOB-INTERNAL", "DS-INTERNAL"):
             self.assertNotIn(internal, text)
+        self.assertEqual(field_problems(load(make_run(self.tmp, name="run_corpus_clean", corpus=True))), [])
+
+    def test_corpus_fields_with_the_wrong_shape_are_found(self):
+        run = make_run(self.tmp, corpus=True)
+        path = os.path.join(run, "manifests", "A1_R1_manifest.json")
+        with open(path, encoding="utf-8") as f:
+            manifest = json.load(f)
+        manifest["provenance"]["corpus"] = {"set": FAKE_KB, "digest": "not-a-digest"}
+        manifest["provenance"]["execution"]["corpus"] = {"verified": "maybe"}
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(manifest, f)
+        self.assertEqual(field_problems(load(run)), [
+            ("manifest corpus digest", "unexpected shape"),
+            ("manifest corpus set", "unexpected shape"),
+            ("manifest corpus verified", "unexpected shape"),
+        ])
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(main([run, "--out", self.out]), 0)
+        self.assertIn("warning: shape check, field manifest corpus set: unexpected shape", out.getvalue())
+        self.assertNotIn(FAKE_KB, out.getvalue())
 
     # -- Format guards ---------------------------------------------------------
     def test_scores_without_the_published_columns_are_refused(self):

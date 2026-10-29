@@ -360,17 +360,34 @@ def section_calibration(run, ctx):
 def section_run(run, ctx):
     card = run["card"]
     lines = ["## 6. What was run", ""]
-    # The published format records no corpus digest per arm and no corpus
-    # preflight result, so a report states both as not recorded.
-    body = []
+    # Corpus fields come from the manifests: provenance.corpus.set and .digest, and
+    # provenance.execution.corpus.verified. A run made before the corpus preflight
+    # carries none of them, and the report says so.
+    body, undigested = [], []
     for a in ctx["arms"]:
         configs = _manifest_values(run, a, "spec_hash") or ["not recorded"]
         models = _manifest_values(run, a, "model") or ["not recorded"]
+        digests = _manifest_values(run, a, "corpus_digest")
+        verified = _manifest_values(run, a, "corpus_verified")
+        if digests:
+            sets = _manifest_values(run, a, "corpus_set")
+            corpus = "; ".join("`%s`" % d for d in digests) + (" (set %s)" % ", ".join(sets) if sets else "")
+        elif verified == ["not_applicable"]:
+            corpus = "none: this arm retrieves nothing"
+        else:
+            corpus = "**none recorded**"
+            undigested.append(a)
         body.append(["`%s`" % a, ", ".join("`%s`" % c if c != "not recorded" else c for c in configs),
-                     "**none recorded**", ", ".join(models)])
+                     corpus, ", ".join(models)])
     lines += _table(["Arm", "Agent spec hash", "Corpus digest", "Agent model"], body) + [""]
-    lines += ["**No corpus digest is recorded for %s.** This report cannot show which corpus text "
-              "those arms retrieved from." % ", ".join("`%s`" % a for a in ctx["arms"]), ""]
+    if undigested:
+        lines += ["**No corpus digest is recorded for %s.** This report cannot show which corpus text "
+                  "those arms retrieved from." % ", ".join("`%s`" % a for a in undigested), ""]
+    results = {a: _manifest_values(run, a, "corpus_verified") for a in ctx["arms"]}
+    if not any(results.values()):
+        preflight = "not recorded; this run has no corpus preflight result"
+    else:
+        preflight = "; ".join("`%s` %s" % (a, ", ".join(v) if v else "not recorded") for a, v in results.items())
     prompts = ["`%s`" % card["judge_prompt_sha256"]] if "judge_prompt_sha256" in card else []
     judges = _judge_models(run, card)
     seeds = _seeds(card)
@@ -384,7 +401,7 @@ def section_run(run, ctx):
         scenario_set = NOT_RECORDED
     started, finished = run["dates"]
     lines += [
-        "- **Corpus verified by preflight:** not recorded; this run has no corpus preflight result",
+        "- **Corpus verified by preflight:** %s" % preflight,
         "- **Scenario set sha256:** %s" % scenario_set,
         "- **Judge models:** %s" % ("; ".join(judges) or NOT_RECORDED),
         "- **Judge prompt hashes:** %s" % ("; ".join(prompts) or ("see table below" if run["manifests"]["judges"]

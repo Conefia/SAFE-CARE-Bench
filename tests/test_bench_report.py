@@ -44,7 +44,7 @@ MANIFEST_ENGINE_COMMIT = "f00dfac"
 
 
 def make_run(root, name="run_test", s003_in_scope=True, model="gen-model-2026-01-01", seed="42",
-             bench="b" * 40, engine=ENGINE_COMMIT, sections=False, hard_fail_fired=None):
+             bench="b" * 40, engine=ENGINE_COMMIT, sections=False, hard_fail_fired=None, corpus=False):
     """A synthetic run in the published layout: a prose run card with tables (and a
     key block holding fields outside the allow-list), a scores file with the
     published columns, and manifests carrying a provenance block."""
@@ -87,6 +87,13 @@ def make_run(root, name="run_test", s003_in_scope=True, model="gen-model-2026-01
         }
         if hard_fail_fired is not None:
             provenance["execution"] = {"hard_fail_fired": hard_fail_fired}
+        if corpus:
+            # As corpus integrity writes it: A0 retrieves nothing; the internal ids must not surface.
+            retrieves = arm != "A0"
+            provenance["corpus"] = {"set": "base" if retrieves else None, "digest": "d" * 64 if retrieves else None}
+            provenance.setdefault("execution", {})["corpus"] = (
+                {"verified": True, "internal_job": "JOB-INTERNAL", "internal_source": "DS-INTERNAL"}
+                if retrieves else {"verified": "not_applicable"})
         with open(os.path.join(run, "manifests", "%s_R1_manifest.json" % arm), "w", encoding="utf-8") as f:
             json.dump({"run_id": arm, "started_at": "2026-09-01T10:00:00Z", "finished_at": "2026-09-01T11:00:00Z",
                        "provenance": provenance}, f)
@@ -404,6 +411,17 @@ class ReportTests(unittest.TestCase):
         self.assertIn("**No corpus digest is recorded for `A0`, `A1`, `A2`.**", what_was_run)
         self.assertIn("not recorded; this run has no corpus preflight result", what_was_run)
         self.assertNotRegex(what_was_run, r"\|[ \t]*\|")
+
+    # -- Test 5: corpus digest and preflight, when the run records them ----------
+    def test_recorded_corpus_digest_and_preflight_are_printed(self):
+        text = self.report(make_run(self.tmp, corpus=True))
+        what_was_run = section(text, 6)
+        self.assertIn("| `A0` | `%s` | none: this arm retrieves nothing |" % ("a0" * 32), what_was_run)
+        self.assertIn("`%s` (set base)" % ("d" * 64), what_was_run)
+        self.assertIn("- **Corpus verified by preflight:** `A0` not_applicable; `A1` true; `A2` true", what_was_run)
+        self.assertNotIn("No corpus digest is recorded", what_was_run)
+        for internal in ("JOB-INTERNAL", "DS-INTERNAL"):
+            self.assertNotIn(internal, text)
 
     # -- Format guards ---------------------------------------------------------
     def test_scores_without_the_published_columns_are_refused(self):

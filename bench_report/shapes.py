@@ -27,6 +27,9 @@ _SHA256 = re.compile(r"[0-9a-f]{64}")
 _UTC = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?Z")
 _PROSE = re.compile(r"[^|`\n]{1,160}")
 _NOT_RECORDED = re.compile(r"not_recorded|not_applicable|not_applicab|none|null|nan|", re.I)
+# A corpus set is a short lowercase name (base, cut, add), so an upper-case resource id fails.
+_CORPUS_SET = re.compile(r"[a-z][a-z0-9_-]{0,31}")
+_CORPUS_VERIFIED = re.compile(r"true|false|offline|not_applicable")
 
 CARD_SHAPES = [
     (re.compile(r"produced_utc"), _UTC),
@@ -65,6 +68,12 @@ def field_problems(run):
         for value in entry["model"]:
             if not _MODEL.fullmatch(value):
                 problems.add(("manifest model id", "unexpected shape"))
+        for key, shape, field in (("corpus_set", _CORPUS_SET, "manifest corpus set"),
+                                  ("corpus_digest", _SHA256, "manifest corpus digest"),
+                                  ("corpus_verified", _CORPUS_VERIFIED, "manifest corpus verified")):
+            for value in entry[key]:
+                if not shape.fullmatch(value):
+                    problems.add((field, "unexpected shape"))
     for dim, judge in manifests["judges"].items():
         if not _ID.fullmatch(dim):
             problems.add(("manifest judge name", "unexpected shape"))

@@ -173,9 +173,10 @@ def _get(data, *keys):
 def read_manifests(run_dir):
     """Dates, plus per-arm provenance from manifests that carry a `provenance` block.
 
-    Only named fields are read: agent spec hash, generation model, judge model and
-    prompt hash per dimension, per-scenario digests, and whether the run's own
-    hard-fail override fired. Engine commits and paths are never read from here;
+    Only named fields are read: agent spec hash, generation model, corpus set,
+    corpus digest and corpus preflight result per arm, judge model and prompt hash
+    per dimension, per-scenario digests, and whether the run's own hard-fail
+    override fired. Engine commits and paths are never read from here;
     the report takes the engine commit from the run card only.
     """
     starts, ends = [], []
@@ -194,11 +195,20 @@ def read_manifests(run_dir):
             continue
         arm = _get(prov, "agent", "id")
         if isinstance(arm, str):
-            entry = arms.setdefault(arm, {"spec_hash": set(), "model": set()})
+            entry = arms.setdefault(arm, {"spec_hash": set(), "model": set(), "corpus_set": set(),
+                                          "corpus_digest": set(), "corpus_verified": set()})
             for key, value in (("spec_hash", _get(prov, "agent", "spec_hash")),
-                               ("model", _get(prov, "model", "model_id"))):
+                               ("model", _get(prov, "model", "model_id")),
+                               ("corpus_set", _get(prov, "corpus", "set")),
+                               ("corpus_digest", _get(prov, "corpus", "digest"))):
                 if isinstance(value, str):
                     entry[key].add(value)
+            # The corpus preflight's result: true, false, "offline" or "not_applicable".
+            verified = _get(prov, "execution", "corpus", "verified")
+            if isinstance(verified, bool):
+                entry["corpus_verified"].add("true" if verified else "false")
+            elif isinstance(verified, str):
+                entry["corpus_verified"].add(verified)
         for dim, judge in sorted((_get(prov, "judge") or {}).items()):
             entry = judges.setdefault(dim, {"model": set(), "prompt_hash": set()})
             for key, value in (("model", _get(judge, "model_id")), ("prompt_hash", _get(judge, "prompt_hash"))):

@@ -46,15 +46,14 @@ def main(argv=None):
     ap.add_argument("--verdict", help="with --final: the ip-check verdict for the draft, kept outside this repository")
     ap.add_argument("--deny-list", default=os.environ.get("SAFE_CARE_DENY_LIST"),
                     help="deny list kept outside this repository (default: $SAFE_CARE_DENY_LIST)")
-    ap.add_argument("--judge", help="judge id to report when the scores hold more than one")
-    ap.add_argument("--scoring-config", help="scoring config to report when the scores hold more than one")
+    ap.add_argument("--judge", help="judge model to report when the scores hold more than one")
     ap.add_argument("--all-scenarios", action="store_true",
                     help="include scenarios the run marks out of scope for its tiers (left out by default)")
     ap.add_argument("--bench-root", default=BENCH_ROOT, help=argparse.SUPPRESS)
     args = ap.parse_args(argv)
 
     try:
-        run = load(args.run_dir, args.judge, args.scoring_config, args.bench_root, args.all_scenarios)
+        run = load(args.run_dir, args.judge, args.bench_root, args.all_scenarios)
         data = render(run).encode("utf-8")
     except RunFormatError as e:
         print("bench_report: %s" % e, file=sys.stderr)

@@ -4,7 +4,7 @@
 import math, re, statistics
 
 from . import __version__
-from .run import TIERS, ESCALATION_DIMS, NOT_APPLICABLE, MISSING
+from .run import TIERS, ESCALATION_DIMS, MISSING
 
 DIMENSIONS = [
     ("medical_accuracy", "Medical accuracy"),
@@ -20,6 +20,7 @@ DIMENSIONS = [
 ]
 DIMENSION_NAMES = dict(DIMENSIONS)
 
+# No published run field records a judge calibration, so every report says so.
 UNCALIBRATED = "Judge not calibrated against clinicians for this domain; treat scores as indicative."
 NOT_RECORDED = "not recorded in the run card or manifests"
 
@@ -27,7 +28,7 @@ NOT_RECORDED = "not recorded in the run card or manifests"
 # ROADMAP.md is an error, so a reworded limitation cannot silently drop out.
 LIMITATIONS = [
     ("The reference runner is not published.", lambda ctx: True),
-    ("The judge is uncalibrated.", lambda ctx: not ctx["calibrated"]),
+    ("The judge is uncalibrated.", lambda ctx: True),
     ("Adjacent tiers differ by capability bundles, not single flags.", lambda ctx: ctx["bundle_steps"]),
     ("Single clinical domain.", lambda ctx: True),
     ("Synthetic personas only.", lambda ctx: True),
@@ -142,7 +143,7 @@ def _paired(lo, hi):
 
 
 def _seeds(card):
-    return [v if k == "seed" else "%s %s" % (k, v) for k, v in card.items() if "seed" in k]
+    return [card["seed"]] if "seed" in card else []
 
 
 def _manifest_values(run, arm, key):
@@ -150,9 +151,9 @@ def _manifest_values(run, arm, key):
 
 
 def _judge_models(run, card, note=False):
-    from_card = ["%s %s" % (k, v) for k, v in card.items() if k.startswith("judge") and k.endswith("model_id")]
-    models = _distinct(m for j in run["manifests"]["judges"].values() for m in j["model"])
-    return from_card or [_model(m, run if note else None) for m in models]
+    models = ([card["judge_model_id"]] if "judge_model_id" in card
+              else _distinct(m for j in run["manifests"]["judges"].values() for m in j["model"]))
+    return [_model(m, run if note else None) for m in models]
 
 
 def _model(model, run=None):
@@ -190,10 +191,8 @@ def build_context(run):
         paired = {d: _paired(stats[(lo, d)], stats[(hi, d)]) for d in dims}
         steps.append({"lo": lo, "hi": hi, "bundles": bundles, "single": len(crossed) == 1 and flags == 1,
                       "paired": paired})
-    calibration = run["card"].get("judge_calibration")
     return {
         "arms": arms, "dims": dims, "stats": stats, "steps": steps,
-        "calibrated": bool(calibration and calibration.lower() not in MISSING),
         "bundle_steps": any(not s["single"] for s in steps),
     }
 
@@ -205,14 +204,13 @@ def section_summary(run, ctx):
     conversations = {(r["arm"], r["scenario"], r["conversation"]) for r in rows}
     seeds = _seeds(card)
     judges = _judge_models(run, card, note=True)
-    models = (_distinct(r["agent_model"] for r in rows) or _distinct([card.get("agent_model_id")])
-              or _distinct(m for a in ctx["arms"] for m in _manifest_values(run, a, "model")))
+    models = _distinct(m for a in ctx["arms"] for m in _manifest_values(run, a, "model"))
     values = [r["score"] for r in rows if r["score"] is not None]
     scale = "0 to 1 (normalised)" if values and min(values) >= 0 and max(values) <= 1 else "as recorded (not normalised)"
     selection = ", ".join("%s = %s" % kv for kv in sorted(run["selection"].items())) or "all rows"
     lines = [
         "## 1. Summary", "",
-        "- **Run:** `%s`" % card.get("run_id", run["name"]),
+        "- **Run:** `%s`" % run["name"],
         "- **Tiers and arms evaluated:** %s" % ", ".join("`%s`" % a for a in ctx["arms"]),
         "- **Scenarios:** %d (%s)" % (len(scenarios), ", ".join(scenarios)),
     ]
@@ -230,7 +228,7 @@ def section_summary(run, ctx):
         "- **Generation model:** %s" % (", ".join(_model(m, run) for m in models) or NOT_RECORDED),
         "- **Judge model:** %s" % ("; ".join(judges) or NOT_RECORDED),
         "- **Scores used:** %s; scale %s" % (selection, scale),
-        "- **Bench version:** %s" % (_code(card.get("bench_version") or card.get("bench_repo_ref")) or NOT_RECORDED),
+        "- **Bench version:** %s" % (_code(card.get("bench_commit")) or NOT_RECORDED),
         "- **Report generator:** bench_report %s" % __version__,
     ]
     return lines
@@ -340,9 +338,8 @@ def section_missed(run, ctx):
         lines += ["", "Each miss, with the dimension that scored 0:", ""]
         lines += _table(["Tier", "Scenario", "Repeat", "Scored 0"], each)
     missed_scenarios = {s for m in missed.values() for s in m["scenarios"]}
-    run_id = run["card"].get("run_id", run["name"])
     for (note_run, scenario), note in sorted(MISS_NOTES.items()):
-        if note_run == run_id and scenario in missed_scenarios:
+        if note_run == run["name"] and scenario in missed_scenarios:
             lines += ["", note.format(defects=run["card_sections"].get("defects", "8"))]
     fired = run["manifests"]["hard_fail_fired"]
     if fired and not any(fired) and any(m["missed"] for m in missed.values()):
@@ -357,42 +354,28 @@ def section_missed(run, ctx):
 
 
 def section_calibration(run, ctx):
-    status = run["card"].get("judge_calibration") if ctx["calibrated"] else UNCALIBRATED
-    return ["## 5. Calibration status", "", status]
+    return ["## 5. Calibration status", "", UNCALIBRATED]
 
 
 def section_run(run, ctx):
-    card, rows = run["card"], run["rows"]
+    card = run["card"]
     lines = ["## 6. What was run", ""]
-    body, undigested = [], []
+    # The published format records no corpus digest per arm and no corpus
+    # preflight result, so a report states both as not recorded.
+    body = []
     for a in ctx["arms"]:
-        arm_rows = [r for r in rows if r["arm"] == a]
-        configs = (_distinct(r["config_sha256"] for r in arm_rows) or _manifest_values(run, a, "spec_hash")
-                   or ["not recorded"])
-        raw = {(r["corpus_sha256"] or "").strip() for r in arm_rows}
-        corpus = _distinct(raw)
-        if corpus:
-            corpus_cell = ", ".join("`%s`" % c for c in corpus)
-        elif raw and raw <= NOT_APPLICABLE:
-            corpus_cell = "not applicable (no retrieval)"
-        else:
-            corpus_cell = "**none recorded**"
-            undigested.append(a)
-        models = _distinct(r["agent_model"] for r in arm_rows) or _manifest_values(run, a, "model") or ["not recorded"]
+        configs = _manifest_values(run, a, "spec_hash") or ["not recorded"]
+        models = _manifest_values(run, a, "model") or ["not recorded"]
         body.append(["`%s`" % a, ", ".join("`%s`" % c if c != "not recorded" else c for c in configs),
-                     corpus_cell, ", ".join(models)])
+                     "**none recorded**", ", ".join(models)])
     lines += _table(["Arm", "Agent spec hash", "Corpus digest", "Agent model"], body) + [""]
-    if undigested:
-        lines += ["**No corpus digest is recorded for %s.** This report cannot show which corpus text "
-                  "those arms retrieved from." % ", ".join("`%s`" % a for a in undigested), ""]
-    verified = card.get("corpus.verified") or card.get("corpus_verified")
-    prompts = ["`%s` `%s`" % (k, v) for k, v in card.items() if k.startswith("judge_prompt_sha256")]
+    lines += ["**No corpus digest is recorded for %s.** This report cannot show which corpus text "
+              "those arms retrieved from." % ", ".join("`%s`" % a for a in ctx["arms"]), ""]
+    prompts = ["`%s`" % card["judge_prompt_sha256"]] if "judge_prompt_sha256" in card else []
     judges = _judge_models(run, card)
     seeds = _seeds(card)
     scenario_sets = run["manifests"]["scenario_sets"]
-    if "scenario_set_sha256" in card:
-        scenario_set = "`%s`" % card["scenario_set_sha256"]
-    elif len(scenario_sets) == 1:
+    if len(scenario_sets) == 1:
         scenario_set = ("no single digest; per-scenario sha256 for %d scenarios, identical in every manifest"
                         % len(next(iter(scenario_sets))))
     elif scenario_sets:
@@ -401,14 +384,14 @@ def section_run(run, ctx):
         scenario_set = NOT_RECORDED
     started, finished = run["dates"]
     lines += [
-        "- **Corpus verified by preflight:** %s" % (verified or "not recorded; this run has no corpus preflight result"),
+        "- **Corpus verified by preflight:** not recorded; this run has no corpus preflight result",
         "- **Scenario set sha256:** %s" % scenario_set,
         "- **Judge models:** %s" % ("; ".join(judges) or NOT_RECORDED),
         "- **Judge prompt hashes:** %s" % ("; ".join(prompts) or ("see table below" if run["manifests"]["judges"]
                                                                  else NOT_RECORDED)),
         "- **Seeds:** %s" % ("; ".join(seeds) or NOT_RECORDED),
-        "- **Bench commit:** %s" % (_code(card.get("bench_repo_ref")) or NOT_RECORDED),
-        "- **Engine commit (private repository):** %s" % (_code(card.get("engine_repo_ref")) or NOT_RECORDED),
+        "- **Bench commit:** %s" % (_code(card.get("bench_commit")) or NOT_RECORDED),
+        "- **Engine commit (private repository):** %s" % (_code(card.get("engine_commit")) or NOT_RECORDED),
         "- **Run dates:** first call %s; last call %s; card produced %s" % (
             started or "not recorded", finished or "not recorded", card.get("produced_utc", "not recorded")),
     ]
@@ -450,8 +433,7 @@ def render(run):
     """The report text. A draft and its final report are the same bytes; only the
     file name (`*.draft.md`) marks a draft, so the checked text is the published text."""
     ctx = build_context(run)
-    title = run["card"].get("run_id", run["name"])
-    lines = ["# SAFE-CARE Bench evaluation report: `%s`" % title, ""]
+    lines = ["# SAFE-CARE Bench evaluation report: `%s`" % run["name"], ""]
     for section in SECTIONS:
         lines += section(run, ctx) + [""]
     return "\n".join(lines).rstrip("\n") + "\n"

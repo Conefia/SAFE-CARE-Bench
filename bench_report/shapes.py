@@ -6,7 +6,7 @@ catch identifiers nobody listed, by their shape:
 
 * Field shapes. Every value a report can print from a run (run-card keys and
   rows, manifest provenance, score-file ids) must have the shape its field
-  allows. A knowledge-base id pasted into `bench_version` fails here.
+  allows. A knowledge-base id pasted into the bench commit fails here.
 * A whole-report scan for ARNs, storage URLs, AWS keys and account ids,
   10-character AWS resource ids, UUIDs, long hex or base64 blobs, email
   addresses and local paths. The one exception is hashes: 64 lowercase hex
@@ -29,20 +29,14 @@ _PROSE = re.compile(r"[^|`\n]{1,160}")
 _NOT_RECORDED = re.compile(r"not_recorded|not_applicable|not_applicab|none|null|nan|", re.I)
 
 CARD_SHAPES = [
-    (re.compile(r"run_id"), _ID),
     (re.compile(r"produced_utc"), _UTC),
-    (re.compile(r"bench_version"), re.compile(r"v?[0-9][A-Za-z0-9.+-]{0,39}")),
-    (re.compile(r"bench_repo_ref|engine_repo_ref"), re.compile(r"[0-9a-f]{7,40}( \(tree dirty at run time\))?")),
-    (re.compile(r"agent_model_id|judge(_\d+)?_model_id"), _MODEL),
-    (re.compile(r"judge_prompt_sha256\S*|scenario_set_sha256|corpus_manifest_sha256|corpus_digest"), _SHA256),
-    (re.compile(r"conversations_generated|conversations_errored"), re.compile(r"\d{1,6}")),
-    (re.compile(r"\S*seed\S*|judge_calibration|corpus[._]verified"), _PROSE),
+    (re.compile(r"bench_commit|engine_commit"), re.compile(r"[0-9a-f]{7,40}( \(tree dirty at run time\))?")),
+    (re.compile(r"judge_model_id"), _MODEL),
+    (re.compile(r"judge_prompt_sha256"), _SHA256),
+    (re.compile(r"seed"), _PROSE),
 ]
 
-ROW_SHAPES = {
-    "arm": _ID, "scenario": _ID, "conversation": _ID, "dimension": _ID,
-    "agent_model": _MODEL, "config_sha256": _SHA256, "corpus_sha256": _SHA256,
-}
+ROW_SHAPES = {"arm": _ID, "scenario": _ID, "conversation": _ID, "dimension": _ID}
 
 
 def _ok(shape, value):

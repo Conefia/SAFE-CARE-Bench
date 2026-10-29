@@ -14,18 +14,15 @@ ESCALATION_DIMS = ("escalation_singleturn", "escalation_multiturn")
 NOT_APPLICABLE = {"not_applicable", "not_applicab"}   # the second is a truncation seen in run cards
 MISSING = {"", "not_recorded", "none", "null", "nan"} | NOT_APPLICABLE
 
-# Run-card keys a report may print. Everything else in the card is ignored on
-# purpose: cards can carry live account identifiers that must never be published.
-CARD_KEYS = re.compile(
-    r"^(run_id|produced_utc|bench_version|bench_repo_ref|agent_model_id"
-    r"|judge(_\d+)?_model_id|judge_prompt_sha256\S*|scenario_set_sha256"
-    r"|corpus_manifest_sha256|corpus_digest|corpus[._]verified|\S*seed\S*"
-    r"|judge_calibration|conversations_generated|conversations_errored)$")
+# Run-card keys a report may print, as published cards name them in their key
+# block. Everything else in the card is ignored on purpose: cards can carry live
+# account identifiers that must never be published.
+CARD_KEYS = re.compile(r"^(produced_utc|judge_model_id|judge_prompt_sha256)$")
 
 # Run-card table rows a report may print, as {row label: card key}. Published
 # cards are prose with tables rather than a key block; only these rows are read.
 # The engine repository is private, but its commit names the version that ran.
-CARD_ROWS = {"Seed": "seed", "Bench": "bench_repo_ref", "Engine": "engine_repo_ref"}
+CARD_ROWS = {"Seed": "seed", "Bench": "bench_commit", "Engine": "engine_commit"}
 
 # Run-card headings a report may point to, as {key: heading pattern}. Only the
 # section number is kept, never the text under the heading.
@@ -35,24 +32,17 @@ CARD_SECTIONS = {
 }
 DIVERGENCES = re.compile(r"^### .*declared divergences", re.M | re.I)
 
-# Score columns, by role. The first alias present in the file is used.
-# A conversation is identified by arm, scenario and this column together.
+# Score columns, by role, as the published scores file names them; no other names
+# are accepted. A conversation is identified by arm, scenario and replicate together.
 COLUMNS = {
-    "arm":             ("arm_id", "tier", "agent_id"),
-    "scenario":        ("scenario_id",),
-    "conversation":    ("conversation_id", "replicate"),
-    "dimension":       ("dimension",),
-    "score":           ("score_normalised", "score", "score_raw"),
-    "in_scope":        ("scenario_in_A0_A2_scope",),
-    "judge":           ("judge_id", "judge_model"),
-    "judge_pass":      ("judge_pass",),
-    "scoring_config":  ("scoring_config",),
-    "parse_ok":        ("parse_ok",),
-    "config_sha256":   ("config_sha256",),
-    "corpus_sha256":   ("corpus_manifest_sha256",),
-    "agent_model":     ("agent_model_id",),
+    "arm":          "tier",
+    "scenario":     "scenario_id",
+    "conversation": "replicate",
+    "dimension":    "dimension",
+    "score":        "score",
+    "in_scope":     "scenario_in_A0_A2_scope",
+    "judge":        "judge_model",
 }
-REQUIRED = ("arm", "scenario", "conversation", "dimension", "score")
 
 
 class RunFormatError(Exception):
@@ -116,72 +106,57 @@ def _scores_file(run_dir):
     raise RunFormatError("expected one scores/*.csv (or scores/per_row_scores.csv), found %d" % len(files))
 
 
-def _score(value, parse_ok):
-    if parse_ok is not None and parse_ok.strip().lower() == "false":
-        return None
+def _score(value):
     if value is None or value.strip().lower() in MISSING:
         return None
     return float(value)
 
 
-def read_scores(run_dir, judge=None, scoring_config=None, all_scenarios=False):
-    """Return the primary score rows and a note of how they were selected.
+def read_scores(run_dir, judge=None, all_scenarios=False):
+    """Return the score rows, how they were selected, and the scenario scope.
 
-    Primary means judge pass 1. If more than one judge or scoring config remains
-    after that, the caller must name one: pooling them silently would report a
-    number no single judge produced. Scenarios the run marks out of scope for its
-    tiers are dropped unless `all_scenarios` is set, so the headline matches the
-    run card's denominators.
+    The file must use the published column names. If it holds more than one judge
+    model, the caller must name one: pooling them silently would report a number
+    no single judge produced. Scenarios the run marks out of scope for its tiers
+    are dropped unless `all_scenarios` is set, so the headline matches the run
+    card's denominators.
     """
     path = _scores_file(run_dir)
     # utf-8-sig: the published per_row_scores.csv starts with a byte-order mark
     with open(path, encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
         header = reader.fieldnames or []
-        col = {role: next((a for a in aliases if a in header), None) for role, aliases in COLUMNS.items()}
-        missing = [role for role in REQUIRED if col[role] is None]
+        missing = [name for name in COLUMNS.values() if name not in header]
         if missing:
-            raise RunFormatError("scores file has no column for: %s" % ", ".join(missing))
+            raise RunFormatError(
+                "%s is not in the published run format: it has no column %s. bench_report reads only "
+                "the published format; see scores/COLUMN_GUIDE.md in a published run"
+                % (os.path.basename(path), ", ".join(missing)))
         raw = list(reader)
 
-    excluded = []
-    if col["in_scope"]:
-        excluded = sorted({r[col["scenario"]] for r in raw if r[col["in_scope"]].strip().lower() == "false"})
-        if not all_scenarios:
-            raw = [r for r in raw if r[col["scenario"]] not in excluded]
+    col = COLUMNS
+    excluded = sorted({r[col["scenario"]] for r in raw if r[col["in_scope"]].strip().lower() == "false"})
+    if not all_scenarios:
+        raw = [r for r in raw if r[col["scenario"]] not in excluded]
 
-    selection = {}
-    if col["judge_pass"]:
-        raw = [r for r in raw if r[col["judge_pass"]] == "1"]
-        selection["judge_pass"] = "1"
-    for role, wanted in (("judge", judge), ("scoring_config", scoring_config)):
-        if not col[role]:
-            continue
-        values = sorted({r[col[role]] for r in raw})
-        if wanted is None and len(values) > 1:
-            flag = "--judge" if role == "judge" else "--scoring-config"
-            raise RunFormatError("scores mix %s values %s; choose one with %s" % (col[role], ", ".join(values), flag))
-        wanted = wanted if wanted is not None else (values[0] if values else None)
-        raw = [r for r in raw if r[col[role]] == wanted]
-        selection[col[role]] = wanted
+    values = sorted({r[col["judge"]] for r in raw})
+    if judge is None and len(values) > 1:
+        raise RunFormatError("scores mix %s values %s; choose one with --judge" % (col["judge"], ", ".join(values)))
+    judge = judge if judge is not None else (values[0] if values else None)
+    raw = [r for r in raw if r[col["judge"]] == judge]
+    selection = {col["judge"]: judge}
     if not raw:
         raise RunFormatError("no score rows left after selecting %s" % selection)
 
-    rows = []
-    for r in raw:
-        get = lambda role: r[col[role]] if col[role] else None
-        rows.append({
-            "arm": get("arm"),
-            "scenario": get("scenario"),
-            "conversation": get("conversation"),
-            "dimension": get("dimension"),
-            "score": _score(get("score"), get("parse_ok")),
-            "config_sha256": get("config_sha256"),
-            "corpus_sha256": get("corpus_sha256"),
-            "agent_model": get("agent_model"),
-        })
+    rows = [{
+        "arm": r[col["arm"]],
+        "scenario": r[col["scenario"]],
+        "conversation": r[col["conversation"]],
+        "dimension": r[col["dimension"]],
+        "score": _score(r[col["score"]]),
+    } for r in raw]
     scope = {"column": col["in_scope"], "excluded": excluded, "included": all_scenarios}
-    return rows, selection, {"corpus_column": col["corpus_sha256"] is not None, "scope": scope}
+    return rows, selection, scope
 
 
 # ---------------------------------------------------------------------------
@@ -298,11 +273,11 @@ def read_limitations(bench_root=BENCH_ROOT):
 
 
 # ---------------------------------------------------------------------------
-def load(run_dir, judge=None, scoring_config=None, bench_root=BENCH_ROOT, all_scenarios=False):
+def load(run_dir, judge=None, bench_root=BENCH_ROOT, all_scenarios=False):
     run_dir = os.path.abspath(run_dir)
     if not os.path.isdir(run_dir):
         raise RunFormatError("not a directory: %s" % run_dir)
-    rows, selection, info = read_scores(run_dir, judge, scoring_config, all_scenarios)
+    rows, selection, scope = read_scores(run_dir, judge, all_scenarios)
     manifests = read_manifests(run_dir)
     return {
         "name": os.path.basename(run_dir.rstrip("\\/")),
@@ -310,8 +285,7 @@ def load(run_dir, judge=None, scoring_config=None, bench_root=BENCH_ROOT, all_sc
         "card_sections": read_card_sections(run_dir),
         "rows": rows,
         "selection": selection,
-        "scope": info["scope"],
-        "corpus_column": info["corpus_column"],
+        "scope": scope,
         "dates": manifests["dates"],
         "manifests": manifests,
         "scenarios": read_scenarios(bench_root),

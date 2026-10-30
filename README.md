@@ -27,7 +27,7 @@ It also publishes **a worked example**: the two reference runs reported in the a
 How evaluations are run:
 
 - **The reference runner stays internal.** The harness that executes tiers and collects transcripts is not published; it drives hosted evaluations. The configurations here stay implementation-neutral, so the method can be reproduced on any runtime — see [Reproducing an evaluation](#reproducing-an-evaluation).
-- **Evaluations are run on request.** <!-- TODO(v0.4): request page link --> [Request an evaluation](TODO-request-page-url).
+- **Evaluations are run on request.** [Request an evaluation](https://conefia.com/benchmarks/safe-care-bench/evaluate).
 
 What is **not** published yet:
 

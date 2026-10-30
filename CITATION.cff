@@ -18,8 +18,7 @@ authors:
 # rights vest in Conefia LLC per https://conefia.com/ip-policy - see NOTICE.md
 # and CONTRIBUTORS.md. Yassen Eltayeb is lead author.
 version: v0.4.0
-# TODO(v0.4.0): set date-released to the release date before the release is cut
-date-released: 2026-09-14
+date-released: 2026-10-30
 license: Apache-2.0
 copyright: "2026 Conefia LLC (d/b/a Conefia Technologies). All rights reserved."
 doi: "10.5281/zenodo.21444597"

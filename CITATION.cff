@@ -25,22 +25,25 @@ doi: "10.5281/zenodo.21444597"
 repository-code: "https://github.com/Conefia/SAFE-CARE-Bench"
 url: "https://doi.org/10.5281/zenodo.21444597"
 abstract: >
-  An implementation-neutral benchmark specification and evaluation protocol for safety,
-  guardrails, and user experience in multi-turn healthcare AI agent conversations. Defines
-  a controlled A0-A4 ablation in which five agent variants differing by a declared
-  capability bundle are scored over identical simulated conversations with synthetic
-  personas, holding model, temperature, and seed constant. Scoring spans seven Likert
-  dimensions and three binary dimensions, with separate single-turn and multi-turn safety
-  and escalation judges and a hard-fail override on missed escalation. Ships tier
-  configurations, judge prompts, scoring anchors, a machine-readable scenario schema with
-  hidden ground truth, a synthetic persona schema, and a reproducible dataset build
-  pipeline. Ships a provenance-documented public reference retrieval corpus, pinned by
-  per-document SHA-256, that tiers declaring retrieval draw on and against which citation
-  grounding is scored. Publishes a worked example of two reference runs with run cards. The
-  reference runner is internal and evaluations are run on request. A judge calibration study
-  is under way; scores produced before calibration are indicative, not validated
-  measurement. Companion instrument to the SAFE-CARE framework for healthcare AI agent
-  design and evaluation.
+  Patient-facing healthcare AI agents now hold multi-turn conversations, and each new version
+  should pass a release gate, the go-live check that asks whether a change made the agent
+  safer without losing accuracy. Single-turn medical benchmarks cannot answer that question,
+  because a conversational agent fails across turns, where risk builds while each reply looks
+  acceptable. SAFE-CARE Bench is an implementation-neutral benchmark specification and
+  evaluation protocol designed for that decision. Its controlled ablation scores five agent
+  variants, tiers A0 to A4, over identical simulated conversations with the model, temperature
+  and seed held fixed. Each tier adds one declared capability bundle (grounding, safety
+  control, personalization, agency), so the change between adjacent tiers is read as the
+  effect of that bundle. An LLM judge scores ten dimensions, seven on a 1-to-5 scale and three
+  as pass or fail, with safety and escalation each judged on one turn and across turns, and a
+  missed escalation fails a conversation whatever its other scores. Its worked example, tiers
+  A0 to A2, shows why the instrument must be checked before its verdict is trusted. Adding the
+  safety guardrail lowered judged medical accuracy by 0.157 on scores rescaled to 0-to-1,
+  downward in six of nine scenarios, while the interval for its safety change included zero.
+  Because the scenario file fixes which turns each judge reads, 44% of turns went unscored at
+  every tier, and no safety or escalation judge read 12 of the guardrail's 36 enforced
+  actions. With nine scenarios in scope and a judge not yet calibrated against clinicians,
+  these results are exploratory and every score is indicative.
 keywords:
   - healthcare AI
   - AI agents
@@ -54,7 +57,7 @@ keywords:
   - retrieval-augmented generation
 references:
   - type: generic
-    title: "SAFE-CARE: A Framework for Designing and Evaluating Safe Healthcare AI Agents"
+    title: "SAFE-CARE: A framework for designing, evaluating and releasing safe patient-facing healthcare AI agents"
     authors:
       - family-names: Eltayeb
         given-names: Yassen
@@ -70,10 +73,11 @@ references:
 #     v0.1.0   10.5281/zenodo.21444598   2026-07-19
 #     v0.1.1   10.5281/zenodo.21446163   2026-07-20
 #     v0.1.2   10.5281/zenodo.22739092   2026-09-14
+#     v0.4.0   10.5281/zenodo.23826063   2026-10-31
 #
 # The `version` field above names the latest ARCHIVED release, which is what the concept
-# DOI resolves to. The `main` branch is ahead of it and carries tags (v0.2.0, v0.3.0) that
-# are working states rather than releases and have no DOI.
+# DOI resolves to. The tags v0.2.0 and v0.3.0 are working states between archived releases
+# and have no DOI.
 #
 # v0.1.2 exists because the reference retrieval corpus was committed after v0.1.1 was
 # archived. Anyone resolving the DOI before 2026-09-14 reached a state of the benchmark

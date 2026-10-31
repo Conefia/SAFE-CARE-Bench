@@ -25,25 +25,31 @@ doi: "10.5281/zenodo.21444597"
 repository-code: "https://github.com/Conefia/SAFE-CARE-Bench"
 url: "https://doi.org/10.5281/zenodo.21444597"
 abstract: >
-  Patient-facing healthcare AI agents now hold multi-turn conversations, and each new version
-  should pass a release gate, the go-live check that asks whether a change made the agent
-  safer without losing accuracy. Single-turn medical benchmarks cannot answer that question,
-  because a conversational agent fails across turns, where risk builds while each reply looks
-  acceptable. SAFE-CARE Bench is an implementation-neutral benchmark specification and
-  evaluation protocol designed for that decision. Its controlled ablation scores five agent
-  variants, tiers A0 to A4, over identical simulated conversations with the model, temperature
-  and seed held fixed. Each tier adds one declared capability bundle (grounding, safety
-  control, personalization, agency), so the change between adjacent tiers is read as the
-  effect of that bundle. An LLM judge scores ten dimensions, seven on a 1-to-5 scale and three
-  as pass or fail, with safety and escalation each judged on one turn and across turns, and a
-  missed escalation fails a conversation whatever its other scores. Its worked example, tiers
-  A0 to A2, shows why the instrument must be checked before its verdict is trusted. Adding the
-  safety guardrail lowered judged medical accuracy by 0.157 on scores rescaled to 0-to-1,
-  downward in six of nine scenarios, while the interval for its safety change included zero.
-  Because the scenario file fixes which turns each judge reads, 44% of turns went unscored at
-  every tier, and no safety or escalation judge read 12 of the guardrail's 36 enforced
-  actions. With nine scenarios in scope and a judge not yet calibrated against clinicians,
-  these results are exploratory and every score is indicative.
+  Patient-facing healthcare AI agents now talk with people across many turns, and each new
+  version should pass a release gate, the go-live check that asks whether a change made the
+  agent safer without losing accuracy. Single-turn medical benchmarks were not designed to
+  answer that question, because a conversational agent fails across turns: risk builds while
+  each reply looks acceptable, and an escalation to human care can arrive one turn too late.
+  SAFE-CARE Bench is a benchmark specification and evaluation protocol designed for that
+  decision. Its configurations declare which capabilities are active, not how to build them,
+  so a team can reproduce the protocol on its own runtime. To trace a change to its cause,
+  SAFE-CARE Bench runs a controlled ablation. Five agent variants, tiers A0 to A4, add one
+  capability bundle at a time: retrieval with enforced citations, a safety guardrail,
+  personalization from memory, and agency (tools, profile write-back and closed-loop actions).
+  All five are scored over the same simulated conversations with synthetic personas, with the
+  model, temperature and seed held fixed, so the design attributes the change between adjacent
+  tiers to the bundle added. An LLM judge scores ten dimensions, seven on a 1-to-5 scale and
+  three as pass or fail, and judges safety and escalation both on a single turn and across
+  turns. A missed escalation fails a conversation whatever its other scores. The worked
+  example, tiers A0 to A2, shows why the instrument must be checked before its verdict is
+  trusted. We expected the safety guardrail to raise judged safety. Instead, adding it lowered
+  judged medical accuracy by 0.157 on a 0-to-1 scale, lower in six of nine scenarios and
+  higher in none, while the 95% interval for its safety change included zero. Auditing the
+  instrument then showed that the scenario file decides, before any agent runs, which turns
+  each judge reads. As a result, 33 of 75 turns (44%) went unscored at every tier, and 12 of
+  the 36 turns on which the guardrail intervened were read by no safety or escalation judge.
+  With nine scenarios in scope and a judge not yet calibrated against clinicians, these
+  results are exploratory, and every score should be read as indicative, not validated.
 keywords:
   - healthcare AI
   - AI agents
@@ -74,6 +80,7 @@ references:
 #     v0.1.1   10.5281/zenodo.21446163   2026-07-20
 #     v0.1.2   10.5281/zenodo.22739092   2026-09-14
 #     v0.4.0   10.5281/zenodo.23826063   2026-10-31
+#     v0.4.1   10.5281/zenodo.23827384   2026-10-31
 #
 # The `version` field above names the latest ARCHIVED release, which is what the concept
 # DOI resolves to. The tags v0.2.0 and v0.3.0 are working states between archived releases

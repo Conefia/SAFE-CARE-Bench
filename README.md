@@ -325,6 +325,7 @@ Contributions are welcome, particularly additional red-flag scenarios, judge cal
 | v0.1.1 only | [10.5281/zenodo.21446163](https://doi.org/10.5281/zenodo.21446163) |
 | v0.1.2 only | [10.5281/zenodo.22739092](https://doi.org/10.5281/zenodo.22739092) |
 | v0.4.0 only | [10.5281/zenodo.23826063](https://doi.org/10.5281/zenodo.23826063) |
+| v0.4.1 only | [10.5281/zenodo.23827384](https://doi.org/10.5281/zenodo.23827384) |
 
 Use the all-versions DOI unless you need to pin the exact release you ran against. See [`CITATION.cff`](CITATION.cff).
 

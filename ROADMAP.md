@@ -33,7 +33,7 @@ coming, and what is deliberately out of scope.
 ## Next
 
 - [ ] **Judge calibration set.** A human-scored subset with reported judge–human agreement. A
-      12-clinician calibration study is under way, with results to follow the paper. Until it
+      16-clinician calibration study is under way, with results to follow the paper. Until it
       reports, all judge output is uncalibrated.
 - [ ] **MedMCQA rebuild.** Regenerate from the train split via `datasets/build.py`, complete manual
       review, and restore the file from quarantine. See [`datasets/DATASET_CARD.md`](datasets/DATASET_CARD.md).
@@ -75,7 +75,7 @@ These are stated openly because a benchmark that hides its limitations is worse 
    materially different agents. Treat the configurations as an implementation-neutral
    specification, not a turnkey benchmark.
 3. **The judge is uncalibrated.** No judge–human agreement and no clinician inter-rater reliability
-   have been measured; the 12-clinician calibration study has not yet reported. Scores, including
+   have been measured; the 16-clinician calibration study has not yet reported. Scores, including
    the worked example's, are indicative and must not be reported as validated measurement.
 4. **Adjacent tiers differ by capability bundles, not single flags.** Only A1→A2 is a one-variable
    delta. Do not attribute a bundle effect to any single member.

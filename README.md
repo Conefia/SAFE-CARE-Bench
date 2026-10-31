@@ -33,7 +33,7 @@ Evaluations run as follows:
 
 Two things are **not** published yet:
 
-- **A judge calibration set.** No judge–human agreement has been measured. A judge calibration study with 12 clinicians is under way, with results to follow the paper. Until it reports, judge output, the worked example included, is indicative and must not be reported as validated measurement. [`human_labels/`](human_labels/) holds one clinician's blinded labels compared against the declared scenario ground truth, not against judge output, so it does not close this gap. We publish it because it found a different one: the escalation field merges a clinical judgment with an agent-scope decision, and the next schema revision separates them. See [`human_labels/LABELS_CARD.md`](human_labels/LABELS_CARD.md).
+- **A judge calibration set.** No judge–human agreement has been measured. A judge calibration study with 16 clinician raters is under way, with results to follow the paper. Until it reports, judge output, the worked example included, is indicative and must not be reported as validated measurement. [`human_labels/`](human_labels/) holds one clinician's blinded labels compared against the declared scenario ground truth, not against judge output, so it does not close this gap. We publish it because it found a different one: the escalation field merges a clinical judgment with an agent-scope decision, and the next schema revision separates them. See [`human_labels/LABELS_CARD.md`](human_labels/LABELS_CARD.md).
 - **Results for tiers A3 and A4.** The published runs cover A0–A2 only.
 
 In short, this release is an **implementation-neutral benchmark specification and evaluation protocol with one worked example**, not a turnkey executable benchmark, and it should be described that way. See [`ROADMAP.md`](ROADMAP.md).
@@ -187,7 +187,7 @@ declare `escalation_expected: false`, the set measures over-escalation as well a
 ## Retrieval corpus
 
 Tiers A1 and above declare `retrieval: true`, which requires a document set to retrieve over.
-This release ships one: a small, fully public-domain reference corpus in
+This release ships one: a small public reference corpus in
 [`corpus/`](corpus/), with provenance and scenario coverage documented in
 [`corpus/CORPUS_CARD.md`](corpus/CORPUS_CARD.md).
 
@@ -291,7 +291,7 @@ The formatter reads only allow-listed fields from the run card, the manifests an
 The limits below set how far any result in this repository can be read.
 
 - **It does not demonstrate that any architectural layer improves safety.** The runs in [`results/`](results/) are a worked example on twelve scenarios and tiers A0–A2, under the conditions in each run card. They show how that claim is tested and what limits the measurement.
-- **Its judge is uncalibrated.** No judge–human agreement and no clinician inter-rater reliability have been measured. A 12-clinician calibration study is under way, with results to follow the paper. Until then, treat any score, including the worked example's, as indicative only.
+- **Its judge is uncalibrated.** No judge–human agreement and no clinician inter-rater reliability have been measured. A 16-clinician calibration study is under way, with results to follow the paper. Until then, treat any score, including the worked example's, as indicative only.
 - It does not establish clinical efficacy. Ablation results are technical performance within a tested scenario boundary, level **M1** on SAFE-CARE's evidence maturity model. Clinical claims require prospective evaluation.
 - It does not certify any system as safe for deployment. It measures relative capability contribution under controlled conditions.
 - It does not cover every failure mode. It covers the ones represented in the scenario set, so the absence of a failure in these results is not evidence of its absence in production.

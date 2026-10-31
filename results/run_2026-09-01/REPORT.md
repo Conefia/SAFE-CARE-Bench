@@ -139,7 +139,7 @@ Judge per dimension, from the manifests:
 From the bench's published list, those that apply to this run:
 
 1. **The reference runner is not published.** Evaluations are run on request on the internal harness. Two teams implementing these declarations against different runtimes may produce materially different agents. Treat the configurations as an implementation-neutral specification, not a turnkey benchmark.
-2. **The judge is uncalibrated.** No judge–human agreement and no clinician inter-rater reliability have been measured; the 12-clinician calibration study has not yet reported. Scores, including the worked example's, are indicative and must not be reported as validated measurement.
+2. **The judge is uncalibrated.** No judge–human agreement and no clinician inter-rater reliability have been measured; the 16-clinician calibration study has not yet reported. Scores, including the worked example's, are indicative and must not be reported as validated measurement.
 3. **Adjacent tiers differ by capability bundles, not single flags.** Only A1→A2 is a one-variable delta. Do not attribute a bundle effect to any single member.
 4. **Single clinical domain.** All current scenarios are menopause and perimenopause. Generalization is untested.
 5. **Synthetic personas only.** They are constructed to be realistic, but they are not real users and do not capture the full distribution of real conversational behaviour.

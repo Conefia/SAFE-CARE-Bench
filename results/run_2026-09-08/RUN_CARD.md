@@ -112,7 +112,7 @@ reported as their own count, so applying the rule changes no number the paper re
 
 ## Redaction status
 
-**No `ip-scan` result is recorded for this directory.** It has been checked by string search
+**ip-check at 6a00c9a on all 17 files: PASS (items 4, 5 and 7 cleared by Yassen 2026-10-30).** It has also been checked by string search
 for guardrail rule identifiers, classifier reasoning, suppressed pre-rewrite drafts, client
 identifiers, credentials and storage URLs, and none were found. That is necessary and not
 sufficient.
